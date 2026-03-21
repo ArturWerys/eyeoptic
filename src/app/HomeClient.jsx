@@ -24,6 +24,35 @@ import Footer from "@/components/Footer";
 export default function HomeClient() {
   const { home } = content;
 
+  const heroSlides = [
+    {
+      title: "Lupy TTL",
+      subtitle:
+        "Systemy TTL dopasowane do specjalizacji, stylu pracy i odległości roboczej.",
+      href: "/products/ttl",
+      buttonLabel: "Zobacz więcej",
+      img: "/images/home_page/ttl.png",
+    },
+    {
+      title: "Lupy Flip-Up",
+      subtitle:
+        "Regulowane rozwiązanie dla użytkowników, którzy cenią możliwość szybkiego dopasowania.",
+      href: "/products/flip-up",
+      buttonLabel: "Zobacz więcej",
+      img: "/images/home_page/flip-up.png",
+    },
+    {
+      title: "Oświetlenie LED",
+      subtitle: "Lepsza widoczność pola zabiegowego i wygoda codziennej pracy.",
+      href: "/products/oswietlenie-led",
+      buttonLabel: "Zobacz więcej",
+      img: "/images/home_page/led-free-2.png",
+    },
+  ];
+
+  const [heroIndex, setHeroIndex] = useState(0);
+  const activeHero = heroSlides[heroIndex];
+
   // --- products carousel (prosta, solidna) ---
   const scrollerRef = useRef(null);
   const [drag, setDrag] = useState({ active: false, x: 0, left: 0 });
@@ -80,7 +109,6 @@ export default function HomeClient() {
     const el = scrollerRef.current;
     if (el) el.style.cursor = "grab";
 
-
     if (drag.active) snapToNearestCard();
 
     setDrag((d) => ({ ...d, active: false }));
@@ -93,6 +121,14 @@ export default function HomeClient() {
     { a: "Profesjonalne oświetlenie LED", b: "i akcesoria" },
   ];
 
+  const prevHero = () => {
+    setHeroIndex((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
+
+  const nextHero = () => {
+    setHeroIndex((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <Box
       sx={{
@@ -102,138 +138,220 @@ export default function HomeClient() {
       }}
     >
       <Container
-        maxWidth="lg"
-        sx={{ py: { xs: 4, md: 6 }, pt: { xs: "72px", md: "80px" } }}
+        maxWidth={false}
+        sx={{
+          maxWidth: 1360,
+          mx: "auto",
+          py: { xs: 1.5, md: 2 },
+          pt: { xs: "36px", sm: "28px", md: "30px" },
+        }}
       >
         <NavbarPill />
 
         {/* HERO */}
+
         <Box
           sx={{
-            mt: { xs: 4, md: 6 },
+            minHeight: { xs: "auto", md: "68vh" },
             display: "grid",
-            gap: { xs: 4, md: 5 },
-            gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-            alignItems: "start",
+            gridTemplateColumns: { xs: "1fr", md: "33% 67%" },
+            alignItems: "center",
+            gap: { xs: 3, sm: 3.5, md: 2 },
+            position: "relative",
+            width: "100%",
+            mx: "auto",
+            px: { md: 7, lg: 9 },
           }}
         >
-          {/* Left */}
-          <Box>
+          <Button
+            onClick={prevHero}
+            aria-label="Poprzedni slajd"
+            sx={{
+              position: "absolute",
+              left: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              minWidth: 42,
+              width: 42,
+              height: 42,
+              borderRadius: "50%",
+              color: colors.text,
+              zIndex: 3,
+              display: { xs: "none", md: "inline-flex" },
+            }}
+          >
+            <ChevronLeftRoundedIcon />
+          </Button>
+
+          {/* text */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: { xs: "flex-start", md: "center" },
+              alignItems: { xs: "center", md: "flex-start" },
+              textAlign: { xs: "center", md: "left" },
+              width: "100%",
+              maxWidth: { xs: "100%", md: "100%" },
+              minWidth: 0,
+              height: { md: 540 },
+              mx: { xs: "auto", md: 0 },
+              order: { xs: 2, md: 1 },
+            }}
+          >
             <Typography
               sx={{
-                mt: 1.2,
                 fontWeight: 900,
                 letterSpacing: "-0.04em",
-                lineHeight: 0.95,
-                fontSize: { xs: 44, sm: 56, md: 86 },
-                maxWidth: { md: "16ch" },
+                lineHeight: { xs: 1.02, md: 0.95 },
+                fontSize: "clamp(2rem, 8vw, 4rem)",
                 color: colors.text,
+                whiteSpace: "normal",
+                maxWidth: "none",
+                minHeight: { md: 122 },
               }}
             >
-              Lupy stomatologiczne dla ergonomii <br /> i precyzji
+              {activeHero.title}
             </Typography>
 
             <Typography
               sx={{
-                mt: 2.5,
-                fontSize: 18,
-                lineHeight: 1.65,
+                mt: 1.8,
+                fontSize: { xs: 14, sm: 15, md: 16 },
+                lineHeight: 1.6,
                 color: colors.textSoft,
-                maxWidth: "62ch",
+                maxWidth: { xs: "100%", md: "34ch" },
+                minHeight: { md: 86 },
               }}
             >
-              Każdą konfigurację dopasowujemy do Twojej specjalizacji, stylu
-              pracy <br />i oczekiwań - od powiększenia po indywidualną
-              odległość roboczą. Efektem jest większa dokładność zabiegów,
-              mniejsze zmęczenie wzroku i realne odciążenie kręgosłupa przez
-              cały dzień pracy.
+              {activeHero.subtitle}
             </Typography>
 
-            {/* CTA */}
-            <Box sx={{ mt: 3, display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+            <Box sx={{ mt: 3, width: { xs: "100%", sm: "auto" } }}>
               <Button
                 component={NextLink}
-                href="/contact"
+                href={activeHero.href}
                 variant="contained"
                 disableElevation
                 sx={{
-                  borderRadius: 3,
+                  borderRadius: 1.5,
                   fontWeight: 900,
-                  px: 3,
+                  px: 3.2,
                   py: 1.2,
                   textTransform: "none",
+                  width: { xs: "100%", sm: "auto" },
+                  maxWidth: { xs: 320, sm: "none" },
                 }}
               >
-                Umów indywidualny dobór
+                {activeHero.buttonLabel}
+              </Button>
+            </Box>
+          </Box>
+
+          {/* image */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: { xs: "center", md: "flex-end" },
+              alignItems: "center",
+              order: { xs: 1, md: 2 },
+              position: "relative",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: { xs: 360, sm: 560, md: 1100 },
+                aspectRatio: { xs: "4 / 3", sm: "16 / 10" },
+                height: { md: 540 },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                px: { xs: 1, sm: 2, md: 3 },
+                py: { xs: 1, sm: 1.5, md: 2 },
+              }}
+            >
+              <Box
+                component="img"
+                src={activeHero.img}
+                alt={activeHero.title}
+                sx={{
+                  width: { xs: "100%", md: "auto" },
+                  height: { xs: "100%", md: "92%" },
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  display: "block",
+                  objectFit: "contain",
+                  objectPosition: "center",
+                }}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                mt: 2,
+                display: { xs: "flex", md: "none" },
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1.5,
+              }}
+            >
+              <Button
+                onClick={prevHero}
+                aria-label="Poprzedni slajd"
+                sx={{
+                  minWidth: 42,
+                  width: 42,
+                  height: 42,
+                  borderRadius: "50%",
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`,
+                  backgroundColor: colors.surface,
+                }}
+              >
+                <ChevronLeftRoundedIcon />
               </Button>
 
               <Button
-                component={NextLink}
-                href="/#products"
-                variant="outlined"
+                onClick={nextHero}
+                aria-label="Następny slajd"
                 sx={{
-                  borderRadius: 3,
-                  fontWeight: 900,
-                  px: 3,
-                  py: 1.2,
-                  textTransform: "none",
-                  borderColor: "rgba(15,23,42,0.18)",
-                  "&:hover": { borderColor: "rgba(15,23,42,0.28)" },
+                  minWidth: 42,
+                  width: 42,
+                  height: 42,
+                  borderRadius: "50%",
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`,
+                  backgroundColor: colors.surface,
                 }}
               >
-                Zobacz produkty
+                <ChevronRightRoundedIcon />
               </Button>
             </Box>
           </Box>
 
-          {/* Right */}
-          <Box sx={{ display: "grid", gap: 2 }}>
-            <Box
-              sx={{
-                borderRadius: 4,
-                p: { xs: 2.6, md: 3.2 },
-                backgroundColor: colors.surface,
-                border: `1px solid ${colors.border}`,
-                boxShadow: colors.shadow,
-                color: colors.text,
-                maxWidth: 520,
-              }}
-            >
-              <Typography sx={{ fontWeight: 900, fontSize: 18 }}>
-                Dobór w 3 krokach
-              </Typography>
-              <Typography
-                sx={{
-                  mt: 0.8,
-                  color: colors.textSoft,
-                  fontSize: 14,
-                  lineHeight: 1.6,
-                }}
-              >
-                Dopasowujemy lupy precyzyjnie do Twojej specjalizacji <br />i
-                naturalnej pozycji pracy - tak, aby wspierały Cię każdego dnia.
-              </Typography>
-
-              <Box sx={{ mt: 2.4, display: "grid", gap: 2 }}>
-                <Step
-                  n="1"
-                  title="Konsultacja (5-10 min)"
-                  desc="Rozmawiamy o Twojej specjalizacji, codziennych procedurach oraz oczekiwaniach wobec powiększenia i ergonomii."
-                />
-                <Step
-                  n="2"
-                  title="Precyzyjne pomiary"
-                  desc="Wyznaczamy: PD, odległość roboczą oraz preferowaną pozycję pracy."
-                />
-                <Step
-                  n="3"
-                  title="Indywidualna konfiguracja"
-                  desc="Dobieramy optymalne powiększenie, oprawę, oświetlenie LED oraz indywidualną korekcję wzroku.
-"
-                />
-              </Box>
-            </Box>
-          </Box>
+          {/* right arrow */}
+          <Button
+            onClick={nextHero}
+            aria-label="Następny slajd"
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              minWidth: 42,
+              width: 42,
+              height: 42,
+              borderRadius: "50%",
+              color: colors.text,
+              zIndex: 3,
+              display: { xs: "none", md: "inline-flex" },
+            }}
+          >
+            <ChevronRightRoundedIcon />
+          </Button>
         </Box>
 
         {/* bullets */}
@@ -298,7 +416,7 @@ export default function HomeClient() {
           }}
         />
         {/* PRODUCTS */}
-        <Box
+        {/* <Box
           id="products"
           sx={{
             mt: { xs: 4, md: 4 },
@@ -318,7 +436,7 @@ export default function HomeClient() {
 
           <Box sx={{ mt: 3, position: "relative" }}>
             {/* desktop arrows */}
-            <Button
+        {/* <Button
               onClick={() => scrollByCard(-1)}
               sx={{
                 position: "absolute",
@@ -399,16 +517,16 @@ export default function HomeClient() {
               onMouseUp={stopDrag}
               onMouseLeave={stopDrag}
             >
-              {home.products.tiles.map((t) => (
-                <ProductCard key={t.title} {...t} />
-              ))}
-            </Box>
+              {home.products.tiles.map((t) => ( */}
+        {/* //       <ProductCard key={t.title} {...t} />
+          //     ))}
+          //   </Box>
 
-            <Typography sx={{ mt: 1.25, color: colors.textSoft, fontSize: 13 }}>
-              Przesuń w prawo, aby poznać pełną ofertę.
-            </Typography>
-          </Box>
-        </Box>
+          //   <Typography sx={{ mt: 1.25, color: colors.textSoft, fontSize: 13 }}>
+          //     Przesuń w prawo, aby poznać pełną ofertę.
+          //   </Typography>
+          // </Box>
+        </Box> */}
         {/* WHY */}
         <Box sx={{ mt: 7 }}>
           <Typography
