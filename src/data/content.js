@@ -20,13 +20,12 @@ const content = {
     },
 
     why: {
-      heading: "Większa precyzja, mniejsze obciążenie, zdrowsza postawa",
-      text: "W stomatologii to detale decydują o jakości leczenia. Dobrze dopasowane lupy pozwalają widzieć więcej bez nadmiernego pochylania głowy, co przekłada się na większą powtarzalność ruchów, lepszą kontrolę pola zabiegowego i wyraźnie wyższy komfort podczas długich procedur.",
+      heading: "Co zyskujesz dzięki dobrze dobranym lupom?",
       tiles: [
         "Maksymalna kontrola pola zabiegowego",
-        "Wyraźne granice i lepsza ocena detali",
-        "Odciążenie odcinka szyjnego i lędźwiowego",
-        "Spokojna, stabilna praca w powiększeniu",
+        "Lepsza ocena detali",
+        "Mniejsze obciążenie odcinka szyjnego i lędźwiowego",
+        "Stabilna praca w powiększeniu",
       ],
     },
 
@@ -59,10 +58,30 @@ const content = {
         },
       ],
     },
+    process: {
+      heading: "Dobór w 3 krokach",
+      text: "Krótki proces, dzięki któremu dobieramy lupy do Twojej specjalizacji, pozycji pracy i codziennych potrzeb.",
+      steps: [
+        {
+          n: "01",
+          title: "Krótka konsultacja",
+          desc: "Rozmawiamy o Twojej specjalizacji, sposobie pracy i oczekiwaniach.",
+        },
+        {
+          n: "02",
+          title: "Precyzyjne pomiary",
+          desc: "Sprawdzamy PD, odległość roboczą i naturalną pozycję podczas pracy.",
+        },
+        {
+          n: "03",
+          title: "Indywidualna konfiguracja",
+          desc: "Dobieramy powiększenie, oprawę, oświetlenie i ewentualną korekcję.",
+        },
+      ],
+    },
 
     compare: {
-      heading:
-        "Lupy TTL czy Flip-Up? Dobierz rozwiązanie dopasowane do Twojego stylu pracy",
+      heading: "TTL czy Flip-Up — co sprawdzi się lepiej?",
       rows: [
         {
           left: "Maksymalna stabilność i stała geometria obrazu",
@@ -75,8 +94,6 @@ const content = {
           right: "Flip-Up",
         },
       ],
-
-      note: "Nie wiesz, który system wybrać? Podczas krótkiej konsultacji pomożemy dobrać lupy dopasowane do Twojej specjalizacji i ergonomii pracy.",
     },
 
     faqPreview: {

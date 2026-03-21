@@ -151,7 +151,7 @@ export default function FlipUpProductClient() {
         </Box>
       </Box>
 
-      {/* Najważniejsze korzyści — bez otoczki, styl jak konfiguracje */}
+      {/* Najważniejsze korzyści */}
       <Box
         sx={{
           mt: { xs: 6, md: 8 },
@@ -276,7 +276,7 @@ export default function FlipUpProductClient() {
         </Box>
       </Box>
 
-      {/* Konfiguracje — PREMIUM (spacing dopasowany) */}
+      {/* Konfiguracje*/}
       <Box
         sx={{
           mt: { xs: 6, md: 8 },
@@ -361,7 +361,7 @@ export default function FlipUpProductClient() {
           </Typography>
 
           {/* Kafelki powiększeń */}
-          {/* Kafelki powiększeń — jak w LED */}
+
           <Box sx={{ mt: 1.25 }}>
             <Box
               sx={{

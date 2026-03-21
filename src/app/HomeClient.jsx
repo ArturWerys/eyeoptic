@@ -1,7 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -23,6 +23,11 @@ import Footer from "@/components/Footer";
 
 export default function HomeClient() {
   const { home } = content;
+
+  const heroTextAnimation =
+    "heroTextIn 1500ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both";
+  const heroImageAnimation =
+    "heroImageIn 1300ms cubic-bezier(0.16, 1, 0.3, 1) both";
 
   const heroSlides = [
     {
@@ -53,7 +58,6 @@ export default function HomeClient() {
   const [heroIndex, setHeroIndex] = useState(0);
   const activeHero = heroSlides[heroIndex];
 
-  // --- products carousel (prosta, solidna) ---
   const scrollerRef = useRef(null);
   const [drag, setDrag] = useState({ active: false, x: 0, left: 0 });
 
@@ -61,7 +65,6 @@ export default function HomeClient() {
     const el = scrollerRef.current;
     if (!el) return;
 
-    // przewiń o ~1 kartę (85% szerokości widoku na xs albo ~340 na md)
     const card = el.querySelector("[data-card='1']");
     const step = card ? card.getBoundingClientRect().width + 16 : 360;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
@@ -80,6 +83,7 @@ export default function HomeClient() {
     const dx = e.pageX - drag.x;
     el.scrollLeft = drag.left - dx;
   };
+
   const snapToNearestCard = () => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -87,14 +91,13 @@ export default function HomeClient() {
     const cards = Array.from(el.querySelectorAll("[data-card='1']"));
     if (!cards.length) return;
 
-    // szukamy karty, której lewy brzeg jest najbliżej aktualnego scrollLeft
     const current = el.scrollLeft;
 
     let bestLeft = 0;
     let bestDist = Infinity;
 
     for (const c of cards) {
-      const left = c.offsetLeft; // działa dobrze, bo karty są dziećmi scroller'a
+      const left = c.offsetLeft;
       const dist = Math.abs(left - current);
       if (dist < bestDist) {
         bestDist = dist;
@@ -113,13 +116,6 @@ export default function HomeClient() {
 
     setDrag((d) => ({ ...d, active: false }));
   };
-
-  const bullets = [
-    { a: "Indywidualny dobór", b: "pod specjalizację" },
-    { a: "Systemy", b: "TTL oraz Flip-Up" },
-    { a: "Możliwość", b: "korekcji wzroku" },
-    { a: "Profesjonalne oświetlenie LED", b: "i akcesoria" },
-  ];
 
   const prevHero = () => {
     setHeroIndex((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
@@ -149,10 +145,12 @@ export default function HomeClient() {
         <NavbarPill />
 
         {/* HERO */}
-
         <Box
           sx={{
-            minHeight: { xs: "auto", md: "68vh" },
+            minHeight: {
+              xs: "calc(100svh - 110px)",
+              md: "calc(100svh - 85px)",
+            },
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "33% 67%" },
             alignItems: "center",
@@ -183,8 +181,8 @@ export default function HomeClient() {
             <ChevronLeftRoundedIcon />
           </Button>
 
-          {/* text */}
           <Box
+            key={`hero-text-${heroIndex}`}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -197,11 +195,23 @@ export default function HomeClient() {
               height: { md: 540 },
               mx: { xs: "auto", md: 0 },
               order: { xs: 2, md: 1 },
+              animation: heroTextAnimation,
+              transformOrigin: { xs: "center top", md: "left center" },
+              "@keyframes heroTextIn": {
+                "0%": {
+                  opacity: 0,
+                  transform: "translateY(10px)",
+                },
+                "100%": {
+                  opacity: 1,
+                  transform: "translateY(0)",
+                },
+              },
             }}
           >
             <Typography
               sx={{
-                fontWeight: 900,
+                fontWeight: 800,
                 letterSpacing: "-0.04em",
                 lineHeight: { xs: 1.02, md: 0.95 },
                 fontSize: "clamp(2rem, 8vw, 4rem)",
@@ -218,7 +228,8 @@ export default function HomeClient() {
               sx={{
                 mt: 1.8,
                 fontSize: { xs: 14, sm: 15, md: 16 },
-                lineHeight: 1.6,
+                fontWeight: 400,
+                lineHeight: 1.7,
                 color: colors.textSoft,
                 maxWidth: { xs: "100%", md: "34ch" },
                 minHeight: { md: 86 },
@@ -235,7 +246,8 @@ export default function HomeClient() {
                 disableElevation
                 sx={{
                   borderRadius: 1.5,
-                  fontWeight: 900,
+                  fontWeight: 800,
+                  lineHeight: 1.1,
                   px: 3.2,
                   py: 1.2,
                   textTransform: "none",
@@ -248,7 +260,6 @@ export default function HomeClient() {
             </Box>
           </Box>
 
-          {/* image */}
           <Box
             sx={{
               width: "100%",
@@ -261,6 +272,7 @@ export default function HomeClient() {
             }}
           >
             <Box
+              key={`hero-image-frame-${heroIndex}`}
               sx={{
                 width: "100%",
                 maxWidth: { xs: 360, sm: 560, md: 1100 },
@@ -271,6 +283,17 @@ export default function HomeClient() {
                 justifyContent: "center",
                 px: { xs: 1, sm: 2, md: 3 },
                 py: { xs: 1, sm: 1.5, md: 2 },
+                animation: heroImageAnimation,
+                "@keyframes heroImageIn": {
+                  "0%": {
+                    opacity: 0,
+                    transform: "translateY(8px) scale(0.992)",
+                  },
+                  "100%": {
+                    opacity: 1,
+                    transform: "translateY(0) scale(1)",
+                  },
+                },
               }}
             >
               <Box
@@ -332,7 +355,6 @@ export default function HomeClient() {
             </Box>
           </Box>
 
-          {/* right arrow */}
           <Button
             onClick={nextHero}
             aria-label="Następny slajd"
@@ -354,341 +376,287 @@ export default function HomeClient() {
           </Button>
         </Box>
 
-        {/* bullets */}
+        <Box sx={{ maxWidth: 1200, mx: "auto" }}>
+          <RevealSection>
+          {/* WHY */}
+          <Box sx={{ mt: 7 }}>
+            <SectionEyebrow>Korzyści</SectionEyebrow>
 
-        <Box
-          sx={{
-            mt: { xs: 3, md: 3.5 },
-            display: "grid",
-            gap: 3,
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(4, 1fr)",
-            },
-            alignItems: "center",
-          }}
-        >
-          {bullets.map((t) => (
-            <Box
-              key={t.a}
+            <Typography
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.2,
+                fontSize: { xs: 28, md: 40 },
+                fontWeight: 800,
+                lineHeight: 1.08,
+                letterSpacing: "-0.02em",
+                color: colors.text,
+                maxWidth: { xs: "100%", md: "18ch" },
               }}
             >
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 999,
-                  backgroundColor: "#1BA39C",
-                  flex: "0 0 auto",
-                }}
-              />
+              {home.why.heading}
+            </Typography>
 
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  fontSize: 16,
-                  color: "rgba(15, 23, 42, 0.78)",
-                  lineHeight: 1.25,
-                }}
-              >
-                {t.a}
-                {t.b && (
-                  <>
-                    <br />
-                    {t.b}
-                  </>
-                )}
-              </Typography>
+            <Box
+              sx={{
+                mt: 3,
+                display: "grid",
+                gap: 1.5,
+                gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+              }}
+            >
+              {home.why.tiles.map((t) => (
+                <GlassTile key={t} text={t} />
+              ))}
             </Box>
-          ))}
-        </Box>
+          </Box>
+          </RevealSection>
 
-        <Divider
-          sx={{
-            mt: { xs: 4, md: 4 },
-            mb: { xs: 1.25, md: 2 },
-            borderColor: "rgba(15,23,42,0.08)",
-          }}
-        />
-        {/* PRODUCTS */}
-        {/* <Box
-          id="products"
-          sx={{
-            mt: { xs: 4, md: 4 },
-            mb: { xs: 1.25, md: 2 },
-            scrollMarginTop: 110,
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: { xs: 28, md: 40 },
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {home.products.heading}
-          </Typography>
+          <RevealSection delay={90}>
+          {/* PROCESS */}
+          <Box sx={{ mt: 7 }}>
+            <SectionEyebrow>Proces doboru</SectionEyebrow>
 
-          <Box sx={{ mt: 3, position: "relative" }}>
-            {/* desktop arrows */}
-        {/* <Button
-              onClick={() => scrollByCard(-1)}
+            <Typography
               sx={{
-                position: "absolute",
-                left: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 3,
-                minWidth: 46,
-                width: 46,
-                height: 46,
-                borderRadius: "50%",
-                backgroundColor: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(10px)",
-                border: `1px solid ${colors.border}`,
-                boxShadow: "0 8px 20px rgba(15,23,42,0.10)",
+                fontSize: { xs: 24, md: 34 },
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
                 color: colors.text,
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.98)" },
-                display: { xs: "none", md: "flex" },
               }}
             >
-              <ChevronLeftRoundedIcon />
-            </Button>
+              {home.process.heading}
+            </Typography>
 
-            <Button
-              onClick={() => scrollByCard(1)}
+            <Typography
               sx={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 3,
-                minWidth: 46,
-                width: 46,
-                height: 46,
-                borderRadius: "50%",
-                backgroundColor: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(10px)",
-                border: `1px solid ${colors.border}`,
-                boxShadow: "0 8px 20px rgba(15,23,42,0.10)",
-                color: colors.text,
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.98)" },
-                display: { xs: "none", md: "flex" },
+                mt: 1.5,
+                color: colors.textSoft,
+                fontSize: 15,
+                fontWeight: 400,
+                maxWidth: { xs: "100%", md: 760 },
+                lineHeight: 1.75,
               }}
             >
-              <ChevronRightRoundedIcon />
-            </Button>
+              {home.process.text}
+            </Typography>
 
             <Box
-              ref={scrollerRef}
               sx={{
-                display: "flex",
-                gap: 2,
-                overflowX: "auto",
-                py: 0.5,
-                px: { xs: 1, md: 2 },
-                scrollSnapType: "x mandatory",
-                WebkitOverflowScrolling: "touch",
-                scrollbarWidth: "none",
-                "&::-webkit-scrollbar": { display: "none" },
-                cursor: { xs: "auto", md: "grab" },
-                scrollSnapStop: "always",
-
-                WebkitMaskImage: {
-                  xs: "linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%)",
-                  md: "linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%)",
-                },
-                maskImage: {
-                  xs: "linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%)",
-                  md: "linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%)",
-                },
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskSize: "100% 100%",
-                maskSize: "100% 100%",
+                mt: 3,
+                display: "grid",
+                gap: 1.5,
+                gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
               }}
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={stopDrag}
-              onMouseLeave={stopDrag}
             >
-              {home.products.tiles.map((t) => ( */}
-        {/* //       <ProductCard key={t.title} {...t} />
-          //     ))}
-          //   </Box>
-
-          //   <Typography sx={{ mt: 1.25, color: colors.textSoft, fontSize: 13 }}>
-          //     Przesuń w prawo, aby poznać pełną ofertę.
-          //   </Typography>
-          // </Box>
-        </Box> */}
-        {/* WHY */}
-        <Box sx={{ mt: 7 }}>
-          <Typography
-            sx={{
-              fontSize: { xs: 28, md: 40 },
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {home.why.heading}
-          </Typography>
-          <Typography sx={{ mt: 2, color: colors.textSoft, fontSize: 15 }}>
-            {home.why.text}
-          </Typography>
-
-          <Box
-            sx={{
-              mt: 3,
-              display: "grid",
-              gap: 1.5,
-              gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-            }}
-          >
-            {home.why.tiles.map((t) => (
-              <GlassTile key={t} text={t} />
-            ))}
+              {home.process.steps.map((step) => (
+                <StepCard
+                  key={step.n}
+                  n={step.n}
+                  title={step.title}
+                  desc={step.desc}
+                />
+              ))}
+            </Box>
           </Box>
-        </Box>
+          </RevealSection>
 
-        {/* COMPARE */}
-        <Box sx={{ mt: 7 }}>
-          <Typography
-            sx={{
-              fontSize: { xs: 24, md: 34 },
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              color: colors.text,
-            }}
-          >
-            {home.compare.heading}
-          </Typography>
+          <RevealSection delay={140}>
+          {/* COMPARE */}
+          <Box sx={{ mt: 7 }}>
+            <SectionEyebrow>Porównanie systemów</SectionEyebrow>
 
-          <Box
-            sx={{
-              mt: 2,
-              borderRadius: 3,
-              overflow: "hidden",
-              border: `1px solid ${colors.border}`,
-              boxShadow: colors.shadowSm,
-              backgroundColor: colors.surface,
-            }}
-          >
-            {home.compare.rows.map((r, idx) => (
-              <Box key={r.left}>
+            <Typography
+              sx={{
+                fontSize: { xs: 24, md: 34 },
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                color: colors.text,
+                maxWidth: { xs: "100%", md: "24ch" },
+              }}
+            >
+              {home.compare.heading}
+            </Typography>
+
+            <Box
+              sx={{
+                mt: 2,
+                borderRadius: 3,
+                overflow: "hidden",
+                border: `1px solid ${colors.border}`,
+                boxShadow: colors.shadowSm,
+                backgroundColor: colors.surface,
+              }}
+            >
+              {home.compare.rows.map((r, idx) => (
+                <Box key={r.left}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 2,
+                      px: { xs: 2, md: 2.5 },
+                      py: { xs: 1.6, md: 1.9 },
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: colors.textSoft,
+                        fontWeight: 600,
+                        fontSize: 15,
+                        lineHeight: 1.35,
+                      }}
+                    >
+                      {r.left}
+                    </Typography>
+                    <WinnerPill label={r.right} />
+                  </Box>
+
+                  {idx !== home.compare.rows.length - 1 && (
+                    <Divider sx={{ borderColor: "rgba(15,23,42,0.08)" }} />
+                  )}
+                </Box>
+              ))}
+            </Box>
+          </Box>
+          </RevealSection>
+
+          <RevealSection delay={180}>
+          {/* FAQ */}
+          <Box sx={{ mt: 7 }}>
+            <SectionEyebrow>Najczęstsze pytania</SectionEyebrow>
+
+            <Typography
+              sx={{
+                fontSize: { xs: 24, md: 34 },
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                color: colors.text,
+              }}
+            >
+              {home.faqPreview.heading}
+            </Typography>
+
+            <Box sx={{ mt: 2, display: "grid", gap: 1.5 }}>
+              {home.faqPreview.items.map((it) => (
                 <Box
+                  key={it.q}
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 2,
-                    px: { xs: 2, md: 2.5 },
-                    py: { xs: 1.6, md: 1.9 },
+                    borderRadius: 3,
+                    p: 2.5,
+                    backgroundColor: colors.surface,
+                    border: `1px solid ${colors.border}`,
+                    boxShadow: colors.shadowSm,
                   }}
                 >
                   <Typography
                     sx={{
-                      color: colors.textSoft,
                       fontWeight: 700,
-                      fontSize: 15,
-                      lineHeight: 1.25,
+                      fontSize: { xs: 16, md: 17 },
+                      lineHeight: 1.35,
+                      color: colors.text,
                     }}
                   >
-                    {r.left}
+                    {it.q}
                   </Typography>
-                  <WinnerPill label={r.right} />
+
+                  <Typography
+                    sx={{
+                      mt: 1,
+                      color: colors.textSoft,
+                      fontSize: 15,
+                      fontWeight: 400,
+                      lineHeight: 1.75,
+                    }}
+                  >
+                    {it.a}
+                  </Typography>
                 </Box>
+              ))}
+            </Box>
 
-                {idx !== home.compare.rows.length - 1 && (
-                  <Divider sx={{ borderColor: "rgba(15,23,42,0.08)" }} />
-                )}
-              </Box>
-            ))}
+            <Link
+              component={NextLink}
+              href={home.faqPreview.moreHref}
+              underline="none"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                mt: 2.5,
+                color: colors.accent,
+                fontWeight: 800,
+                lineHeight: 1.1,
+              }}
+            >
+              {home.faqPreview.moreLabel}
+              <NorthEastRoundedIcon sx={{ fontSize: 18 }} />
+            </Link>
           </Box>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, fontSize: 14 }}>
-            {home.compare.note}
-          </Typography>
-
-          <Button
-            component={NextLink}
-            href="/contact"
-            variant="contained"
-            disableElevation
-            sx={{
-              mt: 2.5,
-              borderRadius: 3,
-              fontWeight: 900,
-              px: 3,
-              py: 1.2,
-              textTransform: "none",
-            }}
-          >
-            Umów dobór
-          </Button>
-        </Box>
-
-        {/* FAQ preview */}
-        <Box sx={{ mt: 7 }}>
-          <Typography
-            sx={{
-              fontSize: { xs: 24, md: 34 },
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {home.faqPreview.heading}
-          </Typography>
-
-          <Box sx={{ mt: 2, display: "grid", gap: 1.5 }}>
-            {home.faqPreview.items.map((it) => (
-              <Box
-                key={it.q}
-                sx={{
-                  borderRadius: 3,
-                  p: 2.5,
-                  backgroundColor: colors.surface,
-                  border: `1px solid ${colors.border}`,
-                  boxShadow: colors.shadowSm,
-                }}
-              >
-                <Typography sx={{ fontWeight: 800, color: colors.text }}>
-                  {it.q}
-                </Typography>
-                <Typography
-                  sx={{ mt: 1, color: colors.textSoft, fontSize: 14 }}
-                >
-                  {it.a}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <Link
-            component={NextLink}
-            href={home.faqPreview.moreHref}
-            underline="none"
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-              mt: 2.5,
-              color: colors.text,
-              fontWeight: 900,
-            }}
-          >
-            {home.faqPreview.moreLabel}{" "}
-            <NorthEastRoundedIcon sx={{ fontSize: 18 }} />
-          </Link>
+          </RevealSection>
         </Box>
 
         <Footer />
       </Container>
+    </Box>
+  );
+}
+
+function SectionEyebrow({ children }) {
+  return (
+    <Typography
+      sx={{
+        mb: 1,
+        color: colors.accent,
+        fontSize: 12,
+        fontWeight: 700,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+      }}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+function RevealSection({ children, delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px",
+      }
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(28px)",
+        transition:
+          "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transitionDelay: `${delay}ms`,
+        willChange: "opacity, transform",
+      }}
+    >
+      {children}
     </Box>
   );
 }
@@ -704,62 +672,71 @@ function GlassTile({ text }) {
         boxShadow: colors.shadowSm,
       }}
     >
-      <Typography sx={{ color: colors.text, fontWeight: 900 }}>
+      <Typography
+        sx={{
+          color: colors.text,
+          fontWeight: 600,
+          fontSize: { xs: 15, md: 15 },
+          lineHeight: 1.35,
+        }}
+      >
         {text}
       </Typography>
     </Box>
   );
 }
 
-function Step({ n, title, desc }) {
+function StepCard({ n, title, desc }) {
   return (
     <Box
       sx={{
-        display: "grid",
-        gridTemplateColumns: "32px 1fr",
-        gap: 1.6,
-        alignItems: "start",
+        borderRadius: 3,
+        p: 2.5,
+        backgroundColor: colors.surface,
+        border: `1px solid ${colors.border}`,
+        boxShadow: colors.shadowSm,
       }}
     >
       <Box
         sx={{
-          width: 28,
-          height: 28,
+          width: 36,
+          height: 36,
           borderRadius: 999,
           backgroundColor: colors.accentSoft,
           color: colors.accent,
           display: "grid",
           placeItems: "center",
           fontWeight: 800,
+          lineHeight: 1.1,
           fontSize: 13,
-          mt: "2px",
         }}
       >
         {n}
       </Box>
 
-      <Box>
-        <Typography
-          sx={{
-            fontWeight: 800,
-            fontSize: 15,
-            lineHeight: 1.25,
-            color: colors.text,
-          }}
-        >
-          {title}
-        </Typography>
-        <Typography
-          sx={{
-            mt: 0.4,
-            color: colors.textSoft,
-            fontSize: 14,
-            lineHeight: 1.6,
-          }}
-        >
-          {desc}
-        </Typography>
-      </Box>
+      <Typography
+        sx={{
+          mt: 2,
+          fontWeight: 700,
+          fontSize: { xs: 17, md: 18 },
+          lineHeight: 1.3,
+          color: colors.text,
+        }}
+      >
+        {title}
+      </Typography>
+
+      <Typography
+        sx={{
+          mt: 1,
+          color: colors.textSoft,
+          fontSize: 15,
+          fontWeight: 400,
+          lineHeight: 1.75,
+        }}
+      >
+        {desc}
+      </Typography>
     </Box>
   );
 }
@@ -774,94 +751,13 @@ function WinnerPill({ label }) {
         px: 1.2,
         py: 0.55,
         fontWeight: 800,
-        color: "rgba(15,23,42,0.85)",
+        color: colors.accent,
         lineHeight: 1,
         whiteSpace: "nowrap",
       }}
     >
       {label}
-      <TrendingUpRoundedIcon sx={{ fontSize: 18, opacity: 0.7 }} />
-    </Box>
-  );
-}
-
-function ProductCard({ title, desc, href, cta, img }) {
-  return (
-    <Box
-      component={NextLink}
-      href={href}
-      data-card="1"
-      sx={{
-        scrollSnapAlign: "start",
-        flex: "0 0 auto",
-        width: { xs: "85%", sm: 320, md: 340 },
-        textDecoration: "none",
-        borderRadius: 3,
-        overflow: "hidden",
-        backgroundColor: colors.surface,
-        border: `1px solid ${colors.border}`,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)",
-        transition: "all 200ms ease",
-        "&:hover": {
-          transform: "translateY(-1px)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.12)",
-          borderColor: "rgba(15,23,42,0.12)",
-        },
-      }}
-    >
-      {/* image */}
-      <Box
-        sx={{
-          position: "relative",
-          aspectRatio: "16/10",
-          backgroundColor: colors.surfaceAlt,
-        }}
-      >
-        <Box
-          component="img"
-          src={img || "/hero.jpg"}
-          alt={title}
-          sx={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.30), rgba(0,0,0,0) 50%)",
-            pointerEvents: "none",
-          }}
-        />
-      </Box>
-
-      {/* body */}
-      <Box sx={{ p: 2.5 }}>
-        <Typography
-          sx={{ color: colors.textSoft, fontSize: 14, lineHeight: 1.6 }}
-        >
-          {desc}
-        </Typography>
-
-        <Box
-          sx={{
-            mt: 2.5,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 0.5,
-            color: colors.accent,
-            fontWeight: 700,
-            fontSize: 13,
-          }}
-        >
-          {title} <NorthEastRoundedIcon sx={{ fontSize: 16 }} />
-        </Box>
-      </Box>
+      <TrendingUpRoundedIcon sx={{ fontSize: 18, opacity: 0.75 }} />
     </Box>
   );
 }
