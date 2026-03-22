@@ -152,7 +152,7 @@ export default function HomeClient() {
               md: "calc(100svh - 85px)",
             },
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "33% 67%" },
+            gridTemplateColumns: { xs: "1fr", md: "42% 58%" },
             alignItems: "center",
             gap: { xs: 3, sm: 3.5, md: 2 },
             position: "relative",
@@ -214,11 +214,11 @@ export default function HomeClient() {
                 fontWeight: 800,
                 letterSpacing: "-0.04em",
                 lineHeight: { xs: 1.02, md: 0.95 },
-                fontSize: "clamp(2rem, 8vw, 4rem)",
+                fontSize: { xs: "clamp(2rem, 8vw, 4rem)", md: "clamp(2.8rem, 4.4vw, 4rem)" },
                 color: colors.text,
-                whiteSpace: "normal",
+                whiteSpace: { xs: "normal", md: "nowrap" },
                 maxWidth: "none",
-                minHeight: { md: 122 },
+                minHeight: { md: 88 },
               }}
             >
               {activeHero.title}
@@ -226,7 +226,7 @@ export default function HomeClient() {
 
             <Typography
               sx={{
-                mt: 1.8,
+                mt: { xs: 1.8, md: 1.1 },
                 fontSize: { xs: 14, sm: 15, md: 16 },
                 fontWeight: 400,
                 lineHeight: 1.7,
