@@ -47,7 +47,7 @@ export default function NavbarPill() {
           display: "flex",
           alignItems: "center",
           gap: 2,
-          maxWidth: 1400,
+          maxWidth: 1440,
           mx: "auto",
         }}
       >
@@ -196,7 +196,7 @@ export default function NavbarPill() {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <Box
           sx={{
-            maxWidth: 1400,
+            maxWidth: 1440,
             mx: "auto",
             mt: 1,
             borderRadius: 3,

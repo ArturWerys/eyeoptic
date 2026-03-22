@@ -10,6 +10,73 @@ const content = {
 
   home: {
     hero: {
+      slides: [
+        {
+          title: "Lupy TTL",
+          subtitle:
+            "Precyzyjne rozwiązanie dopasowane do specjalizacji, stylu pracy i odległości roboczej.",
+          href: "/products/ttl",
+          buttonLabel: "Poznaj lupy TTL",
+          img: "/images/home_page/ttl.png",
+          imageLayout: {
+            desktopHeight: "92%",
+            desktopMaxWidth: "96%",
+            objectPosition: "center 54%",
+          },
+        },
+        {
+          title: "Lupy TTL Sport",
+          subtitle:
+            "Lżejsza konstrukcja dla większego komfortu i swobody pracy.",
+          href: "/products/ttl",
+          buttonLabel: "Poznaj lupy TTL Sport",
+          img: "/images/home_page/ttl-sport.png",
+          imageLayout: {
+            desktopHeight: "92%",
+            desktopMaxWidth: "96%",
+            objectPosition: "center 54%",
+          },
+        },
+        {
+          title: "Lupy Flip-Up",
+          subtitle:
+            "Regulowane ustawienie i szybkie dopasowanie do własnych preferencji pracy.",
+          href: "/products/flipUp",
+          buttonLabel: "Poznaj lupy Flip-Up",
+          img: "/images/home_page/flip-up.png",
+          imageLayout: {
+            desktopHeight: "90%",
+            desktopMaxWidth: "94%",
+            objectPosition: "center 55%",
+          },
+        },
+        {
+          title: "Lupy Ergo Flip-Up",
+          subtitle:
+            "Większy komfort pracy, ergonomia i swoboda ustawienia dopasowana do użytkownika.",
+          href: "/products/flipUp",
+          buttonLabel: "Poznaj lupy Ergo Flip-Up",
+          img: "/images/home_page/ergo-flip-up.png",
+          imageLayout: {
+            desktopHeight: "88%",
+            desktopMaxWidth: "92%",
+            objectPosition: "center 53%",
+          },
+        },
+        {
+          title: "Oświetlenie LED",
+          subtitle:
+            "Lepsza widoczność pola zabiegowego i większy komfort codziennej pracy.",
+          href: "/products/led",
+          buttonLabel: "Poznaj oświetlenie LED",
+          img: "/images/home_page/led-free-2.png",
+          imageLayout: {
+            desktopHeight: "89%",
+            desktopMaxWidth: "93%",
+            objectPosition: "center 55%",
+          },
+        },
+      ],
       points: [
         { title: "Ergonomia", desc: "Naturalna pozycja głowy i pleców" },
         { title: "Precyzja", desc: "Więcej detalu, pewniejszy ruch" },

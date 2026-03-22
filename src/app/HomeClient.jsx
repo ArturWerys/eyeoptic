@@ -23,99 +23,16 @@ import Footer from "@/components/Footer";
 
 export default function HomeClient() {
   const { home } = content;
+  const heroSlides = home.hero.slides;
 
   const heroTextAnimation =
     "heroTextIn 1500ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both";
   const heroImageAnimation =
     "heroImageIn 1300ms cubic-bezier(0.16, 1, 0.3, 1) both";
 
-  const heroSlides = [
-    {
-      title: "Lupy TTL",
-      subtitle:
-        "Systemy TTL dopasowane do specjalizacji, stylu pracy i odległości roboczej.",
-      href: "/products/ttl",
-      buttonLabel: "Zobacz więcej",
-      img: "/images/home_page/ttl.png",
-    },
-    {
-      title: "Lupy Flip-Up",
-      subtitle:
-        "Regulowane rozwiązanie dla użytkowników, którzy cenią możliwość szybkiego dopasowania.",
-      href: "/products/flip-up",
-      buttonLabel: "Zobacz więcej",
-      img: "/images/home_page/flip-up.png",
-    },
-    {
-      title: "Oświetlenie LED",
-      subtitle: "Lepsza widoczność pola zabiegowego i wygoda codziennej pracy.",
-      href: "/products/oswietlenie-led",
-      buttonLabel: "Zobacz więcej",
-      img: "/images/home_page/led-free-2.png",
-    },
-  ];
-
   const [heroIndex, setHeroIndex] = useState(0);
   const activeHero = heroSlides[heroIndex];
-
-  const scrollerRef = useRef(null);
-  const [drag, setDrag] = useState({ active: false, x: 0, left: 0 });
-
-  const scrollByCard = (dir) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    const card = el.querySelector("[data-card='1']");
-    const step = card ? card.getBoundingClientRect().width + 16 : 360;
-    el.scrollBy({ left: dir * step, behavior: "smooth" });
-  };
-
-  const onMouseDown = (e) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    setDrag({ active: true, x: e.pageX, left: el.scrollLeft });
-    el.style.cursor = "grabbing";
-  };
-
-  const onMouseMove = (e) => {
-    const el = scrollerRef.current;
-    if (!el || !drag.active) return;
-    const dx = e.pageX - drag.x;
-    el.scrollLeft = drag.left - dx;
-  };
-
-  const snapToNearestCard = () => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    const cards = Array.from(el.querySelectorAll("[data-card='1']"));
-    if (!cards.length) return;
-
-    const current = el.scrollLeft;
-
-    let bestLeft = 0;
-    let bestDist = Infinity;
-
-    for (const c of cards) {
-      const left = c.offsetLeft;
-      const dist = Math.abs(left - current);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestLeft = left;
-      }
-    }
-
-    el.scrollTo({ left: bestLeft, behavior: "smooth" });
-  };
-
-  const stopDrag = () => {
-    const el = scrollerRef.current;
-    if (el) el.style.cursor = "grab";
-
-    if (drag.active) snapToNearestCard();
-
-    setDrag((d) => ({ ...d, active: false }));
-  };
+  const activeHeroImageLayout = activeHero.imageLayout ?? {};
 
   const prevHero = () => {
     setHeroIndex((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
@@ -123,6 +40,26 @@ export default function HomeClient() {
 
   const nextHero = () => {
     setHeroIndex((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
+  };
+
+  const heroArrowSx = {
+    minWidth: 44,
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    color: "rgba(15,23,42,0.72)",
+    border: "1px solid rgba(15,23,42,0.06)",
+    backgroundColor: "rgba(255,255,255,0.44)",
+    backdropFilter: "blur(14px)",
+    boxShadow: "0 10px 28px rgba(15,23,42,0.05)",
+    transition:
+      "transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease",
+    "&:hover": {
+      color: "rgba(15,23,42,0.86)",
+      backgroundColor: "rgba(255,255,255,0.62)",
+      borderColor: "rgba(15,23,42,0.09)",
+      boxShadow: "0 12px 30px rgba(15,23,42,0.07)",
+    },
   };
 
   return (
@@ -136,10 +73,10 @@ export default function HomeClient() {
       <Container
         maxWidth={false}
         sx={{
-          maxWidth: 1360,
+          maxWidth: 1440,
           mx: "auto",
           py: { xs: 1.5, md: 2 },
-          pt: { xs: "36px", sm: "28px", md: "30px" },
+          pt: { xs: "20px", sm: "16px", md: "2px" },
         }}
       >
         <NavbarPill />
@@ -148,17 +85,19 @@ export default function HomeClient() {
         <Box
           sx={{
             minHeight: {
-              xs: "calc(100svh - 110px)",
-              md: "calc(100svh - 85px)",
+              xs: "calc(100svh - 96px)",
+              md: "calc(100svh - 118px)",
             },
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "42% 58%" },
-            alignItems: "center",
-            gap: { xs: 3, sm: 3.5, md: 2 },
+            gridTemplateColumns: { xs: "1fr", md: "39% 61%" },
+            alignItems: { xs: "center", md: "center" },
+            gap: { xs: 3, sm: 3.5, md: 1.5 },
             position: "relative",
             width: "100%",
             mx: "auto",
-            px: { md: 7, lg: 9 },
+            px: { xs: 0, md: 4, lg: 5 },
+            pt: { xs: 0.5, md: 2, lg: 3 },
+            pb: { xs: 2.5, md: 2 },
           }}
         >
           <Button
@@ -166,19 +105,19 @@ export default function HomeClient() {
             aria-label="Poprzedni slajd"
             sx={{
               position: "absolute",
-              left: 0,
+              left: { md: -30, lg: -38 },
               top: "50%",
               transform: "translateY(-50%)",
-              minWidth: 42,
-              width: 42,
-              height: 42,
-              borderRadius: "50%",
-              color: colors.text,
               zIndex: 3,
               display: { xs: "none", md: "inline-flex" },
+              ...heroArrowSx,
+              "&:hover": {
+                ...heroArrowSx["&:hover"],
+                transform: "translateY(-50%) scale(1.02)",
+              },
             }}
           >
-            <ChevronLeftRoundedIcon />
+            <ChevronLeftRoundedIcon sx={{ fontSize: 21 }} />
           </Button>
 
           <Box
@@ -192,7 +131,7 @@ export default function HomeClient() {
               width: "100%",
               maxWidth: { xs: "100%", md: "100%" },
               minWidth: 0,
-              height: { md: 540 },
+              minHeight: { md: 460 },
               mx: { xs: "auto", md: 0 },
               order: { xs: 2, md: 1 },
               animation: heroTextAnimation,
@@ -211,10 +150,26 @@ export default function HomeClient() {
           >
             <Typography
               sx={{
+                mb: { xs: 1.2, md: 1.4 },
+                color: colors.accent,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+              }}
+            >
+              Eye Optic - precyzja, ergonomia, komfort
+            </Typography>
+
+            <Typography
+              sx={{
                 fontWeight: 800,
                 letterSpacing: "-0.04em",
                 lineHeight: { xs: 1.02, md: 0.95 },
-                fontSize: { xs: "clamp(2rem, 8vw, 4rem)", md: "clamp(2.8rem, 4.4vw, 4rem)" },
+                fontSize: {
+                  xs: "clamp(2.2rem, 8.6vw, 4.2rem)",
+                  md: "clamp(3.1rem, 4.9vw, 4.5rem)",
+                },
                 color: colors.text,
                 whiteSpace: { xs: "normal", md: "nowrap" },
                 maxWidth: "none",
@@ -226,33 +181,40 @@ export default function HomeClient() {
 
             <Typography
               sx={{
-                mt: { xs: 1.8, md: 1.1 },
-                fontSize: { xs: 14, sm: 15, md: 16 },
+                mt: { xs: 1.5, md: 1.4 },
+                fontSize: { xs: 15, sm: 16, md: 18 },
                 fontWeight: 400,
-                lineHeight: 1.7,
+                lineHeight: 1.65,
                 color: colors.textSoft,
                 maxWidth: { xs: "100%", md: "34ch" },
-                minHeight: { md: 86 },
+                minHeight: { md: 84 },
               }}
             >
               {activeHero.subtitle}
             </Typography>
 
-            <Box sx={{ mt: 3, width: { xs: "100%", sm: "auto" } }}>
+            <Box sx={{ mt: { xs: 2.5, md: 2.4 }, width: { xs: "100%", sm: "auto" } }}>
               <Button
                 component={NextLink}
                 href={activeHero.href}
                 variant="contained"
                 disableElevation
                 sx={{
-                  borderRadius: 1.5,
-                  fontWeight: 800,
-                  lineHeight: 1.1,
-                  px: 3.2,
-                  py: 1.2,
+                  borderRadius: 3.5,
+                  backgroundColor: colors.accent,
+                  color: colors.white,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  lineHeight: 1,
+                  minHeight: 56,
+                  px: 3.75,
+                  py: 0,
                   textTransform: "none",
                   width: { xs: "100%", sm: "auto" },
-                  maxWidth: { xs: 320, sm: "none" },
+                  minWidth: { xs: "100%", sm: 250 },
+                  maxWidth: { xs: 360, sm: "none" },
+                  whiteSpace: "nowrap",
+                  "&:hover": { backgroundColor: colors.accent },
                 }}
               >
                 {activeHero.buttonLabel}
@@ -265,23 +227,24 @@ export default function HomeClient() {
               width: "100%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: { xs: "center", md: "flex-end" },
+              justifyContent: { xs: "center", md: "center" },
               alignItems: "center",
               order: { xs: 1, md: 2 },
               position: "relative",
+              pr: { md: 1, lg: 1.5 },
             }}
           >
             <Box
               key={`hero-image-frame-${heroIndex}`}
               sx={{
                 width: "100%",
-                maxWidth: { xs: 360, sm: 560, md: 1100 },
+                maxWidth: { xs: 380, sm: 620, md: 1320 },
                 aspectRatio: { xs: "4 / 3", sm: "16 / 10" },
-                height: { md: 540 },
+                height: { md: 580 },
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                px: { xs: 1, sm: 2, md: 3 },
+                px: { xs: 1, sm: 2, md: 0.5 },
                 py: { xs: 1, sm: 1.5, md: 2 },
                 animation: heroImageAnimation,
                 "@keyframes heroImageIn": {
@@ -302,12 +265,19 @@ export default function HomeClient() {
                 alt={activeHero.title}
                 sx={{
                   width: { xs: "100%", md: "auto" },
-                  height: { xs: "100%", md: "92%" },
-                  maxWidth: "100%",
+                  height: {
+                    xs: "100%",
+                    md: activeHeroImageLayout.desktopHeight ?? "88%",
+                  },
+                  maxWidth: {
+                    xs: "100%",
+                    md: activeHeroImageLayout.desktopMaxWidth ?? "96%",
+                  },
                   maxHeight: "100%",
                   display: "block",
                   objectFit: "contain",
-                  objectPosition: "center",
+                  objectPosition:
+                    activeHeroImageLayout.objectPosition ?? "center center",
                 }}
               />
             </Box>
@@ -325,32 +295,38 @@ export default function HomeClient() {
                 onClick={prevHero}
                 aria-label="Poprzedni slajd"
                 sx={{
+                  ...heroArrowSx,
                   minWidth: 42,
                   width: 42,
                   height: 42,
-                  borderRadius: "50%",
-                  color: colors.text,
-                  border: `1px solid ${colors.border}`,
-                  backgroundColor: colors.surface,
+                  backgroundColor: "rgba(255,255,255,0.56)",
+                  boxShadow: "0 8px 18px rgba(15,23,42,0.05)",
+                  "&:hover": {
+                    ...heroArrowSx["&:hover"],
+                    transform: "translateY(-1px)",
+                  },
                 }}
               >
-                <ChevronLeftRoundedIcon />
+                <ChevronLeftRoundedIcon sx={{ fontSize: 20 }} />
               </Button>
 
               <Button
                 onClick={nextHero}
                 aria-label="Następny slajd"
                 sx={{
+                  ...heroArrowSx,
                   minWidth: 42,
                   width: 42,
                   height: 42,
-                  borderRadius: "50%",
-                  color: colors.text,
-                  border: `1px solid ${colors.border}`,
-                  backgroundColor: colors.surface,
+                  backgroundColor: "rgba(255,255,255,0.56)",
+                  boxShadow: "0 8px 18px rgba(15,23,42,0.05)",
+                  "&:hover": {
+                    ...heroArrowSx["&:hover"],
+                    transform: "translateY(-1px)",
+                  },
                 }}
               >
-                <ChevronRightRoundedIcon />
+                <ChevronRightRoundedIcon sx={{ fontSize: 20 }} />
               </Button>
             </Box>
           </Box>
@@ -360,241 +336,241 @@ export default function HomeClient() {
             aria-label="Następny slajd"
             sx={{
               position: "absolute",
-              right: 0,
+              right: { md: -30, lg: -38 },
               top: "50%",
               transform: "translateY(-50%)",
-              minWidth: 42,
-              width: 42,
-              height: 42,
-              borderRadius: "50%",
-              color: colors.text,
               zIndex: 3,
               display: { xs: "none", md: "inline-flex" },
+              ...heroArrowSx,
+              "&:hover": {
+                ...heroArrowSx["&:hover"],
+                transform: "translateY(-50%) scale(1.02)",
+              },
             }}
           >
-            <ChevronRightRoundedIcon />
+            <ChevronRightRoundedIcon sx={{ fontSize: 21 }} />
           </Button>
         </Box>
 
-        <Box sx={{ maxWidth: 1200, mx: "auto" }}>
+        <Box sx={{ maxWidth: 1260, mx: "auto" }}>
           <RevealSection>
-          {/* WHY */}
-          <Box sx={{ mt: 7 }}>
-            <SectionEyebrow>Korzyści</SectionEyebrow>
+            {/* WHY */}
+            <Box sx={{ mt: 7 }}>
+              <SectionEyebrow>Korzyści</SectionEyebrow>
 
-            <Typography
-              sx={{
-                fontSize: { xs: 28, md: 40 },
-                fontWeight: 800,
-                lineHeight: 1.08,
-                letterSpacing: "-0.02em",
-                color: colors.text,
-                maxWidth: { xs: "100%", md: "18ch" },
-              }}
-            >
-              {home.why.heading}
-            </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: 28, md: 40 },
+                  fontWeight: 800,
+                  lineHeight: 1.08,
+                  letterSpacing: "-0.02em",
+                  color: colors.text,
+                  maxWidth: { xs: "100%", md: "18ch" },
+                }}
+              >
+                {home.why.heading}
+              </Typography>
 
-            <Box
-              sx={{
-                mt: 3,
-                display: "grid",
-                gap: 1.5,
-                gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-              }}
-            >
-              {home.why.tiles.map((t) => (
-                <GlassTile key={t} text={t} />
-              ))}
+              <Box
+                sx={{
+                  mt: 3,
+                  display: "grid",
+                  gap: 1.5,
+                  gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+                }}
+              >
+                {home.why.tiles.map((t) => (
+                  <GlassTile key={t} text={t} />
+                ))}
+              </Box>
             </Box>
-          </Box>
           </RevealSection>
 
           <RevealSection delay={90}>
-          {/* PROCESS */}
-          <Box sx={{ mt: 7 }}>
-            <SectionEyebrow>Proces doboru</SectionEyebrow>
+            {/* PROCESS */}
+            <Box sx={{ mt: 7 }}>
+              <SectionEyebrow>Proces doboru</SectionEyebrow>
 
-            <Typography
-              sx={{
-                fontSize: { xs: 24, md: 34 },
-                fontWeight: 800,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
-                color: colors.text,
-              }}
-            >
-              {home.process.heading}
-            </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: 24, md: 34 },
+                  fontWeight: 800,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                  color: colors.text,
+                }}
+              >
+                {home.process.heading}
+              </Typography>
 
-            <Typography
-              sx={{
-                mt: 1.5,
-                color: colors.textSoft,
-                fontSize: 15,
-                fontWeight: 400,
-                maxWidth: { xs: "100%", md: 760 },
-                lineHeight: 1.75,
-              }}
-            >
-              {home.process.text}
-            </Typography>
+              <Typography
+                sx={{
+                  mt: 1.5,
+                  color: colors.textSoft,
+                  fontSize: 15,
+                  fontWeight: 400,
+                  maxWidth: { xs: "100%", md: 760 },
+                  lineHeight: 1.75,
+                }}
+              >
+                {home.process.text}
+              </Typography>
 
-            <Box
-              sx={{
-                mt: 3,
-                display: "grid",
-                gap: 1.5,
-                gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
-              }}
-            >
-              {home.process.steps.map((step) => (
-                <StepCard
-                  key={step.n}
-                  n={step.n}
-                  title={step.title}
-                  desc={step.desc}
-                />
-              ))}
+              <Box
+                sx={{
+                  mt: 3,
+                  display: "grid",
+                  gap: 1.5,
+                  gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+                }}
+              >
+                {home.process.steps.map((step) => (
+                  <StepCard
+                    key={step.n}
+                    n={step.n}
+                    title={step.title}
+                    desc={step.desc}
+                  />
+                ))}
+              </Box>
             </Box>
-          </Box>
           </RevealSection>
 
           <RevealSection delay={140}>
-          {/* COMPARE */}
-          <Box sx={{ mt: 7 }}>
-            <SectionEyebrow>Porównanie systemów</SectionEyebrow>
+            {/* COMPARE */}
+            <Box sx={{ mt: 7 }}>
+              <SectionEyebrow>Porównanie systemów</SectionEyebrow>
 
-            <Typography
-              sx={{
-                fontSize: { xs: 24, md: 34 },
-                fontWeight: 800,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
-                color: colors.text,
-                maxWidth: { xs: "100%", md: "24ch" },
-              }}
-            >
-              {home.compare.heading}
-            </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: 24, md: 34 },
+                  fontWeight: 800,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                  color: colors.text,
+                  maxWidth: { xs: "100%", md: "24ch" },
+                }}
+              >
+                {home.compare.heading}
+              </Typography>
 
-            <Box
-              sx={{
-                mt: 2,
-                borderRadius: 3,
-                overflow: "hidden",
-                border: `1px solid ${colors.border}`,
-                boxShadow: colors.shadowSm,
-                backgroundColor: colors.surface,
-              }}
-            >
-              {home.compare.rows.map((r, idx) => (
-                <Box key={r.left}>
+              <Box
+                sx={{
+                  mt: 2,
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  border: `1px solid ${colors.border}`,
+                  boxShadow: colors.shadowSm,
+                  backgroundColor: colors.surface,
+                }}
+              >
+                {home.compare.rows.map((r, idx) => (
+                  <Box key={r.left}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 2,
+                        px: { xs: 2, md: 2.5 },
+                        py: { xs: 1.6, md: 1.9 },
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: colors.textSoft,
+                          fontWeight: 600,
+                          fontSize: 15,
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {r.left}
+                      </Typography>
+                      <WinnerPill label={r.right} />
+                    </Box>
+
+                    {idx !== home.compare.rows.length - 1 && (
+                      <Divider sx={{ borderColor: "rgba(15,23,42,0.08)" }} />
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </RevealSection>
+
+          <RevealSection delay={180}>
+            {/* FAQ */}
+            <Box sx={{ mt: 7 }}>
+              <SectionEyebrow>Najczęstsze pytania</SectionEyebrow>
+
+              <Typography
+                sx={{
+                  fontSize: { xs: 24, md: 34 },
+                  fontWeight: 800,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                  color: colors.text,
+                }}
+              >
+                {home.faqPreview.heading}
+              </Typography>
+
+              <Box sx={{ mt: 2, display: "grid", gap: 1.5 }}>
+                {home.faqPreview.items.map((it) => (
                   <Box
+                    key={it.q}
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 2,
-                      px: { xs: 2, md: 2.5 },
-                      py: { xs: 1.6, md: 1.9 },
+                      borderRadius: 3,
+                      p: 2.5,
+                      backgroundColor: colors.surface,
+                      border: `1px solid ${colors.border}`,
+                      boxShadow: colors.shadowSm,
                     }}
                   >
                     <Typography
                       sx={{
-                        color: colors.textSoft,
-                        fontWeight: 600,
-                        fontSize: 15,
+                        fontWeight: 700,
+                        fontSize: { xs: 16, md: 17 },
                         lineHeight: 1.35,
+                        color: colors.text,
                       }}
                     >
-                      {r.left}
+                      {it.q}
                     </Typography>
-                    <WinnerPill label={r.right} />
+
+                    <Typography
+                      sx={{
+                        mt: 1,
+                        color: colors.textSoft,
+                        fontSize: 15,
+                        fontWeight: 400,
+                        lineHeight: 1.75,
+                      }}
+                    >
+                      {it.a}
+                    </Typography>
                   </Box>
+                ))}
+              </Box>
 
-                  {idx !== home.compare.rows.length - 1 && (
-                    <Divider sx={{ borderColor: "rgba(15,23,42,0.08)" }} />
-                  )}
-                </Box>
-              ))}
+              <Link
+                component={NextLink}
+                href={home.faqPreview.moreHref}
+                underline="none"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mt: 2.5,
+                  color: colors.accent,
+                  fontWeight: 800,
+                  lineHeight: 1.1,
+                }}
+              >
+                {home.faqPreview.moreLabel}
+                <NorthEastRoundedIcon sx={{ fontSize: 18 }} />
+              </Link>
             </Box>
-          </Box>
-          </RevealSection>
-
-          <RevealSection delay={180}>
-          {/* FAQ */}
-          <Box sx={{ mt: 7 }}>
-            <SectionEyebrow>Najczęstsze pytania</SectionEyebrow>
-
-            <Typography
-              sx={{
-                fontSize: { xs: 24, md: 34 },
-                fontWeight: 800,
-                lineHeight: 1.1,
-                letterSpacing: "-0.02em",
-                color: colors.text,
-              }}
-            >
-              {home.faqPreview.heading}
-            </Typography>
-
-            <Box sx={{ mt: 2, display: "grid", gap: 1.5 }}>
-              {home.faqPreview.items.map((it) => (
-                <Box
-                  key={it.q}
-                  sx={{
-                    borderRadius: 3,
-                    p: 2.5,
-                    backgroundColor: colors.surface,
-                    border: `1px solid ${colors.border}`,
-                    boxShadow: colors.shadowSm,
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: { xs: 16, md: 17 },
-                      lineHeight: 1.35,
-                      color: colors.text,
-                    }}
-                  >
-                    {it.q}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      mt: 1,
-                      color: colors.textSoft,
-                      fontSize: 15,
-                      fontWeight: 400,
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    {it.a}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            <Link
-              component={NextLink}
-              href={home.faqPreview.moreHref}
-              underline="none"
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 1,
-                mt: 2.5,
-                color: colors.accent,
-                fontWeight: 800,
-                lineHeight: 1.1,
-              }}
-            >
-              {home.faqPreview.moreLabel}
-              <NorthEastRoundedIcon sx={{ fontSize: 18 }} />
-            </Link>
-          </Box>
           </RevealSection>
         </Box>
 
@@ -636,7 +612,7 @@ function RevealSection({ children, delay = 0 }) {
       {
         threshold: 0.18,
         rootMargin: "0px 0px -10% 0px",
-      }
+      },
     );
 
     observer.observe(el);

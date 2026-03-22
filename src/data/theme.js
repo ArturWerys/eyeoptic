@@ -21,6 +21,13 @@ const theme = createTheme({
   },
   shape: { borderRadius: 8 },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        maxWidthLg: {
+          maxWidth: "1280px !important",
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
