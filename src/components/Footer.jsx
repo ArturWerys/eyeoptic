@@ -14,10 +14,14 @@ export default function Footer() {
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 } }}>
         <Box
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 4,
-            justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, minmax(0, 1fr))",
+              md: "1.2fr 1fr 1.2fr",
+            },
+            gap: { xs: 4, md: 5 },
+            alignItems: "start",
           }}
         >
           <Box>
@@ -56,37 +60,39 @@ export default function Footer() {
             >
               Kontakt
             </Typography>
-            <Typography sx={{ mt: 1.5, color: colors.textSoft, fontSize: 13 }}>
-              <Link
-                href={`mailto:${contact.email}`}
-                underline="hover"
-                sx={{ color: colors.textSoft }}
+            <Box
+              sx={{
+                mt: 1.5,
+                display: "grid",
+                gap: 1,
+                maxWidth: 360,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: colors.text,
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
               >
+                {contact.owner}
+              </Typography>
+              <FooterContactLink href={`mailto:${contact.email}`}>
                 {contact.email}
-              </Link>
-            </Typography>
-            <Typography sx={{ mt: 0.5, color: colors.textSoft, fontSize: 13 }}>
-              <Link
-                href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                underline="hover"
-                sx={{ color: colors.textSoft }}
-              >
+              </FooterContactLink>
+              <FooterContactLink href={`tel:${contact.phone.replace(/\s/g, "")}`}>
                 {contact.phone}
-              </Link>
-            </Typography>
-            <Typography sx={{ mt: 0.5, color: colors.textSoft, fontSize: 13 }}>
-              <Link
+              </FooterContactLink>
+              <FooterContactLink
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                   contact.address,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                underline="hover"
-                sx={{ color: colors.textSoft }}
               >
                 {contact.address}
-              </Link>
-            </Typography>
+              </FooterContactLink>
+            </Box>
           </Box>
         </Box>
 
@@ -127,6 +133,25 @@ function FooterLink({ href, children }) {
         "&:hover": { color: colors.text, textDecoration: "underline" },
         textDecorationColor: colors.border,
       }}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function FooterContactLink({ children, ...props }) {
+  return (
+    <Link
+      underline="hover"
+      sx={{
+        color: colors.textSoft,
+        fontSize: 13,
+        lineHeight: 1.7,
+        textDecorationColor: colors.border,
+        textUnderlineOffset: 3,
+        "&:hover": { color: colors.text },
+      }}
+      {...props}
     >
       {children}
     </Link>

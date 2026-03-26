@@ -34,10 +34,9 @@ export default function NavbarPill() {
         right: 0,
         zIndex: 1100,
 
-        pt: { xs: 2, md: 3 },
-        px: { xs: 2, md: 3 },
-
-        pb: { xs: open ? 3 : 2, md: 1 },
+        pt: { xs: 1, md: 3 },
+        px: { xs: 1.25, md: 3 },
+        pb: { xs: open ? 2 : 1, md: 1 },
         backgroundColor: "rgba(0,0,0,0)",
         backdropFilter: "blur(15px)",
       }}
@@ -58,14 +57,21 @@ export default function NavbarPill() {
           sx={{
             textDecoration: "none",
             borderRadius: 3,
-            px: 2.5,
-            py: 1.6,
+            px: { xs: 1.75, md: 2.5 },
+            py: { xs: 1.1, md: 1.6 },
             backgroundColor: colors.surface,
             border: `1px solid ${colors.border}`,
             boxShadow: colors.shadow,
           }}
         >
-          <Typography sx={{ fontWeight: 900, color: colors.text }}>
+          <Typography
+            sx={{
+              fontWeight: 900,
+              color: colors.text,
+              fontSize: { xs: 14, md: 16 },
+              lineHeight: 1,
+            }}
+          >
             {contact.brand}
           </Typography>
         </Box>
@@ -74,8 +80,8 @@ export default function NavbarPill() {
           sx={{
             flex: 1,
             borderRadius: 3,
-            px: 1.2,
-            py: 1.1,
+            px: { xs: 0.75, md: 1.2 },
+            py: { xs: 0.65, md: 1.1 },
             backgroundColor: colors.surface,
             border: `1px solid ${colors.border}`,
             display: "flex",
@@ -137,10 +143,18 @@ export default function NavbarPill() {
 
           {/* Right controls */}
           <Box
-            sx={{ display: "flex", alignItems: "center", gap: 1.2, ml: "auto" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: { xs: 0.55, md: 1.2 },
+              ml: "auto",
+            }}
           >
             <IconButton
-              sx={{ display: { xs: "inline-flex", lg: "none" } }}
+              sx={{
+                display: { xs: "inline-flex", lg: "none" },
+                p: { xs: 0.85, md: 1.25 },
+              }}
               aria-label="Otwórz menu"
               onClick={() => setOpen((v) => !v)}
             >
@@ -153,6 +167,7 @@ export default function NavbarPill() {
                 borderRadius: 3,
                 backgroundColor: colors.pillBg,
                 color: colors.text,
+                p: { xs: 0.85, md: 1.25 },
                 "&:hover": { backgroundColor: colors.pillHover },
               }}
               aria-label="Napisz maila"
@@ -166,6 +181,7 @@ export default function NavbarPill() {
                 borderRadius: 3,
                 backgroundColor: colors.pillBg,
                 color: colors.text,
+                p: { xs: 0.85, md: 1.25 },
                 "&:hover": { backgroundColor: colors.pillHover },
               }}
               aria-label="Zadzwoń"
@@ -179,12 +195,16 @@ export default function NavbarPill() {
               variant="contained"
               disableElevation
               sx={{
-                borderRadius: 3,
+                borderRadius: 2.6,
                 backgroundColor: colors.accent,
                 color: colors.white,
-                fontWeight: 900,
-                px: 3,
-                py: 1.25,
+                fontWeight: 800,
+                fontSize: { xs: 13.5, md: 15 },
+                lineHeight: 1,
+                minHeight: { xs: 38, md: 46 },
+                px: { xs: 2.05, md: 3.1 },
+                py: 0,
+                boxShadow: "0 6px 12px rgba(15,23,42,0.08)",
                 "&:hover": { backgroundColor: colors.accent },
               }}
             >

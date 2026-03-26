@@ -51,11 +51,11 @@ const content = {
           },
         },
         {
-          title: "Lupy Ergo Flip-Up",
+          title: "Lupy Ergo",
           subtitle:
             "Większy komfort pracy, ergonomia i swoboda ustawienia dopasowana do użytkownika.",
           href: "/products/flipUp",
-          buttonLabel: "Poznaj lupy Ergo Flip-Up",
+          buttonLabel: "Poznaj lupy Ergo",
           img: "/images/home_page/ergo-flip-up.png",
           imageLayout: {
             desktopHeight: "88%",
@@ -94,6 +94,21 @@ const content = {
         "Mniejsze obciążenie odcinka szyjnego i lędźwiowego",
         "Stabilna praca w powiększeniu",
       ],
+    },
+
+    about: {
+      heading: "O nas",
+      title:
+        "Eye Optic to marka stworzona przez specjalistow z ponad dwudziestoletnim doswiadczeniem w technologiach dla stomatologii.",
+      text:
+        "Bogate doswiadczenie w dziedzinie optyki zabiegowej pozwolilo nam stworzyc linie produktow laczacych wysoka jakosc z atrakcyjna cena. Lupy stomatologiczne oraz systemy oswietlenia Eye Optic spelniaja rygorystyczne normy dla wyrobow medycznych. Kazdy produkt przed dostarczeniem do klienta przechodzi indywidualna kontrole jakosci, aby zapewnic maksymalny komfort pracy oraz bezpieczenstwo podczas zabiegow.",
+      points: [
+        "Rozwiazania Eye Optic sa kompatybilne z produktami innych producentow dostepnych na rynku.",
+        "Nasze systemy charakteryzuja sie latwa konfiguracja, intuicyjna obsluga oraz trwaloscia w codziennym uzytkowaniu.",
+        "Naszym celem jest, aby kazdy zabieg z wykorzystaniem lup i oswietlenia Eye Optic wyroznial sie komfortem, ergonomia i najwyzsza efektywnoscia.",
+      ],
+      note:
+        "Nasza misja jest przyczyniac sie do sukcesow klinicznych naszych klientow. Poczuj roznice z Eye Optic.",
     },
 
     products: {
