@@ -21,6 +21,34 @@ import content from "@/data/content";
 import NavbarPill from "@/components/NavbarPill";
 import Footer from "@/components/Footer";
 
+import CenterFocusStrongRoundedIcon from "@mui/icons-material/CenterFocusStrongRounded";
+import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded";
+import AccessibilityNewRoundedIcon from "@mui/icons-material/AccessibilityNewRounded";
+import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
+
+const benefitCards = [
+  {
+    icon: CenterFocusStrongRoundedIcon,
+    title: "Maksymalna kontrola pola zabiegowego",
+    desc: "Lepsza widoczność obszaru pracy i większa pewność podczas precyzyjnych procedur.",
+  },
+  {
+    icon: ZoomInRoundedIcon,
+    title: "Lepsza ocena detali",
+    desc: "Łatwiejsze dostrzeganie szczegółów, struktur i granic podczas codziennej pracy.",
+  },
+  {
+    icon: AccessibilityNewRoundedIcon,
+    title: "Mniejsze obciążenie odcinka szyjnego i lędźwiowego",
+    desc: "Bardziej ergonomiczna pozycja pracy, która pomaga ograniczyć napięcie i zmęczenie.",
+  },
+  {
+    icon: TrackChangesRoundedIcon,
+    title: "Stabilna praca w powiększeniu",
+    desc: "Większa precyzja ruchu i komfort działania nawet podczas dłuższych zabiegów.",
+  },
+];
+
 const sectionHeadingSx = {
   fontSize: { xs: 28, md: 40 },
   fontWeight: 800,
@@ -171,7 +199,7 @@ export default function HomeClient() {
         <Box
           sx={{
             minHeight: {
-              xs: "calc(100svh - 76px)",
+              xs: "calc(100svh - 92px)",
               md: "calc(100svh - 118px)",
             },
             display: "grid",
@@ -182,8 +210,8 @@ export default function HomeClient() {
             width: "100%",
             mx: "auto",
             px: { xs: 0.5, md: 4, lg: 5 },
-            pt: { xs: 0, md: 2, lg: 3 },
-            pb: { xs: 0.6, md: 2 },
+            pt: { xs: 1.2, md: 2, lg: 3 },
+            pb: { xs: 0.1, md: 2 },
           }}
         >
           <Button
@@ -218,6 +246,7 @@ export default function HomeClient() {
               maxWidth: { xs: "100%", md: "100%" },
               minWidth: 0,
               minHeight: { md: 460 },
+              mt: { xs: -10, md: 0 },
               mx: { xs: "auto", md: 0 },
               order: { xs: 2, md: 1 },
               animation: heroTextAnimation,
@@ -259,7 +288,31 @@ export default function HomeClient() {
                 display: { xs: "none", md: "block" },
               }}
             >
-              Eye Optic - precyzja, ergonomia, komfort
+              <>
+                Precyzja
+                <Box
+                  component="span"
+                  sx={{
+                    mx: 0.65,
+                    fontSize: { xs: "1.22em", md: "1.42em" },
+                    lineHeight: 0,
+                  }}
+                >
+                  ·
+                </Box>
+                Ergonomia
+                <Box
+                  component="span"
+                  sx={{
+                    mx: 0.65,
+                    fontSize: { xs: "1.22em", md: "1.42em" },
+                    lineHeight: 0,
+                  }}
+                >
+                  ·
+                </Box>
+                Komfort
+              </>
             </Typography>
 
             <Typography
@@ -283,7 +336,7 @@ export default function HomeClient() {
 
             <Typography
               sx={{
-                mt: { xs: -12, md: 1.4 },
+                mt: { xs: -8.2, md: 1.4 },
                 fontSize: { xs: 15, sm: 16, md: 18 },
                 fontWeight: 400,
                 lineHeight: 1.6,
@@ -302,7 +355,7 @@ export default function HomeClient() {
 
             <Box
               sx={{
-                mt: { xs: 1.95, md: 2.4 },
+                mt: { xs: 1.9, md: 2.4 },
                 width: { xs: "100%", sm: "auto" },
                 display: "flex",
                 justifyContent: { xs: "center", md: "flex-start" },
@@ -341,18 +394,18 @@ export default function HomeClient() {
 
             <Box
               sx={{
-                mt: 1.55,
+                mt: 1.2,
                 display: { xs: "flex", md: "none" },
                 alignSelf: { xs: "center", md: "auto" },
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 0.55,
-                px: 0.45,
-                py: 0.38,
+                gap: 0.8,
+                px: 0.55,
+                py: 0.42,
                 borderRadius: 999,
-                backgroundColor: "rgba(255,255,255,0.26)",
-                border: "1px solid rgba(15,23,42,0.04)",
-                boxShadow: "0 3px 10px rgba(15,23,42,0.02)",
+                backgroundColor: "rgba(255,255,255,0.34)",
+                border: "1px solid rgba(15,23,42,0.05)",
+                boxShadow: "0 4px 14px rgba(15,23,42,0.03)",
                 backdropFilter: "blur(8px)",
               }}
             >
@@ -360,9 +413,9 @@ export default function HomeClient() {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 0.5,
+                  gap: 0.7,
                   justifyContent: "center",
-                  px: 0.2,
+                  px: 0.28,
                   width: "100%",
                 }}
               >
@@ -374,17 +427,17 @@ export default function HomeClient() {
                     }
                     sx={{
                       cursor: "pointer",
-                      width: index === heroIndex ? 18 : 7,
-                      height: 7,
+                      width: index === heroIndex ? 24 : 9,
+                      height: 9,
                       borderRadius: 999,
                       backgroundColor:
                         index === heroIndex
-                          ? "rgba(14,165,164,0.72)"
-                          : "rgba(15,23,42,0.09)",
+                          ? "rgba(14,165,164,0.84)"
+                          : "rgba(15,23,42,0.15)",
                       transition:
                         "width 220ms ease, background-color 220ms ease, transform 220ms ease",
                       transform:
-                        index === heroIndex ? "scale(1)" : "scale(0.94)",
+                        index === heroIndex ? "scale(1)" : "scale(0.96)",
                     }}
                   />
                 ))}
@@ -409,7 +462,7 @@ export default function HomeClient() {
           >
             <Typography
               sx={{
-                mt: { xs: 7.5, sm: 2.25, md: 0 },
+                mt: { xs: 5.9, sm: 1.6, md: 0 },
                 display: { xs: "block", md: "none" },
                 color: colors.accent,
                 fontSize: 12,
@@ -417,16 +470,47 @@ export default function HomeClient() {
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 textAlign: "center",
+                position: "relative",
+                zIndex: 2,
+                transform: {
+                  xs: "translateY(7px)",
+                  sm: "translateY(4px)",
+                  md: "none",
+                },
               }}
             >
-              Eye Optic - precyzja, ergonomia, komfort
+              <>
+                Precyzja
+                <Box
+                  component="span"
+                  sx={{
+                    mx: 0.6,
+                    fontSize: { xs: "1.22em", md: "1.38em" },
+                    lineHeight: 0,
+                  }}
+                >
+                  ·
+                </Box>
+                Ergonomia
+                <Box
+                  component="span"
+                  sx={{
+                    mx: 0.6,
+                    fontSize: { xs: "1.22em", md: "1.38em" },
+                    lineHeight: 0,
+                  }}
+                >
+                  ·
+                </Box>
+                Komfort
+              </>
             </Typography>
 
             <Typography
               sx={{
                 display: { xs: "block", md: "none" },
-                mt: 1.35,
-                mb: -1.2,
+                mt: 1.95,
+                mb: -0.7,
                 fontWeight: 800,
                 letterSpacing: "-0.04em",
                 lineHeight: 0.96,
@@ -446,7 +530,7 @@ export default function HomeClient() {
             <Box
               key={`hero-image-frame-${heroIndex}`}
               sx={{
-                mt: { xs: -0.75, md: 0 },
+                mt: { xs: -0.35, md: 0 },
                 width: "100%",
                 maxWidth: { xs: 570, sm: 620, md: 1320 },
                 aspectRatio: { xs: "4 / 3", sm: "16 / 10" },
@@ -537,8 +621,10 @@ export default function HomeClient() {
           </Button>
         </Box>
 
-        <Box sx={{ maxWidth: 1260, mx: "auto", mt: { xs: -15, sm: 4, md: 0 } }}>
-          <RevealSection delay={0}>
+        <Box
+          sx={{ maxWidth: 1260, mx: "auto", mt: { xs: -18, sm: 3.2, md: 0 } }}
+        >
+          <RevealSection delay={0} instantOnMobile mobileDelay={280}>
             {/* PROCESS */}
             <Box sx={{ mt: 7 }}>
               <SectionEyebrow>Proces doboru</SectionEyebrow>
@@ -590,10 +676,10 @@ export default function HomeClient() {
               <Typography
                 sx={{
                   ...sectionHeadingSx,
-                  maxWidth: { xs: "100%", md: "18ch" },
+                  maxWidth: { xs: "100%", md: "14ch" },
                 }}
               >
-                {home.why.heading}
+                Co zyskujesz dzięki dobrze dobranym lupom?
               </Typography>
 
               <Box
@@ -604,8 +690,13 @@ export default function HomeClient() {
                   gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
                 }}
               >
-                {home.why.tiles.map((t) => (
-                  <GlassTile key={t} text={t} />
+                {benefitCards.map((item) => (
+                  <BenefitCard
+                    key={item.title}
+                    icon={item.icon}
+                    title={item.title}
+                    desc={item.desc}
+                  />
                 ))}
               </Box>
             </Box>
@@ -869,11 +960,26 @@ function SectionEyebrow({ children }) {
   );
 }
 
-function RevealSection({ children, delay = 0 }) {
+function RevealSection({
+  children,
+  delay = 0,
+  instantOnMobile = false,
+  mobileDelay = 220,
+}) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 899.95px)").matches;
+
+    if (instantOnMobile && isMobile) {
+      const timer = setTimeout(() => {
+        setVisible(true);
+      }, mobileDelay);
+
+      return () => clearTimeout(timer);
+    }
+
     const el = ref.current;
     if (!el) return;
 
@@ -893,7 +999,7 @@ function RevealSection({ children, delay = 0 }) {
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, []);
+  }, [instantOnMobile, mobileDelay]);
 
   return (
     <Box
@@ -1040,6 +1146,70 @@ function AboutStat({ value, title, desc }) {
           ...bodyTextSx,
           fontSize: 14,
           lineHeight: 1.7,
+        }}
+      >
+        {desc}
+      </Typography>
+    </Box>
+  );
+}
+function BenefitCard({ icon: Icon, title, desc }) {
+  return (
+    <Box
+      sx={{
+        borderRadius: 4,
+        p: { xs: 2.4, md: 3 },
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.82) 100%)",
+        border: `1px solid ${colors.border}`,
+        boxShadow: colors.shadowSm,
+        minHeight: { md: 196 },
+        transition:
+          "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: "0 16px 38px rgba(15,23,42,0.07)",
+          borderColor: "rgba(15,23,42,0.09)",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: 48,
+          height: 48,
+          borderRadius: 2.5,
+          backgroundColor: colors.accentSoft,
+          color: colors.accent,
+          display: "grid",
+          placeItems: "center",
+          boxShadow: "inset 0 0 0 1px rgba(14,165,164,0.08)",
+        }}
+      >
+        <Icon sx={{ fontSize: 24 }} />
+      </Box>
+
+      <Typography
+        sx={{
+          mt: 2,
+          color: colors.text,
+          fontWeight: 800,
+          fontSize: { xs: 18, md: 20 },
+          lineHeight: 1.2,
+          letterSpacing: "-0.02em",
+          maxWidth: { xs: "100%", md: "24ch" },
+        }}
+      >
+        {title}
+      </Typography>
+
+      <Typography
+        sx={{
+          mt: 1.1,
+          color: colors.textSoft,
+          fontSize: 15,
+          fontWeight: 400,
+          lineHeight: 1.7,
+          maxWidth: { xs: "100%", md: "42ch" },
         }}
       >
         {desc}

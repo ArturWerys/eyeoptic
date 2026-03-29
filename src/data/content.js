@@ -4,7 +4,6 @@ const content = {
     { href: "/products/flipUp", label: "Lupy Flip-Up" },
     { href: "/products/led", label: "Oświetlenie LED" },
     { href: "/products/accessories", label: "Akcesoria" },
-    { href: "/faq", label: "FAQ" },
     { href: "/contact", label: "Kontakt" },
   ],
 
@@ -195,8 +194,8 @@ const content = {
         },
       ],
 
-      moreHref: "/faq",
-      moreLabel: "Zobacz pełne FAQ",
+      moreHref: "/contact",
+      moreLabel: "Masz inne pytanie? Skontaktuj się z nami",
     },
 
     contact: {

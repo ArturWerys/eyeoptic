@@ -1,26 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { Box, Button, IconButton, Link, Typography } from "@mui/material";
-import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import Collapse from "@mui/material/Collapse";
+import { Box, Button, Collapse, Divider, IconButton, Link } from "@mui/material";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 import colors from "@/data/colors";
-import content from "@/data/content";
 import contact from "@/data/contact_info.json";
-import { useState, useEffect, use } from "react";
-import { useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import content from "@/data/content";
 
 export default function NavbarPill() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navItems =
+    pathname === "/"
+      ? content.nav
+      : [{ href: "/", label: "Strona główna" }, ...content.nav];
+
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -33,7 +33,6 @@ export default function NavbarPill() {
         left: 0,
         right: 0,
         zIndex: 1100,
-
         pt: { xs: 1, md: 3 },
         px: { xs: 1.25, md: 3 },
         pb: { xs: open ? 2 : 1, md: 1 },
@@ -45,49 +44,53 @@ export default function NavbarPill() {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 2,
+          justifyContent: "space-between",
+          gap: { xs: 1, md: 2 },
+          width: "100%",
           maxWidth: 1440,
           mx: "auto",
+          px: { xs: 1.1, md: 1.4 },
+          py: { xs: 0.58, md: 0.82 },
+          borderRadius: 3,
+          backgroundColor: colors.surface,
+          border: `1px solid ${colors.border}`,
+          boxShadow: colors.shadow,
         }}
       >
-        {/* Brand */}
         <Box
           component={NextLink}
           href="/"
           sx={{
             textDecoration: "none",
-            borderRadius: 3,
-            px: { xs: 1.75, md: 2.5 },
-            py: { xs: 1.1, md: 1.6 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            boxShadow: colors.shadow,
+            display: "flex",
+            alignItems: "center",
+            flexShrink: 0,
           }}
         >
-          <Typography
+          <Box
             sx={{
-              fontWeight: 900,
-              color: colors.text,
-              fontSize: { xs: 14, md: 16 },
-              lineHeight: 1,
+              position: "relative",
+              width: { xs: 182, md: 206 },
+              height: { xs: 54, md: 56 },
             }}
           >
-            {contact.brand}
-          </Typography>
+            <Image
+              src="/images/EyeOpticLogo_Smaller.jpeg"
+              alt={contact.brand}
+              fill
+              sizes="(max-width: 900px) 182px, 206px"
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          </Box>
         </Box>
 
         <Box
           sx={{
-            flex: 1,
-            borderRadius: 3,
-            px: { xs: 0.75, md: 1.2 },
-            py: { xs: 0.65, md: 1.1 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            boxShadow: colors.shadow,
+            gap: { xs: 0.42, md: 1.05 },
+            minWidth: 0,
           }}
         >
           <Box
@@ -96,8 +99,9 @@ export default function NavbarPill() {
               gap: 0.5,
             }}
           >
-            {content.nav.map((item) => {
+            {navItems.map((item) => {
               const active = pathname === item.href;
+
               return (
                 <Link
                   key={item.href}
@@ -141,78 +145,78 @@ export default function NavbarPill() {
             })}
           </Box>
 
-          {/* Right controls */}
-          <Box
+          <IconButton
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: { xs: 0.55, md: 1.2 },
-              ml: "auto",
+              display: { xs: "inline-flex", lg: "none" },
+              p: { xs: 0.7, md: 1.05 },
+              borderRadius: 2.5,
+              backgroundColor: colors.pillBg,
+              color: colors.text,
+              "&:hover": { backgroundColor: colors.pillHover },
+            }}
+            aria-label="Otworz menu"
+            onClick={() => setOpen((value) => !value)}
+          >
+            <MenuRoundedIcon />
+          </IconButton>
+
+          <IconButton
+            component="a"
+            href={`mailto:${contact.email}`}
+            sx={{
+              display: { xs: "none", md: "inline-flex" },
+              borderRadius: 3,
+              backgroundColor: colors.pillBg,
+              color: colors.text,
+              p: { xs: 0.85, md: 1.25 },
+              "&:hover": { backgroundColor: colors.pillHover },
+            }}
+            aria-label="Napisz maila"
+          >
+            <MailRoundedIcon />
+          </IconButton>
+
+          <IconButton
+            component="a"
+            href={`tel:${contact.phone.replace(/\s/g, "")}`}
+            sx={{
+              display: { xs: "none", md: "inline-flex" },
+              borderRadius: 3,
+              backgroundColor: colors.pillBg,
+              color: colors.text,
+              p: { xs: 0.85, md: 1.25 },
+              "&:hover": { backgroundColor: colors.pillHover },
+            }}
+            aria-label="Zadzwon"
+          >
+            <PhoneRoundedIcon />
+          </IconButton>
+
+          <Button
+            component={NextLink}
+            href="/contact"
+            variant="contained"
+            disableElevation
+            sx={{
+              borderRadius: 2.6,
+              backgroundColor: colors.accent,
+              color: colors.white,
+              fontWeight: 800,
+              fontSize: { xs: 13.5, md: 15 },
+              lineHeight: 1,
+              minHeight: { xs: 36, md: 44 },
+              px: { xs: 1.7, sm: 2.05, md: 2.7 },
+              py: 0,
+              boxShadow: "0 6px 12px rgba(15,23,42,0.08)",
+              whiteSpace: "nowrap",
+              "&:hover": { backgroundColor: colors.accent },
             }}
           >
-            <IconButton
-              sx={{
-                display: { xs: "inline-flex", lg: "none" },
-                p: { xs: 0.85, md: 1.25 },
-              }}
-              aria-label="Otwórz menu"
-              onClick={() => setOpen((v) => !v)}
-            >
-              <MenuRoundedIcon />
-            </IconButton>
-            <IconButton
-              component="a"
-              href={`mailto:${contact.email}`}
-              sx={{
-                borderRadius: 3,
-                backgroundColor: colors.pillBg,
-                color: colors.text,
-                p: { xs: 0.85, md: 1.25 },
-                "&:hover": { backgroundColor: colors.pillHover },
-              }}
-              aria-label="Napisz maila"
-            >
-              <MailRoundedIcon />
-            </IconButton>
-            <IconButton
-              component="a"
-              href={`tel:${contact.phone.replace(/\s/g, "")}`}
-              sx={{
-                borderRadius: 3,
-                backgroundColor: colors.pillBg,
-                color: colors.text,
-                p: { xs: 0.85, md: 1.25 },
-                "&:hover": { backgroundColor: colors.pillHover },
-              }}
-              aria-label="Zadzwoń"
-            >
-              <PhoneRoundedIcon />
-            </IconButton>
-
-            <Button
-              component={NextLink}
-              href="/contact"
-              variant="contained"
-              disableElevation
-              sx={{
-                borderRadius: 2.6,
-                backgroundColor: colors.accent,
-                color: colors.white,
-                fontWeight: 800,
-                fontSize: { xs: 13.5, md: 15 },
-                lineHeight: 1,
-                minHeight: { xs: 38, md: 46 },
-                px: { xs: 2.05, md: 3.1 },
-                py: 0,
-                boxShadow: "0 6px 12px rgba(15,23,42,0.08)",
-                "&:hover": { backgroundColor: colors.accent },
-              }}
-            >
-              Umów dobór
-            </Button>
-          </Box>
+            Umów dobór
+          </Button>
         </Box>
       </Box>
+
       <Collapse in={open} timeout="auto" unmountOnExit>
         <Box
           sx={{
@@ -228,7 +232,58 @@ export default function NavbarPill() {
             display: { xs: "block", lg: "none" },
           }}
         >
-          {content.nav.map((item) => {
+          <Box
+            sx={{
+              display: "grid",
+              gap: 1,
+              mb: 1.15,
+            }}
+          >
+            <Link
+              href={`tel:${contact.phone.replace(/\s/g, "")}`}
+              underline="none"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.2,
+                py: 1.1,
+                px: 1.2,
+                borderRadius: 2,
+                fontWeight: 800,
+                color: colors.text,
+              }}
+            >
+              <PhoneRoundedIcon sx={{ fontSize: 18 }} />
+              {contact.phone}
+            </Link>
+
+            <Link
+              href={`mailto:${contact.email}`}
+              underline="none"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.2,
+                py: 1.1,
+                px: 1.2,
+                borderRadius: 2,
+                fontWeight: 800,
+                color: colors.text,
+              }}
+            >
+              <MailRoundedIcon sx={{ fontSize: 18 }} />
+              {contact.email}
+            </Link>
+          </Box>
+
+          <Divider
+            sx={{
+              borderColor: colors.border,
+              mb: 1.1,
+            }}
+          />
+
+          {navItems.map((item) => {
             const active = pathname === item.href;
 
             return (
@@ -241,10 +296,11 @@ export default function NavbarPill() {
                 sx={{
                   position: "relative",
                   display: "block",
-                  py: 1.2,
-                  px: 2,
+                  py: 1,
+                  px: 1.8,
                   borderRadius: 2,
-                  fontWeight: 900,
+                  fontWeight: 700,
+                  fontSize: 15,
                   color: active ? colors.text : colors.textSoft,
                   backgroundColor: active ? colors.surfaceAlt : "transparent",
                   "&:hover": { backgroundColor: colors.surfaceAlt },
