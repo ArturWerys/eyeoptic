@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { Box, Button, Collapse, Divider, IconButton, Link } from "@mui/material";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
@@ -15,16 +16,20 @@ import content from "@/data/content";
 
 export default function NavbarPill() {
   const pathname = usePathname();
+  return <NavbarPillContent key={pathname} pathname={pathname} />;
+}
+
+function NavbarPillContent({ pathname }) {
   const [open, setOpen] = useState(false);
-  const navItems =
-    pathname === "/"
+  const isHomePage = pathname === "/";
+  const desktopNavMinWidth = 1160;
+  const wideDesktopNavMinWidth = 1380;
+  const desktopUtilityMinWidth = 1320;
+  const desktopNavItems = content.nav;
+  const mobileNavItems =
+    isHomePage
       ? content.nav
       : [{ href: "/", label: "Strona główna" }, ...content.nav];
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
   return (
     <Box
       sx={{
@@ -34,7 +39,7 @@ export default function NavbarPill() {
         right: 0,
         zIndex: 1100,
         pt: { xs: 1, md: 3 },
-        px: { xs: 1.25, md: 3 },
+        px: { xs: 0.5, sm: 1.25, md: 3 },
         pb: { xs: open ? 2 : 1, md: 1 },
         backgroundColor: "rgba(0,0,0,0)",
         backdropFilter: "blur(15px)",
@@ -45,11 +50,12 @@ export default function NavbarPill() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: { xs: 1, md: 2 },
+          gap: { xs: 0.45, sm: 1, md: 0.34 },
           width: "100%",
           maxWidth: 1440,
           mx: "auto",
-          px: { xs: 1.1, md: 1.4 },
+          pl: { xs: 0.25, sm: 0.75, md: 0 },
+          pr: { xs: 0.45, sm: 1.1, md: 2.05 },
           py: { xs: 0.58, md: 0.82 },
           borderRadius: 3,
           backgroundColor: colors.surface,
@@ -65,17 +71,23 @@ export default function NavbarPill() {
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
+            minWidth: 0,
+            ml: { md: -0.55 },
           }}
         >
           <Box
             sx={{
               position: "relative",
-              width: { xs: 182, md: 206 },
-              height: { xs: 54, md: 56 },
+              width: { xs: 124, sm: 182, md: 206 },
+              height: { xs: 38, sm: 54, md: 56 },
+              "@media (max-width:359.95px)": {
+                width: 108,
+                height: 34,
+              },
             }}
           >
             <Image
-              src="/images/EyeOpticLogo_Smaller.jpeg"
+              src="/images/eye-optic-logo-smaller.jpeg"
               alt={contact.brand}
               fill
               sizes="(max-width: 900px) 182px, 206px"
@@ -89,17 +101,76 @@ export default function NavbarPill() {
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: { xs: 0.42, md: 1.05 },
+            justifyContent: "flex-end",
+            gap: { xs: 0.25, sm: 0.42, md: 0.72 },
+            pl: { md: 0.3 },
             minWidth: 0,
+            flex: 1,
           }}
         >
           <Box
             sx={{
-              display: { xs: "none", lg: "flex" },
-              gap: 0.5,
+              display: "none",
+              [`@media (min-width:${desktopNavMinWidth}px)`]: {
+                display: "flex",
+              },
+              mr: "auto",
+              flexShrink: 0,
+              minWidth: "max-content",
+              gap: 0.24,
+              [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
+                gap: 0.5,
+              },
             }}
           >
-            {navItems.map((item) => {
+            <IconButton
+              component={NextLink}
+              href="/"
+              aria-label="Strona glowna"
+              sx={{
+                alignSelf: "center",
+                borderRadius: 3,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: isHomePage ? colors.surfaceAlt : colors.pillBg,
+                color: isHomePage ? colors.text : colors.textSoft,
+                px: { xs: 1.05, md: 1.45 },
+                py: { xs: 0.85, md: 1.25 },
+                flexShrink: 0,
+                "&:hover": {
+                  backgroundColor: colors.surfaceAlt,
+                  color: colors.text,
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 0.7,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: 999,
+                    backgroundColor: colors.dot,
+                    flex: "0 0 auto",
+                    opacity: isHomePage ? 1 : 0,
+                    [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
+                      width: 8,
+                      height: 8,
+                    },
+                  }}
+                />
+                <HomeRoundedIcon />
+              </Box>
+            </IconButton>
+
+            {desktopNavItems.map((item) => {
               const active = pathname === item.href;
 
               return (
@@ -109,14 +180,25 @@ export default function NavbarPill() {
                   href={item.href}
                   underline="none"
                   sx={{
-                    position: "relative",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: active ? 0.7 : 0,
                     borderRadius: 2.5,
-                    px: 3,
-                    py: 1.2,
-                    fontSize: 14,
+                    px: 2.05,
+                    py: 1,
+                    fontSize: 13,
                     fontWeight: 800,
+                    lineHeight: 1,
+                    whiteSpace: "nowrap",
                     color: active ? colors.text : colors.textSoft,
                     backgroundColor: active ? colors.surfaceAlt : "transparent",
+                    [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
+                      px: 3,
+                      py: 1.2,
+                      fontSize: 14,
+                      gap: active ? 0.8 : 0,
+                    },
                     "&:hover": {
                       backgroundColor: colors.surfaceAlt,
                       color: colors.text,
@@ -126,18 +208,24 @@ export default function NavbarPill() {
                   {active && (
                     <Box
                       sx={{
-                        position: "absolute",
-                        left: 14,
-                        top: "50%",
-                        width: 8,
-                        height: 8,
+                        width: 7,
+                        height: 7,
                         borderRadius: 999,
                         backgroundColor: colors.dot,
-                        transform: "translateY(-50%)",
+                        flex: "0 0 auto",
+                        [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
+                          width: 8,
+                          height: 8,
+                        },
                       }}
                     />
                   )}
-                  <Box component="span" sx={{ pl: active ? 1.6 : 0 }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "block",
+                    }}
+                  >
                     {item.label}
                   </Box>
                 </Link>
@@ -145,26 +233,65 @@ export default function NavbarPill() {
             })}
           </Box>
 
-          <IconButton
+          <Button
+            onClick={() => setOpen((value) => !value)}
+            aria-label="Otworz menu produktow"
+            aria-expanded={open}
             sx={{
-              display: { xs: "inline-flex", lg: "none" },
-              p: { xs: 0.7, md: 1.05 },
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              [`@media (min-width:${desktopNavMinWidth}px)`]: {
+                display: "none",
+              },
+              minWidth: "unset",
+              fontWeight: 800,
+              fontSize: { xs: 10.2, sm: 13.5, md: 14 },
+              lineHeight: 1,
+              letterSpacing: { xs: "-0.02em", md: "normal" },
+              textTransform: "none",
               borderRadius: 2.5,
               backgroundColor: colors.pillBg,
               color: colors.text,
-              "&:hover": { backgroundColor: colors.pillHover },
+              px: { xs: 0.8, sm: 1.15, md: 1.25 },
+              minHeight: { xs: 32, sm: 36, md: 42 },
+              gap: 0.65,
+              py: 0,
+              boxShadow: "none",
+              "&:hover": {
+                backgroundColor: colors.pillHover,
+                boxShadow: "none",
+              },
             }}
-            aria-label="Otworz menu"
-            onClick={() => setOpen((value) => !value)}
           >
-            <MenuRoundedIcon />
-          </IconButton>
+            <MenuRoundedIcon
+              sx={{
+                fontSize: { xs: 18, sm: 20, md: 20 },
+                flex: "0 0 auto",
+              }}
+            />
+            <Box
+              component="span"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                "@media (max-width:359.95px)": {
+                  fontSize: 11.5,
+                },
+              }}
+            >
+              Produkty
+            </Box>
+          </Button>
 
           <IconButton
             component="a"
             href={`mailto:${contact.email}`}
             sx={{
-              display: { xs: "none", md: "inline-flex" },
+              display: "none",
+              [`@media (min-width:${desktopUtilityMinWidth}px)`]: {
+                display: "inline-flex",
+              },
               borderRadius: 3,
               backgroundColor: colors.pillBg,
               color: colors.text,
@@ -180,7 +307,10 @@ export default function NavbarPill() {
             component="a"
             href={`tel:${contact.phone.replace(/\s/g, "")}`}
             sx={{
-              display: { xs: "none", md: "inline-flex" },
+              display: "none",
+              [`@media (min-width:${desktopUtilityMinWidth}px)`]: {
+                display: "inline-flex",
+              },
               borderRadius: 3,
               backgroundColor: colors.pillBg,
               color: colors.text,
@@ -198,21 +328,37 @@ export default function NavbarPill() {
             variant="contained"
             disableElevation
             sx={{
-              borderRadius: 2.6,
+              flexShrink: 0,
+              minWidth: "max-content",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: { xs: 2.2, md: 2.6 },
               backgroundColor: colors.accent,
               color: colors.white,
               fontWeight: 800,
-              fontSize: { xs: 13.5, md: 15 },
+              fontSize: { xs: 10.2, sm: 13.5, md: 14 },
               lineHeight: 1,
-              minHeight: { xs: 36, md: 44 },
-              px: { xs: 1.7, sm: 2.05, md: 2.7 },
+              minHeight: { xs: 32, sm: 36, md: 42 },
+              px: { xs: 0.95, sm: 2.05, md: 2.2 },
               py: 0,
+              letterSpacing: { xs: "-0.02em", md: "normal" },
               boxShadow: "0 6px 12px rgba(15,23,42,0.08)",
               whiteSpace: "nowrap",
+              [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
+                fontSize: 15,
+                minHeight: 44,
+                px: 2.7,
+              },
+              "@media (max-width:359.95px)": {
+                fontSize: 9.4,
+                minHeight: 30,
+                px: 0.8,
+              },
               "&:hover": { backgroundColor: colors.accent },
             }}
           >
-            Umów dobór
+            Umów konsultację
           </Button>
         </Box>
       </Box>
@@ -229,7 +375,10 @@ export default function NavbarPill() {
             p: 2,
             border: `1px solid ${colors.border}`,
             overflow: "hidden",
-            display: { xs: "block", lg: "none" },
+            display: "block",
+            [`@media (min-width:${desktopNavMinWidth}px)`]: {
+              display: "none",
+            },
           }}
         >
           <Box
@@ -283,7 +432,7 @@ export default function NavbarPill() {
             }}
           />
 
-          {navItems.map((item) => {
+          {mobileNavItems.map((item) => {
             const active = pathname === item.href;
 
             return (

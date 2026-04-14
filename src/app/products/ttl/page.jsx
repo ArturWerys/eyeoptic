@@ -5,9 +5,9 @@ import colors from "@/data/colors";
 import TtlProductClient from "./TtlProductClient.jsx";
 
 export const metadata = {
-  title: "Lupy TTL EYE OPTIC",
+  title: "Lupy TTL Eye Optic",
   description:
-    "Lupy TTL (Through The Lens): stabilność obrazu i ergonomia pracy. Umów dobór konfiguracji TTL w EYE OPTIC.",
+    "Lupy TTL (Through The Lens): stabilność obrazu i ergonomia pracy. Umów dobór konfiguracji TTL w Eye Optic.",
 };
 
 export default function Page() {
@@ -22,7 +22,9 @@ export default function Page() {
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         <NavbarPill />
 
-        <TtlProductClient />
+        <Box sx={{ pt: { xs: 4, md: 4 } }}>
+          <TtlProductClient />
+        </Box>
 
         <Footer />
       </Container>

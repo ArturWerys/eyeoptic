@@ -4,6 +4,7 @@ import NextLink from "next/link";
 import { Box, Container, Link, Typography } from "@mui/material";
 import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
+import { formatDisplayText } from "@/lib/text";
 
 export default function Footer() {
   return (
@@ -26,7 +27,7 @@ export default function Footer() {
         >
           <Box>
             <Typography sx={{ fontWeight: 900, color: colors.text }}>
-              {contact.brand}
+              Eye Optic
             </Typography>
             <Typography
               sx={{
@@ -34,10 +35,10 @@ export default function Footer() {
                 color: colors.textSoft,
                 fontSize: 13,
                 maxWidth: 360,
+                lineHeight: 1.7,
               }}
             >
-              Lupy stomatologiczne dla ergonomii i precyzji. Dobór pod realną
-              pracę w gabinecie.
+              {formatDisplayText("Simply see perfectly!")}
             </Typography>
           </Box>
           <Box>
@@ -49,8 +50,8 @@ export default function Footer() {
             <Box sx={{ mt: 1.5, display: "grid", gap: 1 }}>
               <FooterLink href="/products/ttl">Lupy TTL</FooterLink>
               <FooterLink href="/products/flipUp">Lupy Flip-Up</FooterLink>
+              <FooterLink href="/products/ergo">Lupy Ergo</FooterLink>
               <FooterLink href="/products/led">Oświetlenie LED</FooterLink>
-              <FooterLink href="/products/accessories">Akcesoria</FooterLink>
             </Box>
           </Box>
 
@@ -80,7 +81,9 @@ export default function Footer() {
               <FooterContactLink href={`mailto:${contact.email}`}>
                 {contact.email}
               </FooterContactLink>
-              <FooterContactLink href={`tel:${contact.phone.replace(/\s/g, "")}`}>
+              <FooterContactLink
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+              >
                 {contact.phone}
               </FooterContactLink>
               <FooterContactLink
@@ -134,7 +137,7 @@ function FooterLink({ href, children }) {
         textDecorationColor: colors.border,
       }}
     >
-      {children}
+      {formatDisplayText(children)}
     </Link>
   );
 }
@@ -153,7 +156,7 @@ function FooterContactLink({ children, ...props }) {
       }}
       {...props}
     >
-      {children}
+      {formatDisplayText(children)}
     </Link>
   );
 }

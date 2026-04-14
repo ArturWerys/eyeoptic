@@ -24,6 +24,7 @@ const colors = {
   dot: "#0EA5A4",
 
   pillBg: "#FFFFFF",
+  pillHover: "#F7FAFC",
   cardBg: "rgba(255,255,255,0.92)",
   cardBorder: "rgba(15,23,42,0.10)",
 };

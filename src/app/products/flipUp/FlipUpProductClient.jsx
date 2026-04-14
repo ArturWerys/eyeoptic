@@ -1,409 +1,696 @@
 "use client";
 
-import { useMemo } from "react";
 import NextLink from "next/link";
-
 import { Box, Button, Typography } from "@mui/material";
 
 import colors from "@/data/colors";
+import content from "@/data/content";
+import { formatDisplayText } from "@/lib/text";
+import {
+  ProductBenefitLine,
+  ProductBulletItem,
+  ProductConsultationSection,
+  ProductImageCard,
+  ProductSectionEyebrow,
+} from "@/components/products/ProductPageShared";
+import {
+  bodyTextSx,
+  ctaButtonSx,
+  heroCardSx,
+  heroAccentSx,
+  interactiveCardHoverSx,
+  panelCardSx,
+  sectionHeadingSx,
+} from "@/components/products/productPageStyles";
+
+const images = [
+  "/images/flip-up-product/flip-up-alu.webp",
+  "/images/flip-up-product/flip-up-mini.webp",
+];
+
+const {
+  magnifications: miniFlipUpMagnifications,
+  tableRows: miniFlipUpTableRows,
+} = content.products.miniFlipUp;
+
+const {
+  magnifications: aluFlipUpMagnifications,
+  tableRows: aluFlipUpTableRows,
+} = content.products.aluFlipUp;
+
+const flipUpPage = content.products.flipUp.page;
+const flipUpDesktopTableMinWidth = 1280;
+
+const flipUpConfigurations = flipUpPage.variants.items.map((item) => ({
+  ...item,
+  magnifications:
+    item.key === "mini" ? miniFlipUpMagnifications : aluFlipUpMagnifications,
+  rows: item.key === "mini" ? miniFlipUpTableRows : aluFlipUpTableRows,
+}));
 
 export default function FlipUpProductClient() {
-  const images = useMemo(() => ["/flip-up-1.jpg", "/flip-up-2.png"], []);
-
-  const fontSizes = {
-    title: { xs: 32, sm: 40, md: 46 },
-    subtitle: { xs: 26, md: 34 },
-    text: 18,
-    small: 16,
-    mini: 14,
-    heading: 20,
-  };
-
   return (
     <>
       <Box
         sx={{
           mt: { xs: 4, md: 6 },
           display: "grid",
-          pb: 1,
           gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1.05fr 0.95fr" },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
           alignItems: "center",
         }}
       >
-        {/* LEFT: Gallery */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
-          <Box
-            component="img"
-            src={images[0]}
-            alt="TTL image 1"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
+        <ProductImageCard
+          src={images[0]}
+          alt="Lupy Flip-Up"
+          loading="eager"
+          fetchPriority="high"
+        />
 
-        {/* RIGHT: Product card */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-            pl: { xs: 3, md: 4 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            boxShadow: colors.shadow,
-          }}
-        >
+        <Box sx={heroCardSx}>
           <Typography
             sx={{
-              mt: 2,
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              fontSize: fontSizes.title,
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+              lineHeight: 0.98,
+              fontSize: { xs: 36, sm: 42, md: 52 },
               color: colors.text,
             }}
           >
-            Lupy Flip-Up
+            {flipUpPage.hero.title}
           </Typography>
 
-          {/* mini meta */}
+          <Typography
+            sx={{
+              ...heroAccentSx,
+            }}
+          >
+            {flipUpPage.hero.accent}
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 2.6,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "34ch" },
+            }}
+          >
+            {formatDisplayText(flipUpPage.hero.description)}
+          </Typography>
+
           <Box
             sx={{
-              mt: 2.5,
-              display: "flex",
-              alignItems: "center",
+              mt: 3.2,
+              display: "grid",
               gap: 1.2,
-              color: colors.textSoft,
-              flexWrap: "wrap",
+            }}
+          >
+            {flipUpPage.hero.uses.map((item) => (
+              <ProductBulletItem key={item}>{item}</ProductBulletItem>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          mt: { xs: 7, md: 9 },
+          display: "grid",
+          gap: { xs: 3, md: 4 },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ px: { md: 1 } }}>
+          <ProductSectionEyebrow>
+            {flipUpPage.benefits.eyebrow}
+          </ProductSectionEyebrow>
+
+          <Typography
+            sx={{
+              ...sectionHeadingSx,
+              maxWidth: { xs: "100%", md: "14ch" },
+            }}
+          >
+            {flipUpPage.benefits.title}
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 1.8,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "40ch" },
+            }}
+          >
+            {formatDisplayText(flipUpPage.benefits.description)}
+          </Typography>
+
+          <Box sx={{ mt: 3.4, display: "grid", gap: 1.8 }}>
+            {flipUpPage.benefits.items.map((item) => (
+              <ProductBenefitLine
+                key={item.title}
+                title={item.title}
+                desc={item.desc}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        <ProductImageCard
+          src={images[1]}
+          alt="Korzyści pracy w lupach Flip-Up"
+        />
+      </Box>
+
+      <FlipUpVariantsSection configurations={flipUpConfigurations} />
+
+      <FlipUpTablesSection configurations={flipUpConfigurations} />
+
+      <Box
+        sx={{
+          mt: { xs: 7, md: 9 },
+        }}
+      >
+        <SharedConsultationSection />
+      </Box>
+    </>
+  );
+}
+
+function FlipUpVariantsSection({ configurations }) {
+  return (
+    <Box sx={{ mt: { xs: 7, md: 9 } }}>
+      <ProductSectionEyebrow>
+        {flipUpPage.variants.eyebrow}
+      </ProductSectionEyebrow>
+
+      <Typography
+        sx={{
+          ...sectionHeadingSx,
+          maxWidth: { xs: "100%", md: "17ch" },
+        }}
+      >
+        {flipUpPage.variants.title}
+      </Typography>
+
+      <Typography
+        sx={{
+          mt: 1.8,
+          ...bodyTextSx,
+          maxWidth: { xs: "100%", md: "48ch" },
+        }}
+      >
+        {formatDisplayText(flipUpPage.variants.description)}
+      </Typography>
+
+      <Box
+        sx={{
+          mt: 3.2,
+          display: "grid",
+          gap: { xs: 1.6, md: 2 },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+        }}
+      >
+        {configurations.map((item) => (
+          <Box
+            key={item.name}
+            sx={{
+              ...panelCardSx,
+              ...interactiveCardHoverSx,
             }}
           >
             <Typography
               sx={{
-                fontSize: fontSizes.mini,
+                color: colors.text,
+                fontSize: { xs: 24, md: 28 },
                 fontWeight: 800,
-                color: colors.accent,
-                letterSpacing: "0.1em",
+                lineHeight: 1.02,
+                letterSpacing: "-0.03em",
               }}
             >
-              Elastyczność • Regulacja • Uniwersalność
+              {item.name}
             </Typography>
-          </Box>
 
-          <Typography
-            sx={{
-              mt: 3,
-              color: colors.textSoft,
-              lineHeight: 1.75,
-            }}
-          >
-            Flip-Up to lupy dla tych, którzy chcą elastyczności. Dostarczają
-            możliwość odchylenia optyki, łatwiejszą regulację i wygodną pracę
-            “mix” w gabinecie. To dobry wybór jako pierwsze lupy lub do
-            codziennej, zróżnicowanej pracy w gabinecie.
-          </Typography>
-
-          <Box sx={{ mt: 4, display: "grid", gap: 1.5, pb: 4 }}>
-            {[
-              "Stomatologia ogólna i praca mieszana",
-              "Chirurgia wymagająca zmiany pola widzenia",
-              "Gabinet o zróżnicowanych procedurach",
-              "Pierwsze lupy - możliwość regulacji i adaptacji",
-            ].map((t) => (
-              <Box
-                key={t}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.2,
-                  color: colors.textSoft,
-                  fontWeight: 700,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                  }}
-                />
-                <span>{t}</span>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Najważniejsze korzyści */}
-      <Box
-        sx={{
-          mt: { xs: 6, md: 8 },
-          display: "grid",
-          gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ px: { md: 2 } }}>
-          <Typography
-            sx={{
-              fontSize: fontSizes.subtitle,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
-            }}
-          >
-            Najważniejsze korzyści
-          </Typography>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Lupy Flip-Up zapewniają spójne pole widzenia i powtarzalny obraz,
-            szczególnie wtedy, gdy liczy się precyzja i komfort przez wiele
-            godzin pracy.
-          </Typography>
-
-          <Box sx={{ mt: 3.5, display: "grid", gap: 1.6 }}>
-            {[
-              {
-                title: "Szybka regulacja ",
-                desc: "Łatwiej dopasować wygodną pozycję i przełączać się między powiększeniem a widzeniem naturalnym.",
-              },
-              {
-                title: "Odchylenie optyki ",
-                desc: "Przełączasz się między powiększeniem a widzeniem naturalnym.",
-              },
-              {
-                title: "Uniwersalność",
-                desc: "Idealne do codziennej stomatologii ogólnej oraz procedur specjalistycznych.",
-              },
-            ].map((b) => (
-              <Box
-                key={b.title}
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 1.2,
-                }}
-              >
-                <Box
-                  sx={{
-                    mt: "10px",
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                    flex: "0 0 auto",
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontWeight: 900, color: colors.text }}>
-                    {b.title}
-                  </Typography>
-                  <Typography
-                    sx={{ mt: 0.4, color: colors.textSoft, lineHeight: 1.7 }}
-                  >
-                    {b.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-
-          <Box sx={{ mt: 3.25 }}>
-            <Button
-              component={NextLink}
-              href="/contact"
-              variant="contained"
-              disableElevation
+            <Typography
               sx={{
-                borderRadius: 3,
-                fontWeight: 900,
-                px: 3,
-                py: 1.2,
-                textTransform: "none",
-                backgroundColor: colors.accent,
-                "&:hover": { backgroundColor: colors.accent },
+                mt: 1.15,
+                ...bodyTextSx,
+                maxWidth: "34ch",
               }}
             >
-              Umów dopasowanie Flip-Up
-            </Button>
-          </Box>
-        </Box>
+              {formatDisplayText(item.shortDescription)}
+            </Typography>
 
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
-          <Box
-            component="img"
-            src={images[1]}
-            alt="TTL image 2"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
-      </Box>
-
-      {/* Konfiguracje*/}
-      <Box
-        sx={{
-          mt: { xs: 6, md: 8 },
-          display: "grid",
-          gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          alignItems: "stretch",
-        }}
-      >
-        <Box
-          sx={{
-            px: { md: 2 },
-            backgroundColor: colors.surface,
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-          }}
-        >
-          <Typography
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-              fontSize: fontSizes.small,
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: colors.textSoft,
-              opacity: 0.75,
-            }}
-          >
-            Specyfikacja / konfiguracja
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 1,
-              fontSize: fontSizes.subtitle,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
-            }}
-          >
-            Konfiguracje Flip-Up
-          </Typography>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Dobieramy powiększenie, odległość roboczą i oprawę tak, abyś
-            pracował w naturalnej pozycji i miał powtarzalny obraz bez szukania
-            ustawień w trakcie pracy.
-          </Typography>
-
-          {/* Podpis dla powiększeń */}
-          <Typography
-            sx={{
-              mt: 3,
-              mb: 0.75,
-              fontSize: fontSizes.small,
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: colors.textSoft,
-              opacity: 0.75,
-            }}
-          >
-            Dostępne powiększenia
-          </Typography>
-
-          {/* Podpis dla powiększeń */}
-
-          <Typography
-            sx={{
-              mt: 0,
-              mb: 1.5,
-              fontSize: fontSizes.small,
-              lineHeight: 1.7,
-              color: colors.textSoft,
-            }}
-          >
-            Dobór zależy od typu zabiegów i pozycji pracy - dopasujemy je
-            podczas konsultacji.
-          </Typography>
-
-          {/* Kafelki powiększeń */}
-
-          <Box sx={{ mt: 1.25 }}>
             <Box
               sx={{
+                mt: 2.2,
                 display: "grid",
-                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: { xs: 1.6, sm: 2 },
-                justifyItems: "start",
+                gap: 0.95,
               }}
             >
-              {["2.5×", "4.0×", "3.0×", "3.5×"].map((m) => (
-                <Box
-                  key={m}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.2,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 999,
-                      backgroundColor: colors.accent,
-                      flex: "0 0 auto",
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      color: colors.text,
-                      fontSize: fontSizes.text, // albo 16 jeśli chcesz lżej
-                    }}
-                  >
-                    {m}
-                  </Typography>
-                </Box>
+              {item.bullets.map((bullet) => (
+                <ProductBulletItem key={bullet}>{bullet}</ProductBulletItem>
               ))}
             </Box>
           </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+function FlipUpTablesSection({ configurations }) {
+  return (
+    <Box sx={{ mt: { xs: 7, md: 9 } }}>
+      <ProductSectionEyebrow>{flipUpPage.tables.eyebrow}</ProductSectionEyebrow>
+
+      <Typography
+        sx={{
+          ...sectionHeadingSx,
+          maxWidth: { xs: "100%", md: "12ch" },
+        }}
+      >
+        {flipUpPage.tables.title}
+      </Typography>
+
+      <Typography
+        sx={{
+          mt: 1.8,
+          ...bodyTextSx,
+          maxWidth: { xs: "100%", md: "46ch" },
+        }}
+      >
+        {formatDisplayText(flipUpPage.tables.description)}
+      </Typography>
+
+      <Box
+        sx={{
+          mt: 3.2,
+          display: "grid",
+          gap: { xs: 4, md: 4.5 },
+        }}
+      >
+        {configurations.map((configuration) => (
+          <Box
+            key={configuration.name}
+            sx={{
+              display: "grid",
+              gap: { xs: 2.2, md: 3.2 },
+              gridTemplateColumns: "1fr",
+              [`@media (min-width:${flipUpDesktopTableMinWidth}px)`]: {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              alignItems: "start",
+            }}
+          >
+            <Box sx={{ px: { md: 1 } }}>
+              <Typography
+                sx={{
+                  color: colors.accent,
+                  fontSize: { xs: 13, md: 14 },
+                  fontWeight: 800,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  mb: 1.1,
+                }}
+              >
+                {configuration.name}
+              </Typography>
+
+              <Typography
+                sx={{
+                  color: colors.text,
+                  fontSize: { xs: 24, md: 30 },
+                  fontWeight: 800,
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                  mb: 1.4,
+                }}
+              >
+                {flipUpPage.tables.configurationPrefix} {configuration.name}
+              </Typography>
+
+              <Typography
+                sx={{
+                  ...bodyTextSx,
+                  maxWidth: { xs: "100%", md: "42ch" },
+                }}
+              >
+                {formatDisplayText(configuration.shortDescription)}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                borderRadius: 4,
+                p: 0,
+                background: "transparent",
+                border: "none",
+                boxShadow: "none",
+                overflow: "visible",
+                [`@media (min-width:${flipUpDesktopTableMinWidth}px)`]: {
+                  p: 2.4,
+                  background:
+                    "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.82) 100%)",
+                  border: `1px solid ${colors.border}`,
+                  boxShadow: colors.shadowSm,
+                  overflow: "hidden",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  display: "grid",
+                  [`@media (min-width:${flipUpDesktopTableMinWidth}px)`]: {
+                    display: "none",
+                  },
+                }}
+              >
+                <MobileSpecsTable
+                  magnifications={configuration.magnifications}
+                  rows={configuration.rows}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "none",
+                  borderRadius: 3,
+                  border: "1px solid rgba(15,23,42,0.06)",
+                  background:
+                    "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.75) 100%)",
+                  backdropFilter: "blur(6px)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
+                  overflow: "hidden",
+                  [`@media (min-width:${flipUpDesktopTableMinWidth}px)`]: {
+                    display: "block",
+                  },
+                }}
+              >
+                <Box
+                  component="table"
+                  sx={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    tableLayout: "fixed",
+                  }}
+                >
+                  <Box component="thead">
+                    <Box component="tr">
+                      {[flipUpPage.tables.magnificationLabel, ...configuration.magnifications].map(
+                        (head, index) => (
+                          <Box
+                            key={head}
+                            component="th"
+                            sx={{
+                              px: index === 0 ? 1.8 : 1.2,
+                              py: 1.6,
+                              textAlign: index === 0 ? "left" : "center",
+                              fontSize: index === 0 ? 15.5 : 18,
+                              fontWeight: index === 0 ? 700 : 800,
+                              color:
+                                index === 0 ? colors.textSoft : colors.accent,
+                              letterSpacing: index === 0 ? "0" : "-0.02em",
+                              textTransform: "none",
+                              lineHeight: 1,
+                              borderBottom: "1px solid rgba(15,23,42,0.04)",
+                              backgroundColor: "rgba(14,165,164,0.08)",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {index === 0 ? head : formatMagnification(head)}
+                          </Box>
+                        ),
+                      )}
+                    </Box>
+                  </Box>
+
+                  <Box component="tbody">
+                    {configuration.rows.map((row, rowIndex) => (
+                      <Box key={row.label} component="tr">
+                        <Box
+                          component="td"
+                          sx={{
+                            px: 1.8,
+                            py: 1.55,
+                            fontSize: 13.5,
+                            fontWeight: 700,
+                            color: colors.textSoft,
+                            borderBottom:
+                              rowIndex === configuration.rows.length - 1
+                                ? "none"
+                                : "1px solid rgba(15,23,42,0.04)",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {row.label}
+                        </Box>
+
+                        {row.values.map((value, valueIndex) => (
+                          <Box
+                            key={`${row.label}-${valueIndex}`}
+                            component="td"
+                            sx={{
+                              px: 1.2,
+                              py: 1.55,
+                              textAlign: "center",
+                              fontSize: 16,
+                              fontWeight: 700,
+                              color: colors.text,
+                              borderBottom:
+                                rowIndex === configuration.rows.length - 1
+                                  ? "none"
+                                  : "1px solid rgba(15,23,42,0.04)",
+                              borderLeft:
+                                valueIndex === 0
+                                  ? "none"
+                                  : "1px solid rgba(15,23,42,0.04)",
+                              whiteSpace: "nowrap",
+                              letterSpacing: "-0.02em",
+                            }}
+                          >
+                            {value}
+                          </Box>
+                        ))}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+function SharedConsultationSection() {
+  return (
+    <ProductConsultationSection
+      title={flipUpPage.consultation.title}
+      description={flipUpPage.consultation.description}
+      buttonLabel={flipUpPage.consultation.buttonLabel}
+    />
+  );
+}
+
+function MobileSpecsTable({ magnifications, rows }) {
+  return (
+    <Box
+      sx={{
+        borderRadius: 4,
+        border: "1px solid rgba(15,23,42,0.07)",
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.9) 100%)",
+        boxShadow: "none",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          px: 2.3,
+          pt: 2.35,
+          pb: 2.05,
+          borderBottom: "1px solid rgba(15,23,42,0.06)",
+          background:
+            "linear-gradient(180deg, rgba(14,165,164,0.08) 0%, rgba(14,165,164,0.035) 100%)",
+        }}
+      >
+        <Typography
+          sx={{
+            mb: 0.9,
+            fontSize: 15,
+            fontWeight: 800,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: colors.accent,
+            lineHeight: 1,
+            textAlign: "center",
+          }}
+        >
+          {flipUpPage.tables.magnificationLabel}
+        </Typography>
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${magnifications.length}, minmax(0, 1fr))`,
+            alignItems: "center",
+          }}
+        >
+          {magnifications.map((magnification, index) => (
+            <Box
+              key={magnification}
+              sx={{
+                px: 1.2,
+                textAlign: "center",
+                borderLeft:
+                  index === 0 ? "none" : "1px solid rgba(15,23,42,0.2)",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: colors.accent,
+                  fontSize: 17.5,
+                  fontWeight: 800,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.1,
+                  textAlign: "center",
+                }}
+              >
+                {formatMagnification(magnification)}
+              </Typography>
+            </Box>
+          ))}
         </Box>
       </Box>
-    </>
+
+      <Box
+        sx={{
+          display: "grid",
+          overflow: "hidden",
+        }}
+      >
+        {rows.map((row, rowIndex) => {
+          const normalizedLabel = formatMobileSpec(
+            row.label,
+            row.values[0],
+          ).label;
+          const normalizedValues = row.values.map(
+            (value) => formatMobileSpec(row.label, value).value,
+          );
+
+          return (
+            <Box
+              key={row.label}
+              sx={{
+                px: 2,
+                pt: 1.85,
+                pb: 2,
+                borderBottom:
+                  rowIndex === rows.length - 1
+                    ? "none"
+                    : "1px solid rgba(15,23,42,0.055)",
+              }}
+            >
+              <Box
+                sx={{
+                  px: 1.15,
+                  py: 0.55,
+                  borderRadius: 0,
+                  background: "transparent",
+                  border: "none",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: colors.accent,
+                    fontSize: 13,
+                    fontWeight: 800,
+                    lineHeight: 1.25,
+                    letterSpacing: "0.06em",
+                    textAlign: "center",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {normalizedLabel}
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  mt: 1.05,
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${magnifications.length}, minmax(0, 1fr))`,
+                  alignItems: "center",
+                }}
+              >
+                {normalizedValues.map((value, index) => (
+                  <Box
+                    key={`${row.label}-${index}`}
+                    sx={{
+                      px: 1.15,
+                      textAlign: "center",
+                      borderLeft:
+                        index === 0 ? "none" : "1px solid rgba(15,23,42,0.2)",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: colors.text,
+                        fontSize: 16,
+                        fontWeight: 800,
+                        lineHeight: 1.35,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {value}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
   );
+}
+
+function formatMobileSpec(label, value) {
+  let cleanLabel = String(label)
+    .replace(/\s*\(mm\)/gi, "")
+    .replace(/\s*\(g\)/gi, "")
+    .trim();
+
+  if (/głębia ostrości/i.test(cleanLabel)) cleanLabel = "Głębia ostrości";
+  if (/pole widzenia/i.test(cleanLabel)) cleanLabel = "Pole widzenia";
+
+  let formattedValue = String(value).trim();
+
+  if (
+    /ogniskowa/i.test(label) ||
+    /głębia ostrości/i.test(label) ||
+    /pole widzenia/i.test(label)
+  ) {
+    if (!/mm$/i.test(formattedValue)) {
+      formattedValue = `${formattedValue} mm`;
+    }
+  }
+
+  if (/waga/i.test(label)) {
+    if (!/g$/i.test(formattedValue)) {
+      formattedValue = `${formattedValue} g`;
+    }
+  }
+
+  return {
+    label: cleanLabel,
+    value: formattedValue,
+  };
+}
+
+function formatMagnification(value) {
+  return String(value).replace(/x/gi, "x");
 }

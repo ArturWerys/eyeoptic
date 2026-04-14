@@ -5,9 +5,9 @@ import colors from "@/data/colors";
 import FlipUpProductClient from "./FlipUpProductClient.jsx";
 
 export const metadata = {
-  title: "Lupy Flip-Up EYE OPTIC",
+  title: "Lupy Flip-Up Eye Optic",
   description:
-    "Lupy Flip-Up EYE OPTIC - wygodna regulacja i możliwość odchylenia optyki. Idealne jako pierwsze lupy lub do pracy mieszanej.",
+    "Lupy Flip-Up Eye Optic - wygodna regulacja i możliwość odchylenia optyki. Idealne jako pierwsze lupy lub do pracy mieszanej.",
 };
 
 export default function Page() {
@@ -22,7 +22,9 @@ export default function Page() {
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         <NavbarPill />
 
-        <FlipUpProductClient />
+        <Box sx={{ pt: { xs: 4, md: 4 } }}>
+          <FlipUpProductClient />
+        </Box>
 
         <Footer />
       </Container>

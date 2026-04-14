@@ -5,9 +5,9 @@ import colors from "@/data/colors";
 import LedProductClient from "./LedProductClient.jsx";
 
 export const metadata = {
-  title: "Oświetlenie LED EYE OPTIC",
+  title: "Oświetlenie LED Eye Optic",
   description:
-    "Oświetlenie LED EYE OPTIC do lup stomatologicznych. Równomierna wiązka w osi widzenia, większy komfort i widoczność detali.",
+    "Oświetlenie LED Eye Optic do lup stomatologicznych. Równomierna wiązka w osi widzenia, większy komfort i widoczność detali.",
 };
 
 export default function Page() {
@@ -22,7 +22,9 @@ export default function Page() {
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         <NavbarPill />
 
-        <LedProductClient />
+        <Box sx={{ pt: { xs: 4, md: 4 } }}>
+          <LedProductClient />
+        </Box>
 
         <Footer />
       </Container>

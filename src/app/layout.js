@@ -3,7 +3,7 @@ import Providers from "@/components/Providers";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 
 export const metadata = {
-  title: "EYE OPTIC",
+  title: "Eye Optic",
   description: "Lupy stomatologiczne: TTL, Flip-Up i oświetlenie LED.",
 };
 

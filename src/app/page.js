@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "EYE OPTIC | Lupy stomatologiczne TTL i Flip-Up ",
+  title: "Eye Optic | Lupy stomatologiczne TTL i Flip-Up ",
   description:
     "Profesjonalne lupy stomatologiczne TTL i Flip-Up z oświetleniem LED. Idealna ergonomia i precyzja pracy.",
   keywords: [
@@ -10,7 +10,7 @@ export const metadata = {
     "lupy dla dentysty",
   ],
   openGraph: {
-    title: "Lupy stomatologiczne EYE OPTIC",
+    title: "Lupy stomatologiczne Eye Optic",
     description: "Profesjonalne lupy TTL i Flip-Up z oświetleniem LED.",
     type: "website",
   },

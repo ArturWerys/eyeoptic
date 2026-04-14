@@ -5,9 +5,9 @@ import colors from "@/data/colors";
 import ContactClient from "./ContactClient.jsx";
 
 export const metadata = {
-  title: "Strona kontaktowa EYE OPTIC",
+  title: "Kontakt z Eye Optic",
   description:
-    "Strona kontaktowa EYE OPTIC. Skontaktuj się z nami w sprawie lup stomatologicznych, akcesoriów i usług.",
+    "Strona kontaktowa Eye Optic. Skontaktuj się z nami w sprawie lup stomatologicznych, akcesoriów i usług.",
 };
 
 export default function Page() {

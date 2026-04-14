@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+DEPLOY_CYBERFOLKS.md
+PLAN_WDROZENIA.md
 
 # debug
 npm-debug.log*

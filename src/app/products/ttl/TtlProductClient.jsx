@@ -1,517 +1,577 @@
 "use client";
 
-import { useMemo } from "react";
 import NextLink from "next/link";
-
 import { Box, Button, Typography } from "@mui/material";
 
 import colors from "@/data/colors";
+import content from "@/data/content";
+import { formatDisplayText } from "@/lib/text";
+import {
+  ProductBenefitLine,
+  ProductBulletItem,
+  ProductImageCard,
+  ProductSectionEyebrow,
+} from "@/components/products/ProductPageShared";
+import {
+  bodyTextSx,
+  ctaButtonSx,
+  heroCardSx,
+  heroAccentSx,
+  interactiveCardHoverSx,
+  sectionHeadingSx,
+} from "@/components/products/productPageStyles";
+
+const images = [
+  "/images/ttl-product/ttl.webp",
+  "/images/ttl-product/ttl-sport.webp",
+];
+
+const ttlPage = content.products.ttl.page;
+const { magnifications: ttlMagnifications, tableRows: ttlTableRows } =
+  content.products.ttl;
 
 export default function TtlProductClient() {
-  const images = useMemo(() => ["/ttl-1.jpg", "/ttl-2.jpg"], []);
-
-  const fontSizes = {
-    title: { xs: 32, sm: 40, md: 46 },
-    subtitle: { xs: 26, md: 34 },
-    text: 18,
-    small: 16,
-    mini: 14,
-    heading: 20,
-  };
-
   return (
     <>
-      {/* TOP: TTL + image (image wyśrodkowane względem reszty) */}
       <Box
         sx={{
           mt: { xs: 4, md: 6 },
           display: "grid",
-          pb: 1,
           gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1.05fr 0.95fr" },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
           alignItems: "center",
         }}
       >
-        {/* LEFT: Gallery */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
-          <Box
-            component="img"
-            src={images[0]}
-            alt="TTL image 1"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
+        <ProductImageCard
+          src={images[0]}
+          alt="Lupy TTL"
+          loading="eager"
+          fetchPriority="high"
+        />
 
-        {/* RIGHT: Product card */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-            pl: { xs: 3, md: 4 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            boxShadow: colors.shadow,
-          }}
-        >
+        <Box sx={heroCardSx}>
           <Typography
             sx={{
-              mt: 2,
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              fontSize: fontSizes.title,
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+              lineHeight: 0.98,
+              fontSize: { xs: 36, sm: 42, md: 52 },
               color: colors.text,
             }}
           >
-            Lupy TTL
+            {ttlPage.hero.title}
           </Typography>
 
-          {/* mini meta */}
-          <Box
+          <Typography
             sx={{
-              mt: 2.5,
-              display: "flex",
-              alignItems: "center",
-              gap: 1.2,
-              color: colors.textSoft,
-              flexWrap: "wrap",
+              ...heroAccentSx,
             }}
           >
+            {ttlPage.hero.accent}
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 2.6,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "34ch" },
+            }}
+          >
+            {formatDisplayText(ttlPage.hero.description)}
+          </Typography>
+
+          <Box
+            sx={{
+              mt: 3.2,
+              display: "grid",
+              gap: 1.2,
+            }}
+          >
+            {ttlPage.hero.uses.map((item) => (
+              <ProductBulletItem key={item}>{item}</ProductBulletItem>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          mt: { xs: 7, md: 9 },
+          display: "grid",
+          gap: { xs: 3, md: 4 },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ px: { md: 1 } }}>
+          <ProductSectionEyebrow>
+            {ttlPage.benefits.eyebrow}
+          </ProductSectionEyebrow>
+
+          <Typography
+            sx={{
+              ...sectionHeadingSx,
+              maxWidth: { xs: "100%", md: "14ch" },
+            }}
+          >
+            {ttlPage.benefits.title}
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 1.8,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "40ch" },
+            }}
+          >
+            {formatDisplayText(ttlPage.benefits.description)}
+          </Typography>
+
+          <Box sx={{ mt: 3.4, display: "grid", gap: 1.8 }}>
+            {ttlPage.benefits.items.map((item) => (
+              <ProductBenefitLine
+                key={item.title}
+                title={item.title}
+                desc={item.desc}
+              />
+            ))}
+          </Box>
+        </Box>
+
+        <ProductImageCard src={images[1]} alt="Korzyści pracy w lupach TTL" />
+      </Box>
+
+      <Box sx={{ mt: { xs: 7, md: 9 } }}>
+        <Box
+          sx={{
+            mt: 3.2,
+            display: "grid",
+            gap: { xs: 2.4, md: 3.2 },
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            alignItems: "start",
+          }}
+        >
+          <Box sx={{ px: { md: 1 } }}>
+            <ProductSectionEyebrow>
+              {ttlPage.configuration.eyebrow}
+            </ProductSectionEyebrow>
+
             <Typography
               sx={{
-                fontSize: fontSizes.mini,
-                fontWeight: 800,
-                color: colors.accent,
-                letterSpacing: "0.1em",
+                ...sectionHeadingSx,
+                maxWidth: { xs: "100%", md: "11ch" },
               }}
             >
-              Stabilność • Personalizacja • Precyzja
+              {ttlPage.configuration.title}
             </Typography>
-          </Box>
 
-          <Typography sx={{ mt: 3, color: colors.textSoft, lineHeight: 1.75 }}>
-            Lupy TTL (Through The Lens) to rozwiązanie dla osób, które oczekują
-            maksymalnej stabilności obrazu i pracy bez konieczności korekty
-            ustawień. Optyka osadzona w szkłach daje spójne pole widzenia i
-            wysoką precyzję w wymagających procedurach.
-          </Typography>
-
-          <Box sx={{ mt: 4, display: "grid", gap: 1.5, pb: 4 }}>
-            {[
-              "Endodoncja",
-              "Protetyka i estetyka",
-              "Chirurgia i zabiegi wymagające stabilnej osi widzenia",
-              "Praca na detalach i granicach",
-            ].map((t) => (
-              <Box
-                key={t}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.2,
-                  color: colors.textSoft,
-                  fontWeight: 700,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                  }}
-                />
-                <span>{t}</span>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Najważniejsze korzyści — bez otoczki, styl jak konfiguracje */}
-      <Box
-        sx={{
-          mt: { xs: 6, md: 8 },
-          display: "grid",
-          gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ px: { md: 2 } }}>
-          <Typography
-            sx={{
-              fontSize: fontSizes.subtitle,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
-            }}
-          >
-            Najważniejsze korzyści
-          </Typography>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Lupy TTL zapewniają spójne pole widzenia i powtarzalny obraz,
-            szczególnie wtedy, gdy liczy się precyzja i komfort przez wiele
-            godzin pracy.
-          </Typography>
-
-          <Box sx={{ mt: 3.5, display: "grid", gap: 1.6 }}>
-            {[
-              {
-                title: "Stabilny obraz",
-                desc: "Mniej mikro-ruchów i „pływania” podczas pracy.",
-              },
-              {
-                title: "Ergonomiczna praca",
-                desc: "Dobrany kąt i odległość robocza zapewniają naturalną pozycję głowy i pleców.",
-              },
-              {
-                title: "Przewidywalność",
-                desc: "Raz ustawione - działa, bez potrzeby ciągłego poprawiania.",
-              },
-            ].map((b) => (
-              <Box
-                key={b.title}
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 1.2,
-                }}
-              >
-                <Box
-                  sx={{
-                    mt: "10px",
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                    flex: "0 0 auto",
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontWeight: 900, color: colors.text }}>
-                    {b.title}
-                  </Typography>
-                  <Typography
-                    sx={{ mt: 0.4, color: colors.textSoft, lineHeight: 1.7 }}
-                  >
-                    {b.desc}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-
-          <Box sx={{ mt: 3.25 }}>
-            <Button
-              component={NextLink}
-              href="/contact"
-              variant="contained"
-              disableElevation
+            <Typography
               sx={{
-                borderRadius: 3,
-                fontWeight: 900,
-                px: 3,
-                py: 1.2,
-                textTransform: "none",
-                backgroundColor: colors.accent,
-                "&:hover": { backgroundColor: colors.accent },
+                mt: 1.8,
+                ...bodyTextSx,
+                maxWidth: { xs: "100%", md: "38ch" },
               }}
             >
-              Umów dopasowanie TTL
-            </Button>
-          </Box>
-        </Box>
+              {formatDisplayText(ttlPage.configuration.description)}
+            </Typography>
 
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
+            <Box
+              sx={{
+                mt: 3.1,
+                display: { xs: "none", md: "block" },
+              }}
+            >
+              <Button
+                component={NextLink}
+                href="/contact"
+                variant="contained"
+                disableElevation
+                sx={ctaButtonSx}
+              >
+                {ttlPage.configuration.ctaLabel}
+              </Button>
+            </Box>
+          </Box>
+
           <Box
-            component="img"
-            src={images[1]}
-            alt="TTL image 2"
             sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
-      </Box>
-
-      {/* Konfiguracje — PREMIUM (spacing dopasowany) */}
-      <Box
-        sx={{
-          mt: { xs: 6, md: 8 },
-          display: "grid",
-          gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          alignItems: "stretch",
-        }}
-      >
-        <Box
-          sx={{
-            px: { md: 2 },
-            backgroundColor: colors.surface,
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-          }}
-        >
-          <Typography
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-              fontSize: fontSizes.small,
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: colors.textSoft,
-              opacity: 0.75,
+              borderRadius: { xs: 0, md: 4 },
+              p: { xs: 0, md: 2.4 },
+              background: {
+                xs: "transparent",
+                md: "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.82) 100%)",
+              },
+              border: { xs: "none", md: `1px solid ${colors.border}` },
+              boxShadow: { xs: "none", md: colors.shadowSm },
+              overflow: { xs: "visible", md: "hidden" },
+              ...interactiveCardHoverSx,
+              "&:hover": {
+                transform: { xs: "none", md: "translateY(-2px)" },
+                boxShadow: { xs: "none", md: "0 16px 38px rgba(15,23,42,0.07)" },
+                borderColor: { xs: "transparent", md: "rgba(15,23,42,0.09)" },
+              },
             }}
           >
-            Specyfikacja / konfiguracja
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 1,
-              fontSize: fontSizes.subtitle,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
-            }}
-          >
-            Konfiguracje TTL
-          </Typography>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Dobieramy powiększenie, odległość roboczą i oprawę tak, abyś
-            pracował w naturalnej pozycji i miał powtarzalny obraz bez szukania
-            ustawień w trakcie pracy.
-          </Typography>
-
-          {/* Podpis dla powiększeń */}
-          <Typography
-            sx={{
-              mt: 3,
-              mb: 0.75,
-              fontSize: fontSizes.small,
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: colors.textSoft,
-              opacity: 0.75,
-            }}
-          >
-            Dostępne powiększenia
-          </Typography>
-
-          {/* Podpis dla powiększeń */}
-
-          <Typography
-            sx={{
-              mt: 0,
-              mb: 1.5,
-              fontSize: fontSizes.small,
-              lineHeight: 1.7,
-              color: colors.textSoft,
-            }}
-          >
-            Dobór zależy od typu zabiegów i pozycji pracy - dopasujemy je
-            podczas konsultacji.
-          </Typography>
-
-          {/* Kafelki powiększeń */}
-          <Box sx={{ mt: 2 }}>
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 2,
-                justifyItems: "start", // wyrównanie do lewej
+                display: { xs: "grid", md: "none" },
               }}
             >
-              {["2.5×", "4.0×", "3.0×", "3.5×"].map((m) => (
-                <Box
-                  key={m}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.2,
-                  }}
-                >
-                  {/* zielona kropka */}
-                  <Box
-                    sx={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      backgroundColor: colors.accent,
-                      flex: "0 0 auto",
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      color: colors.text,
-                      fontSize: 16,
-                      letterSpacing: "0.01em",
-                    }}
-                  >
-                    {m}
-                  </Typography>
+              <MobileSpecsTable
+                magnifications={ttlMagnifications}
+                rows={ttlTableRows}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                display: { xs: "none", md: "block" },
+                borderRadius: 3,
+                border: "1px solid rgba(15,23,42,0.06)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.75) 100%)",
+                backdropFilter: "blur(6px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
+                overflow: "hidden",
+              }}
+            >
+              <Box
+                component="table"
+                sx={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  tableLayout: "fixed",
+                }}
+              >
+                <Box component="thead">
+                  <Box component="tr">
+                    {[ttlPage.configuration.magnificationLabel, ...ttlMagnifications].map(
+                      (head, index) => (
+                        <Box
+                          key={head}
+                          component="th"
+                          sx={{
+                            px: index === 0 ? 1.8 : 1.2,
+                            py: 1.6,
+                            textAlign: index === 0 ? "left" : "center",
+                            fontSize: index === 0 ? 15.5 : 18,
+                            fontWeight: index === 0 ? 700 : 800,
+                            color:
+                              index === 0 ? colors.textSoft : colors.accent,
+                            letterSpacing: index === 0 ? "0" : "-0.02em",
+                            textTransform: "none",
+                            lineHeight: 1,
+                            borderBottom: "1px solid rgba(15,23,42,0.04)",
+                            backgroundColor: "rgba(14,165,164,0.08)",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {index === 0 ? head : formatMagnification(head)}
+                        </Box>
+                      ),
+                    )}
+                  </Box>
                 </Box>
-              ))}
+
+                <Box component="tbody">
+                  {ttlTableRows.map((row, rowIndex) => (
+                    <Box key={row.label} component="tr">
+                      <Box
+                        component="td"
+                        sx={{
+                          px: 1.8,
+                          py: 1.55,
+                          fontSize: 13.5,
+                          fontWeight: 700,
+                          color: colors.textSoft,
+                          borderBottom:
+                            rowIndex === ttlTableRows.length - 1
+                              ? "none"
+                              : "1px solid rgba(15,23,42,0.04)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {row.label}
+                      </Box>
+
+                      {row.values.map((value, valueIndex) => (
+                        <Box
+                          key={`${row.label}-${valueIndex}`}
+                          component="td"
+                          sx={{
+                            px: 1.2,
+                            py: 1.55,
+                            textAlign: "center",
+                            fontSize: 16,
+                            fontWeight: 700,
+                            color: colors.text,
+                            borderBottom:
+                              rowIndex === ttlTableRows.length - 1
+                                ? "none"
+                                : "1px solid rgba(15,23,42,0.04)",
+                            borderLeft:
+                              valueIndex === 0
+                                ? "none"
+                                : "1px solid rgba(15,23,42,0.04)",
+                            whiteSpace: "nowrap",
+                            letterSpacing: "-0.02em",
+                          }}
+                        >
+                          {value}
+                        </Box>
+                      ))}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </Box>
 
-        {/* RIGHT: Spec card */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-            pl: { xs: 3, md: 4 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            boxShadow: colors.shadow,
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <Typography
+          <Box
             sx={{
-              position: "relative",
-              mt: 2,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              color: colors.text,
-              fontSize: fontSizes.heading,
+              display: { xs: "block", md: "none" },
+              mt: 3.2,
             }}
           >
-            Najważniejsze parametry techniczne
-          </Typography>
-
-          <Typography
-            sx={{
-              position: "relative",
-              mt: 2.5,
-              color: colors.textSoft,
-              lineHeight: 1.7,
-              fontSize: fontSizes.small,
-            }}
-          >
-            Wartości zależą od konfiguracji - powiększenia, oprawy i korekcji
-            wzroku.
-          </Typography>
-
-          <Box sx={{ mt: 2 }}>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 2,
-                justifyItems: "start",
-              }}
-            >
-              {[
-                {
-                  label: "Odległość robocza",
-                  value: "Tutaj będą wpisane zakresy wartości roboczych",
-                },
-                {
-                  label: "Pole widzenia",
-                  value: "Tutaj będą wpisane zakresy pola widzenia",
-                },
-                {
-                  label: "Waga zestawu",
-                  value: "Tutaj będzie wpisana waga zestawu",
-                },
-                {
-                  label: "Korekcja wzroku",
-                  value: "Tutaj będzie wpisana korekcja wzroku",
-                },
-              ].map((param) => (
-                <Box
-                  key={param.label}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column", // nazwa nad wartością
-                    gap: 0.8, // odstęp między label a wartością
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
-                    {/* zielona kropka */}
-                    <Box
-                      sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: "50%",
-                        backgroundColor: colors.accent,
-                        flex: "0 0 auto",
-                      }}
-                    />
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        color: colors.text,
-                        fontSize: fontSizes.text,
-                      }}
-                    >
-                      {param.label}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    sx={{
-                      fontWeight: 600,
-                      color: colors.textSoft,
-                      fontSize: fontSizes.small,
-                      ml: "16px", // opcjonalnie, żeby wartość była lekko przesunięta pod nazwę
-                    }}
-                  >
-                    {param.value}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
+            <MobileConsultationSection />
           </Box>
         </Box>
       </Box>
     </>
   );
+}
+
+function MobileSpecsTable({ magnifications, rows }) {
+  return (
+    <Box
+      sx={{
+        borderRadius: 4,
+        border: "1px solid rgba(15,23,42,0.07)",
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.9) 100%)",
+        boxShadow: "none",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          px: 2.3,
+          pt: 2.35,
+          pb: 2.05,
+          borderBottom: "1px solid rgba(15,23,42,0.06)",
+          background:
+            "linear-gradient(180deg, rgba(14,165,164,0.08) 0%, rgba(14,165,164,0.035) 100%)",
+        }}
+      >
+        <Typography
+          sx={{
+            mb: 0.9,
+            fontSize: 15,
+            fontWeight: 800,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: colors.accent,
+            lineHeight: 1,
+            textAlign: "center",
+          }}
+        >
+          {ttlPage.configuration.magnificationLabel}
+        </Typography>
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            alignItems: "center",
+          }}
+        >
+          {magnifications.map((magnification, index) => (
+            <Box
+              key={magnification}
+              sx={{
+                px: 1.2,
+                textAlign: "center",
+                borderLeft:
+                  index === 0 ? "none" : "1px solid rgba(15,23,42,0.2)",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: colors.accent,
+                  fontSize: 17.5,
+                  fontWeight: 800,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.1,
+                  textAlign: "center",
+                }}
+              >
+                {formatMagnification(magnification)}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+
+      <Box sx={{ display: "grid", overflow: "hidden" }}>
+        {rows.map((row, rowIndex) => {
+          const normalizedLabel = formatMobileSpec(
+            row.label,
+            row.values[0],
+          ).label;
+          const normalizedValues = row.values.map(
+            (value) => formatMobileSpec(row.label, value).value,
+          );
+
+          return (
+            <Box
+              key={row.label}
+              sx={{
+                px: 2,
+                pt: 1.85,
+                pb: 2,
+                borderBottom:
+                  rowIndex === rows.length - 1
+                    ? "none"
+                    : "1px solid rgba(15,23,42,0.055)",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: colors.accent,
+                  fontSize: 13,
+                  fontWeight: 800,
+                  lineHeight: 1.25,
+                  letterSpacing: "0.06em",
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                }}
+              >
+                {normalizedLabel}
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: 1.05,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  alignItems: "center",
+                }}
+              >
+                {normalizedValues.map((value, index) => (
+                  <Box
+                    key={`${row.label}-${index}`}
+                    sx={{
+                      px: 1.15,
+                      textAlign: "center",
+                      borderLeft:
+                        index === 0 ? "none" : "1px solid rgba(15,23,42,0.2)",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: colors.text,
+                        fontSize: 16,
+                        fontWeight: 800,
+                        lineHeight: 1.35,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {value}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+function MobileConsultationSection() {
+  return (
+    <Box
+      sx={{
+        pt: 2.4,
+        borderTop: "1px solid rgba(15,23,42,0.08)",
+      }}
+    >
+      <Typography
+        sx={{
+          color: colors.text,
+          fontSize: 18,
+          fontWeight: 800,
+          lineHeight: 1.25,
+          letterSpacing: "-0.02em",
+          maxWidth: "22ch",
+        }}
+      >
+        {ttlPage.configuration.mobile.title}
+      </Typography>
+
+      <Typography
+        sx={{
+          mt: 0.75,
+          color: colors.textSoft,
+          fontSize: 14.5,
+          lineHeight: 1.65,
+          maxWidth: "34ch",
+        }}
+      >
+        {formatDisplayText(ttlPage.configuration.mobile.description)}
+      </Typography>
+
+      <Button
+        component={NextLink}
+        href="/contact"
+        variant="contained"
+        disableElevation
+        sx={{
+          ...ctaButtonSx,
+          mt: 1.5,
+        }}
+      >
+        {ttlPage.configuration.mobile.buttonLabel}
+      </Button>
+    </Box>
+  );
+}
+
+function formatMobileSpec(label, value) {
+  let cleanLabel = String(label)
+    .replace(/\s*\(mm\)/gi, "")
+    .replace(/\s*\(g\)/gi, "")
+    .trim();
+
+  if (/głęb[a-ząćęłńóśżź\s]*/i.test(cleanLabel))
+    cleanLabel = "Głębia ostrości";
+  if (/pole widzenia/i.test(cleanLabel)) cleanLabel = "Pole widzenia";
+
+  let formattedValue = String(value).trim();
+
+  if (
+    /ogniskowa/i.test(label) ||
+    /głęb[a-ząćęłńóśżź\s]*/i.test(label) ||
+    /pole widzenia/i.test(label)
+  ) {
+    if (!/mm$/i.test(formattedValue)) {
+      formattedValue = `${formattedValue} mm`;
+    }
+  }
+
+  if (/waga/i.test(label)) {
+    if (!/g$/i.test(formattedValue)) {
+      formattedValue = `${formattedValue} g`;
+    }
+  }
+
+  return {
+    label: cleanLabel,
+    value: formattedValue,
+  };
+}
+
+function formatMagnification(value) {
+  return String(value).replace(/x/gi, "x");
 }

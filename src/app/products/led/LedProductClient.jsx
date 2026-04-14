@@ -1,398 +1,265 @@
 "use client";
 
-import { useMemo } from "react";
 import NextLink from "next/link";
-
 import { Box, Button, Typography } from "@mui/material";
 
 import colors from "@/data/colors";
+import content from "@/data/content";
+import { formatDisplayText } from "@/lib/text";
+import {
+  ProductBenefitLine,
+  ProductBulletItem,
+  ProductImageCard,
+  ProductSectionEyebrow,
+} from "@/components/products/ProductPageShared";
+import {
+  bodyTextSx,
+  ctaButtonSx,
+  heroCardSx,
+  heroAccentSx,
+  interactiveCardHoverSx,
+  sectionHeadingSx,
+} from "@/components/products/productPageStyles";
+
+const images = [
+  "/images/led-product/led-free-2.webp",
+  "/images/led-product/led-free.webp",
+  "/images/led-product/led-ergo.webp",
+];
+
+const ergoImageCenter = "53.7% 48.4%";
+const freeImageCenter = "49.5% 49.7%";
+
+const ledPage = content.products.led.page;
 
 export default function LedProductClient() {
-  const images = useMemo(() => ["/led-1.jpg", "/led-2.jpg"], []);
-
-  const fontSizes = {
-    title: { xs: 32, sm: 40, md: 46 },
-    subtitle: { xs: 26, md: 34 },
-    text: 18,
-    small: 16,
-    mini: 14,
-    heading: 20,
-  };
-
   return (
     <>
       <Box
         sx={{
           mt: { xs: 4, md: 6 },
           display: "grid",
-          pb: 1,
           gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1.05fr 0.95fr" },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
           alignItems: "center",
         }}
       >
-        {/* LEFT: Gallery */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
-          <Box
-            component="img"
-            src={images[0]}
-            alt="TTL image 1"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
+        <ProductImageCard
+          src={images[0]}
+          alt="Oswietlenie LED do lup"
+          loading="eager"
+          fetchPriority="high"
+          objectPosition={{ xs: "55% 40%", sm: "55% 40%", md: "center 50%" }}
+        />
 
-        {/* RIGHT: Product card */}
-        <Box
-          sx={{
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-            pl: { xs: 3, md: 4 },
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            boxShadow: colors.shadow,
-          }}
-        >
+        <Box sx={heroCardSx}>
           <Typography
             sx={{
-              mt: 2,
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              fontSize: fontSizes.title,
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+              lineHeight: 0.98,
+              fontSize: { xs: 36, sm: 42, md: 52 },
               color: colors.text,
             }}
           >
-            Oświetlenie LED do lup
+            {ledPage.hero.title}
           </Typography>
-
-          {/* mini meta */}
-          <Box
-            sx={{
-              mt: 2.5,
-              display: "flex",
-              alignItems: "center",
-              gap: 1.2,
-              color: colors.textSoft,
-              flexWrap: "wrap",
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: fontSizes.mini,
-                fontWeight: 800,
-                color: colors.accent,
-                letterSpacing: "0.1em", // <-- zwiększa odstęp między literami, także przy kropkach
-              }}
-            >
-              Komfort • Ergonomia • Przejrzystość
-            </Typography>
-          </Box>
 
           <Typography
             sx={{
-              mt: 3,
-              color: colors.textSoft,
-              lineHeight: 1.75,
+              ...heroAccentSx,
             }}
           >
-            Dobre oświetlenie eliminuje cienie i zwiększa kontrast w polu
-            zabiegowym. LED do lup działa w osi widzenia, gwarantując
-            równomierny i stabilny obraz, bez potrzeby ciągłego przesuwania
-            lampy.
+            {ledPage.hero.accent}
           </Typography>
 
-          <Box sx={{ mt: 4, display: "grid", gap: 1.5, pb: 4 }}>
-            {[
-              "Endodoncja",
-              "Protetyka i stomatologia estetyczna",
-              "Chirurgia i periodontologia",
-              "Praca na detalach i granicach preparacji",
-            ].map((t) => (
-              <Box
-                key={t}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.2,
-                  color: colors.textSoft,
-                  fontWeight: 700,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                  }}
-                />
-                <span>{t}</span>
-              </Box>
+          <Typography
+            sx={{
+              mt: 2.6,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "34ch" },
+            }}
+          >
+            {formatDisplayText(ledPage.hero.description)}
+          </Typography>
+
+          <Box
+            sx={{
+              mt: 3.2,
+              display: "grid",
+              gap: 1.2,
+            }}
+          >
+            {ledPage.hero.uses.map((item) => (
+              <ProductBulletItem key={item}>{item}</ProductBulletItem>
             ))}
           </Box>
         </Box>
       </Box>
 
-      {/* Najważniejsze korzyści — bez otoczki, styl jak konfiguracje */}
       <Box
         sx={{
-          mt: { xs: 6, md: 8 },
+          mt: { xs: 7, md: 9 },
           display: "grid",
           gap: { xs: 3, md: 4 },
           gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
           alignItems: "center",
         }}
       >
-        <Box sx={{ px: { md: 2 } }}>
+        <Box sx={{ px: { md: 1 } }}>
+          <ProductSectionEyebrow>{ledPage.benefits.eyebrow}</ProductSectionEyebrow>
+
           <Typography
             sx={{
-              fontSize: fontSizes.subtitle,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
+              ...sectionHeadingSx,
+              maxWidth: { xs: "100%", md: "14ch" },
             }}
           >
-            Najważniejsze korzyści
+            {ledPage.benefits.title}
           </Typography>
 
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Oświetlenie LED do lup zapewnia powtarzalne warunki widzenia
-            niezależnie od pozycji pacjenta i etapu zabiegu. To realne wsparcie
-            ergonomii i precyzji pracy.
+          <Typography
+            sx={{
+              mt: 1.8,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "40ch" },
+            }}
+          >
+            {formatDisplayText(ledPage.benefits.description)}
           </Typography>
 
-          <Box sx={{ mt: 3.5, display: "grid", gap: 1.6 }}>
-            {[
-              {
-                title: "Równomierne oświetlenie pola zabiegowego",
-                desc: "Jednolita wiązka światła bez ostrych cieni - lepsza kontrola nad detalami.",
-              },
-              {
-                title: "Większa precyzja i kontrast obrazu",
-                desc: "Wyraźne granice preparacji i struktury tkanek w całym polu widzenia.",
-              },
-              {
-                title: "Mniejsze uzależnienie od lampy unitu",
-                desc: "Światło podąża za wzrokiem, niezależnie od pozycji głowy i pacjenta.",
-              },
-            ].map((b) => (
-              <Box
-                key={b.title}
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 1.2,
-                }}
-              >
-                <Box
-                  sx={{
-                    mt: "10px",
-                    width: 8,
-                    height: 8,
-                    borderRadius: 999,
-                    backgroundColor: colors.accent,
-                    flex: "0 0 auto",
-                  }}
-                />
-                <Box>
-                  <Typography sx={{ fontWeight: 900, color: colors.text }}>
-                    {b.title}
-                  </Typography>
-                  <Typography
-                    sx={{ mt: 0.4, color: colors.textSoft, lineHeight: 1.7 }}
-                  >
-                    {b.desc}
-                  </Typography>
-                </Box>
-              </Box>
+          <Box sx={{ mt: 3.4, display: "grid", gap: 1.8 }}>
+            {ledPage.benefits.items.map((item) => (
+              <ProductBenefitLine
+                key={item.title}
+                title={item.title}
+                desc={item.desc}
+              />
             ))}
           </Box>
+        </Box>
 
-          <Box sx={{ mt: 3.25 }}>
+        <Box
+          sx={{
+            width: "100%",
+            mx: { xs: "auto", md: 0 },
+          }}
+        >
+          <Box
+            sx={{
+              borderRadius: 5,
+              overflow: "hidden",
+              border: `1px solid ${colors.border}`,
+              backgroundColor: colors.surfaceAlt,
+              boxShadow: colors.shadowSm,
+              position: "relative",
+              aspectRatio: "1 / 1",
+              display: "grid",
+              placeItems: "center",
+              ...interactiveCardHoverSx,
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "inherit",
+                overflow: "hidden",
+                backgroundColor: colors.white,
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
+              <Box
+                component="img"
+                src={images[2]}
+                alt="Nowoczesne oswietlenie Ergo Eye Optic"
+                loading="lazy"
+                decoding="async"
+                fetchPriority="auto"
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                  objectPosition: ergoImageCenter,
+                  transform: "scale(1.02)",
+                  transformOrigin: "center",
+                  backgroundColor: colors.white,
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          mt: { xs: 7, md: 9 },
+          display: "grid",
+          gap: { xs: 3, md: 4 },
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            order: { xs: 1, md: 2 },
+            width: "100%",
+            mx: { xs: "auto", md: 0 },
+          }}
+        >
+          <ProductImageCard
+            src={images[1]}
+            alt="Korzysci oswietlenia LED do lup"
+            objectPosition={freeImageCenter}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            order: { xs: 2, md: 1 },
+            mt: 3.2,
+            maxWidth: { xs: "100%", md: "42ch" },
+          }}
+        >
+          <ProductSectionEyebrow>
+            {ledPage.configuration.eyebrow}
+          </ProductSectionEyebrow>
+
+          <Typography
+            sx={{
+              ...sectionHeadingSx,
+              maxWidth: { xs: "100%", md: "11ch" },
+            }}
+          >
+            {ledPage.configuration.title}
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 1.8,
+              ...bodyTextSx,
+              maxWidth: { xs: "100%", md: "38ch" },
+            }}
+          >
+            {formatDisplayText(ledPage.configuration.description)}
+          </Typography>
+
+          <Box
+            sx={{
+              mt: 3.1,
+            }}
+          >
             <Button
               component={NextLink}
               href="/contact"
               variant="contained"
               disableElevation
-              sx={{
-                borderRadius: 3,
-                fontWeight: 900,
-                px: 3,
-                py: 1.2,
-                textTransform: "none",
-                backgroundColor: colors.accent,
-                "&:hover": { backgroundColor: colors.accent },
-              }}
+              sx={ctaButtonSx}
             >
-              Dobierz oświetlenie do swojej pracy
+              {ledPage.configuration.ctaLabel}
             </Button>
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            borderRadius: 5,
-            overflow: "hidden",
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.surfaceAlt,
-            boxShadow: colors.shadowSm,
-            position: "relative",
-            aspectRatio: "7/5",
-          }}
-        >
-          <Box
-            component="img"
-            src={images[1]}
-            alt="TTL image 2"
-            sx={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 50%",
-              filter: "contrast(1.02) saturate(1.02)",
-            }}
-          />
-        </Box>
-      </Box>
-      {/* RIGHT: Spec card */}
-
-      <Box
-        sx={{
-          mt: { xs: 6, md: 8 },
-          display: "grid",
-          gap: { xs: 3, md: 4 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-          alignItems: "stretch",
-        }}
-      >
-        <Box
-          sx={{
-            px: { md: 2 },
-            backgroundColor: colors.surface,
-            borderRadius: 5,
-            p: { xs: 2.5, md: 3 },
-          }}
-        >
-          <Typography
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1,
-              fontSize: fontSizes.small,
-              fontWeight: 900,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: colors.textSoft,
-              opacity: 0.9,
-            }}
-          >
-            Specyfikacja / konfiguracja
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 1,
-              fontSize: fontSizes.subtitle,
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              color: colors.text,
-            }}
-          >
-            Konfiguracje LED
-          </Typography>
-
-          <Typography sx={{ mt: 2, color: colors.textSoft, lineHeight: 1.8 }}>
-            Konfigurujemy oświetlenie LED pod Twój styl pracy - dobierając
-            sposób zasilania, montaż i parametry światła tak, aby zapewnić
-            stabilny obraz i komfort przez cały dzień pracy.
-          </Typography>
-
-          <Box sx={{ mt: 2 }}>
-            <Box
-              sx={{
-                mt: 2.5,
-                display: "grid",
-                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: { xs: 2.2, sm: 3 },
-              }}
-            >
-              {[
-                { label: "Wersja", value: "Przewodowa lub bezprzewodowa" },
-                {
-                  label: "Zasilanie",
-                  value: "Akumulator Li-ion - do 8 h pracy",
-                },
-                {
-                  label: "Montaż",
-                  value: "System clip-on do lup i opraw okularowych",
-                },
-                {
-                  label: "Temperatura barwowa",
-                  value: "4 500 K - 6 500 K (neutralne - chłodne)",
-                },
-              ].map((param) => (
-                <Box key={param.label} sx={{ minWidth: 0 }}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.1 }}>
-                    <Box
-                      sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 999,
-                        backgroundColor: colors.accent,
-                        opacity: 0.9,
-                        flex: "0 0 auto",
-                      }}
-                    />
-                    <Typography
-                      sx={{
-                        fontWeight: 700, // było 700/800 -> zostaje, ale spokojniej
-                        color: colors.text,
-                        fontSize: 16, // było fontSizes.text (18) -> mniej krzyku
-                        letterSpacing: "0.01em",
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      {param.label}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    sx={{
-                      mt: 0.8,
-                      color: colors.textSoft,
-                      fontSize: 14, // mniejsze = bardziej medical
-                      lineHeight: 1.7,
-                      fontWeight: 500, // było 600 -> spokojniej
-                      pl: "17px", // wyrównanie pod tekstem (kropka + gap)
-                    }}
-                  >
-                    {param.value}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
           </Box>
         </Box>
       </Box>

@@ -2,12 +2,12 @@ import { Box, Container } from "@mui/material";
 import NavbarPill from "@/components/NavbarPill";
 import Footer from "@/components/Footer";
 import colors from "@/data/colors";
-import AccessoriesProductClient from "./AccessoriesProductClient.jsx";
+import AccessoriesProductClient from "./ErgoProductClient.jsx";
 
 export const metadata = {
-  title: "Akcesoria do lup EYE OPTIC",
+  title: "Lupy Ergo Eye Optic",
   description:
-    "Akcesoria EYE OPTIC do lup stomatologicznych. Oprawy, paski stabilizujące, etui, osłony i elementy dopasowania.",
+    "Lupy Ergo Eye Optic to rozwiązanie dla osób, które oczekują maksymalnej stabilności obrazu i pracy bez konieczności korekty ustawień.",
 };
 
 export default function Page() {
@@ -22,7 +22,9 @@ export default function Page() {
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         <NavbarPill />
 
-        <AccessoriesProductClient />
+        <Box sx={{ pt: { xs: 4, md: 4 } }}>
+          <AccessoriesProductClient />
+        </Box>
 
         <Footer />
       </Container>

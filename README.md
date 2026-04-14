@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eye Optic
 
-## Getting Started
+Strona produktowa Next.js przygotowana do statycznego wdrożenia na hostingu współdzielonym, np. Cyber_Folks.
 
-First, run the development server:
+## Komendy
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `npm run dev` uruchamia tryb developerski.
+- `npm run build` generuje statyczną wersję strony w katalogu `out/`.
+- `npm start` uruchamia lokalny podgląd gotowego eksportu statycznego.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Adres strony
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Przed buildem ustaw w `.env.local`:
 
-## Learn More
+```bash
+NEXT_PUBLIC_SITE_URL=https://eyeoptic.pl
+```
 
-To learn more about Next.js, take a look at the following resources:
+Ta wartość jest używana w `sitemap.xml` i `robots.txt`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Wdrożenie
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pełna instrukcja wdrożenia na Cyber_Folks, konfiguracji poczty i bezpieczeństwa znajduje się w [DEPLOY_CYBERFOLKS.md](./DEPLOY_CYBERFOLKS.md).
 
-## Deploy on Vercel
+## Kontakt na stronie
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Obecna strona kontaktowa korzysta z linków `tel:` i `mailto:`. Nie wymaga backendu ani obsługi formularza po stronie serwera.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Jeśli w przyszłości chcesz dodać prawdziwy formularz kontaktowy wysyłający maile bezpośrednio z witryny, na hostingu współdzielonym potrzebny będzie osobny mechanizm wysyłki, np. endpoint PHP albo zewnętrzna usługa.

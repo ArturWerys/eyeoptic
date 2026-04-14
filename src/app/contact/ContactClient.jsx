@@ -1,342 +1,358 @@
 "use client";
 
-import { useState } from "react";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
-import colors from "@/data/colors";
-import contact from "@/data/contact_info.json";
+import { Box, Button, Typography } from "@mui/material";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import colors from "@/data/colors";
+import contact from "@/data/contact_info.json";
+import { formatDisplayText } from "@/lib/text";
 
 const fontSizes = {
   title: { xs: 32, sm: 40, md: 46 },
-  subtitle: { xs: 22, md: 28 },
-  text: 18,
-  small: 16,
-  mini: 14,
-  heading: 20,
+  subtitle: { xs: 28, md: 34 },
 };
 
-const tfSx = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 3,
-    backgroundColor: colors.surface,
-    "& fieldset": { borderColor: colors.border },
-    "&:hover fieldset": { borderColor: colors.border },
-    "&.Mui-focused fieldset": { borderColor: colors.accent },
-    "&.Mui-focused": {
-      boxShadow: `0 0 0 4px ${colors.accent}1A`, // delikatny focus (10% alpha)
-    },
-  },
-  "& .MuiInputBase-input::placeholder": {
-    color: colors.textSoft,
-    opacity: 0.7,
-  },
+const supportingTextSx = {
+  color: colors.textSoft,
+  lineHeight: 1.85,
 };
 
-const buttonSx = {
-  borderRadius: 3,
-  fontWeight: 900,
-  px: 3,
-  py: 1.2,
-  textTransform: "none",
-  backgroundColor: colors.accent,
-  "&:hover": { backgroundColor: colors.accent },
-};
-
-const contactInfoData = [
+const contactItems = [
   {
     id: "phone",
+    featured: true,
+    label: "Telefon",
     icon: <PhoneOutlinedIcon sx={{ fontSize: 20 }} />,
     value: contact.phone,
     href: `tel:${contact.phone.replace(/\s/g, "")}`,
   },
   {
     id: "email",
+    label: "E-mail",
     icon: <EmailOutlinedIcon sx={{ fontSize: 20 }} />,
     value: contact.email,
     href: `mailto:${contact.email}`,
   },
   {
     id: "address",
+    label: "Adres",
     icon: <LocationOnOutlinedIcon sx={{ fontSize: 20 }} />,
     value: contact.address,
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       contact.address,
     )}`,
+    external: true,
+  },
+  {
+    id: "hours",
+    label: "Godziny",
+    icon: <AccessTimeOutlinedIcon sx={{ fontSize: 20 }} />,
+    value: "Poniedziałek - Piątek\n8:00 - 17:00",
   },
 ];
 
-// Sub-component for contact info panel
-function ContactInfoPanel() {
-  return (
-    <Box
-      sx={{
-        p: { xs: 2.5, md: 3 },
-        backgroundColor: colors.surfaceAlt,
-        borderRight: { xs: "none", md: `1px solid ${colors.border}` },
-      }}
-    >
+const sharedButtonSx = {
+  minHeight: { xs: 44, md: 52 },
+  px: { xs: 1.4, sm: 3 },
+  width: { xs: "calc(50% - 6px)", sm: 210 },
+  borderRadius: 999,
+  fontSize: { xs: 13.5, md: 15.5 },
+  fontWeight: 800,
+  lineHeight: 1,
+  textTransform: "none",
+  boxShadow: "none",
+  whiteSpace: "nowrap",
+};
+
+const primaryButtonSx = {
+  ...sharedButtonSx,
+  backgroundColor: colors.accent,
+  "&:hover": {
+    backgroundColor: colors.accent,
+    boxShadow: "none",
+  },
+};
+
+const secondaryButtonSx = {
+  ...sharedButtonSx,
+  color: colors.accent,
+  backgroundColor: "rgba(14,165,164,0.12)",
+  border: "1px solid rgba(14,165,164,0.2)",
+  "&:hover": {
+    backgroundColor: "rgba(14,165,164,0.16)",
+    boxShadow: "none",
+  },
+};
+
+function ContactInfoItem({ item }) {
+  const content = (
+    <Box sx={{ minWidth: 0 }}>
       <Typography
         sx={{
-          mt: 1,
-          fontSize: fontSizes.subtitle,
-          fontWeight: 900,
-          letterSpacing: "-0.02em",
-          lineHeight: 1.12,
-          color: colors.text,
+          fontSize: 13,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: item.featured ? colors.text : colors.textMute,
+          fontWeight: 700,
         }}
       >
-        Dane kontaktowe
+        {item.label}
       </Typography>
 
-      <Typography sx={{ mt: 1.5, color: colors.textSoft, lineHeight: 1.8 }}>
-        Masz pytanie o konkretną lupę, jej konfigurację, dopasowanie lub inny
-        produkt? Napisz lub zadzwoń do nas!
+      <Typography
+        className="contact-item-value"
+        sx={{
+          mt: 0.55,
+          color: colors.text,
+          lineHeight: 1.7,
+          fontWeight: item.featured ? 700 : 500,
+          fontSize: item.featured ? { xs: 17, md: 18 } : "inherit",
+          letterSpacing: item.featured ? "-0.01em" : "normal",
+          whiteSpace: "pre-line",
+          transition: "color 180ms ease",
+        }}
+      >
+        {formatDisplayText(item.value)}
       </Typography>
-
-      <Box sx={{ mt: 3.25, display: "grid", gap: 1.4 }}>
-        {contactInfoData.map((item) => (
-          <Box
-            key={item.id}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.2,
-              color: colors.textSoft,
-            }}
-          >
-            <Box
-              sx={{
-                color: colors.accent,
-                display: "grid",
-                placeItems: "center",
-                flex: "0 0 auto",
-              }}
-            >
-              {item.icon}
-            </Box>
-
-            <Link
-              component="a"
-              href={item.href}
-              underline="none"
-              target={item.id === "address" ? "_blank" : undefined}
-              rel={item.id === "address" ? "noopener noreferrer" : undefined}
-              sx={{
-                color: colors.textSoft,
-                lineHeight: 1.7,
-                fontWeight: 500,
-                letterSpacing: "0.01em",
-                "&:hover": { color: colors.text, textDecoration: "underline" },
-                textDecorationColor: colors.border,
-              }}
-            >
-              {item.value}
-            </Link>
-          </Box>
-        ))}
-      </Box>
-
-      <Box sx={{ mt: 3.5 }}>
-        <Typography
-          sx={{
-            mt: 1,
-            color: colors.textSoft,
-            lineHeight: 1.7,
-            fontWeight: 500,
-          }}
-        >
-          Poniedziałek - Piątek
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
-          <AccessTimeOutlinedIcon sx={{ color: colors.accent }} />
-          <Typography
-            sx={{
-              color: colors.textSoft,
-              lineHeight: 1.7,
-              fontWeight: 500,
-            }}
-          >
-            9:00 - 18:00
-          </Typography>
-        </Box>
-      </Box>
     </Box>
   );
-}
 
-// Sub-component for contact form
-function ContactForm({ form, onChange, onSubmit }) {
   return (
     <Box
+      component={item.href ? "a" : "div"}
+      href={item.href}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noopener noreferrer" : undefined}
       sx={{
-        p: { xs: 2.5, md: 3 },
-        backgroundColor: colors.surface,
-        borderTop: { xs: `1px solid ${colors.border}`, md: "none" },
+        display: "grid",
+        gridTemplateColumns: "auto 1fr",
+        gap: 1.5,
+        alignItems: "start",
+        p: 2,
+        borderRadius: 3,
+        backgroundColor: item.featured
+          ? "rgba(14,165,164,0.06)"
+          : colors.surface,
+        border: `1px solid ${item.featured ? "rgba(14,165,164,0.24)" : colors.border}`,
+        textDecoration: "none",
+        color: "inherit",
+        cursor: item.href ? "pointer" : "default",
+        transition:
+          "background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease",
+        WebkitTapHighlightColor: "transparent",
+        "&:hover": item.href
+          ? {
+              backgroundColor: item.featured
+                ? "rgba(14,165,164,0.1)"
+                : colors.surfaceAlt,
+              borderColor: colors.accent,
+              boxShadow: colors.shadowSm,
+            }
+          : undefined,
+        "&:active": item.href
+          ? {
+              backgroundColor: colors.accentSoft,
+              transform: "scale(0.985)",
+            }
+          : undefined,
+        "&:hover .contact-item-value": item.href
+          ? {
+              color: colors.accent,
+            }
+          : undefined,
       }}
     >
-      <Box component="form" onSubmit={onSubmit} sx={{ mt: 2.5 }}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-            gap: 2,
-          }}
-        >
-          <Box>
-            <Typography sx={{ mb: 0.75, fontWeight: 700, color: colors.text }}>
-              Imię
-            </Typography>
-            <TextField
-              fullWidth
-              name="firstName"
-              value={form.firstName}
-              onChange={onChange}
-              placeholder="Imię"
-              autoComplete="given-name"
-              sx={tfSx}
-            />
-          </Box>
-
-          <Box>
-            <Typography sx={{ mb: 0.75, fontWeight: 700, color: colors.text }}>
-              Nazwisko
-            </Typography>
-            <TextField
-              fullWidth
-              name="lastName"
-              value={form.lastName}
-              onChange={onChange}
-              placeholder="Nazwisko"
-              autoComplete="family-name"
-              sx={tfSx}
-            />
-          </Box>
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <Typography sx={{ mb: 0.75, fontWeight: 700, color: colors.text }}>
-            Email
-          </Typography>
-          <TextField
-            fullWidth
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={onChange}
-            placeholder="email@example.com"
-            autoComplete="email"
-            sx={tfSx}
-            required
-          />
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <Typography sx={{ mb: 0.75, fontWeight: 700, color: colors.text }}>
-            Numer telefonu
-          </Typography>
-          <TextField
-            fullWidth
-            type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={onChange}
-            placeholder="+48 000 000 000"
-            autoComplete="tel"
-            sx={tfSx}
-          />
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <Typography sx={{ mb: 0.75, fontWeight: 700, color: colors.text }}>
-            Wiadomość
-          </Typography>
-          <TextField
-            fullWidth
-            multiline
-            minRows={6}
-            name="message"
-            value={form.message}
-            onChange={onChange}
-            placeholder="Twoja wiadomość..."
-            sx={{
-              ...tfSx,
-              "& .MuiInputBase-input": {
-                ...tfSx["& .MuiInputBase-input"],
-                lineHeight: 1.7,
-              },
-            }}
-            required
-          />
-        </Box>
-
-        <Box sx={{ mt: 2.5, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            disableElevation
-            sx={buttonSx}
-          >
-            Wyślij wiadomość
-          </Button>
-        </Box>
+      <Box
+        sx={{
+          width: 42,
+          height: 42,
+          display: "grid",
+          placeItems: "center",
+          borderRadius: "50%",
+          color: colors.accent,
+          backgroundColor: item.featured
+            ? "rgba(14,165,164,0.14)"
+            : colors.accentSoft,
+          flex: "0 0 auto",
+        }}
+      >
+        {item.icon}
       </Box>
+
+      {content}
     </Box>
   );
 }
 
 export default function ContactClient() {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Contact form:", form);
-    // TODO: podłącz API
-    alert("Wysłano (demo).");
-  };
-
   return (
-    <Box sx={{ mt: { xs: 4, md: 6 } }}>
+    <Box sx={{ mt: { xs: 5, sm: 5.5, md: 6, lg: 6.5 } }}>
       <Typography
         sx={{
+          py: { xs: 1.5, md: 2 },
+          mb: { xs: 0.75, md: 1 },
           fontWeight: 700,
           letterSpacing: "-0.03em",
           lineHeight: 1.05,
           fontSize: fontSizes.title,
           color: colors.text,
-          mb: { xs: 2.5, md: 3 },
-          py: 4,
         }}
       >
         Skontaktuj się z nami
       </Typography>
+
+      <Typography
+        sx={{
+          display: { xs: "block", md: "none" },
+          mb: { xs: 2.5, md: 0 },
+          maxWidth: 680,
+          ...supportingTextSx,
+          fontSize: { xs: 16, md: 17 },
+        }}
+      >
+        Chętnie pomożemy dobrać odpowiednie lupy, konfigurację{" "}
+        <Box component="span" sx={{ display: { xs: "inline", md: "block" } }}>
+          i akcesoria do Twoich potrzeb.
+        </Box>
+      </Typography>
+
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "0.42fr 0.58fr" },
-          gap: 0,
+          gridTemplateColumns: { xs: "1fr", md: "0.92fr 1.08fr" },
+          gridTemplateRows: { xs: "auto auto", md: "1fr auto auto 1fr" },
           overflow: "hidden",
           borderRadius: 5,
           border: `1px solid ${colors.border}`,
           boxShadow: colors.shadowSm,
-          backgroundColor: colors.surface,
+          background:
+            "linear-gradient(135deg, rgba(247,250,252,0.96) 0%, rgba(255,255,255,1) 52%, rgba(236,253,245,0.72) 100%)",
         }}
       >
-        <ContactInfoPanel />
-        <ContactForm form={form} onChange={onChange} onSubmit={onSubmit} />
+        <Box
+          sx={{
+            p: { xs: 2.5, md: 3.5 },
+            gridColumn: { xs: "1", md: "1" },
+            gridRow: { xs: "1", md: "1 / span 4" },
+            borderTop: "none",
+            borderBottom: "none",
+            borderRight: { xs: "none", md: `1px solid ${colors.border}` },
+            backgroundColor: "rgba(255,255,255,0.78)",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: 13,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: colors.textMute,
+              fontWeight: 800,
+            }}
+          >
+            Dane kontaktowe
+          </Typography>
+
+          <Box sx={{ mt: 2.5, display: "grid", gap: 1.2 }}>
+            {contactItems.map((item) => (
+              <ContactInfoItem key={item.id} item={item} />
+            ))}
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            p: { xs: 2.5, md: 4 },
+            pb: { xs: 2, md: 1 },
+            gridColumn: { xs: "1", md: "2" },
+            gridRow: { xs: "2", md: "2" },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
+          }}
+        >
+          <Typography
+            sx={{
+              display: { xs: "none", md: "block" },
+              fontSize: 13,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: colors.accent,
+              fontWeight: 800,
+            }}
+          >
+            Indywidualny dobór
+          </Typography>
+
+          <Typography
+            sx={{
+              display: { xs: "none", md: "block" },
+              mt: 1.5,
+              maxWidth: "none",
+              fontSize: { md: fontSizes.subtitle.md },
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.08,
+              color: colors.text,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Umów indywidualny dobór
+          </Typography>
+
+          <Typography
+            sx={{
+              display: { xs: "none", md: "block" },
+              mt: 2,
+              maxWidth: 560,
+              ...supportingTextSx,
+              fontSize: { md: 17 },
+            }}
+          >
+            Chętnie pomożemy dobrać odpowiednie lupy, konfigurację
+            <Box component="span" sx={{ display: "block" }}>
+              i akcesoria do Twoich potrzeb.
+            </Box>
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            p: { xs: 2.5, md: 4 },
+            pt: { xs: 2.25, md: 0 },
+            gridColumn: { xs: "1", md: "2" },
+            gridRow: { xs: "2", md: "3" },
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: { xs: "nowrap", sm: "wrap" },
+            gap: { xs: 1, sm: 1.5 },
+            alignItems: { xs: "center", md: "flex-start" },
+            justifyContent: { xs: "stretch", sm: "flex-start" },
+            backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
+          }}
+        >
+          <Button
+            component="a"
+            href={`tel:${contact.phone.replace(/\s/g, "")}`}
+            variant="contained"
+            disableElevation
+            sx={primaryButtonSx}
+          >
+            Zadzwoń
+          </Button>
+
+          <Button
+            component="a"
+            href={`mailto:${contact.email}`}
+            variant="contained"
+            disableElevation
+            sx={secondaryButtonSx}
+          >
+            Napisz e-mail
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
