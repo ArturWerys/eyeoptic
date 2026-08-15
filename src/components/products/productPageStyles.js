@@ -1,4 +1,5 @@
 import colors from "@/data/colors";
+import { getActionButtonSx } from "@/components/ui/buttonStyles";
 
 export const sectionHeadingSx = {
   fontSize: { xs: 34, sm: 40, md: 44 },
@@ -46,23 +47,11 @@ export const interactiveCardHoverSx = {
   },
 };
 
-export const ctaButtonSx = {
-  borderRadius: 2.8,
-  backgroundColor: "rgba(14,165,164,0.12)",
-  color: colors.accent,
-  border: "1px solid rgba(14,165,164,0.2)",
+export const ctaButtonSx = getActionButtonSx("primary", {
   fontSize: { xs: 14.5, md: 15.5 },
-  fontWeight: 800,
-  lineHeight: 1,
   minHeight: { xs: 42, md: 46 },
   px: { xs: 2.1, md: 2.8 },
-  textTransform: "none",
-  boxShadow: "none",
-  "&:hover": {
-    backgroundColor: "rgba(14,165,164,0.16)",
-    boxShadow: "none",
-  },
-};
+});
 
 export const heroCardSx = {
   borderRadius: 5,

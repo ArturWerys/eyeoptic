@@ -1,10 +1,41 @@
 "use client";
 
 import NextLink from "next/link";
-import { Box, Container, Link, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
+import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
 import { formatDisplayText } from "@/lib/text";
+
+const footerSocialLinks = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    icon: <InstagramIcon sx={{ fontSize: 18 }} />,
+    href: contact.social.instagram,
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    icon: <FacebookRoundedIcon sx={{ fontSize: 18 }} />,
+    href: contact.social.facebook,
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    icon: <YouTubeIcon sx={{ fontSize: 18 }} />,
+    href: contact.social.youtube,
+  },
+];
 
 export default function Footer() {
   return (
@@ -29,17 +60,49 @@ export default function Footer() {
             <Typography sx={{ fontWeight: 900, color: colors.text }}>
               Eye Optic
             </Typography>
-            <Typography
-              sx={{
-                mt: 1,
-                color: colors.textSoft,
-                fontSize: 13,
-                maxWidth: 360,
-                lineHeight: 1.7,
-              }}
-            >
-              {formatDisplayText("Simply see perfectly!")}
-            </Typography>
+            <Box sx={{ mt: 1.5, display: "grid", gap: 1 }}>
+              <Typography
+                sx={{
+                  color: colors.textSoft,
+                  fontSize: 13,
+                  maxWidth: 360,
+                  lineHeight: 1.7,
+                }}
+              >
+                {formatDisplayText("Simply see perfectly!")}
+              </Typography>
+              <Box sx={{ ml: -0.6, display: "flex", gap: 0.55 }}>
+                {footerSocialLinks.map((link) => (
+                  <IconButton
+                    key={link.id}
+                    component="a"
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Otwórz ${link.label}`}
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      p: 0,
+                      color: "rgba(15,23,42,0.58)",
+                      backgroundColor: "transparent",
+                      transition:
+                        "color 180ms ease, opacity 180ms ease, transform 180ms ease",
+                      "&:hover": {
+                        backgroundColor: "transparent",
+                        color: colors.accent,
+                        opacity: 1,
+                      },
+                      "&:active": {
+                        transform: "scale(0.96)",
+                      },
+                    }}
+                  >
+                    {link.icon}
+                  </IconButton>
+                ))}
+              </Box>
+            </Box>
           </Box>
           <Box>
             <Typography
@@ -124,20 +187,33 @@ export default function Footer() {
   );
 }
 
-function FooterLink({ href, children }) {
+function FooterLink({ href, children, external = false, featured = false }) {
   return (
     <Link
-      component={NextLink}
+      component={external ? "a" : NextLink}
       href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
       underline="none"
       sx={{
+        justifySelf: "start",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: featured ? 0.35 : 0,
         color: colors.textSoft,
         fontSize: 13,
-        "&:hover": { color: colors.text, textDecoration: "underline" },
+        fontWeight: featured ? 600 : 400,
+        transition: "color 180ms ease",
+        "&:hover": {
+          color: colors.accent,
+          textDecoration: "underline",
+        },
         textDecorationColor: colors.border,
+        textUnderlineOffset: 3,
       }}
     >
       {formatDisplayText(children)}
+      {featured && <ArrowOutwardRoundedIcon sx={{ fontSize: 14 }} />}
     </Link>
   );
 }
@@ -152,7 +228,7 @@ function FooterContactLink({ children, ...props }) {
         lineHeight: 1.7,
         textDecorationColor: colors.border,
         textUnderlineOffset: 3,
-        "&:hover": { color: colors.text },
+        "&:hover": { color: colors.accent },
       }}
       {...props}
     >

@@ -1,12 +1,21 @@
 "use client";
 
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
+import { getActionButtonSx } from "@/components/ui/buttonStyles";
 import { formatDisplayText } from "@/lib/text";
 
 const fontSizes = {
@@ -19,26 +28,28 @@ const supportingTextSx = {
   lineHeight: 1.85,
 };
 
+const socialIconSize = 18;
+
 const contactItems = [
   {
     id: "phone",
     featured: true,
     label: "Telefon",
-    icon: <PhoneOutlinedIcon sx={{ fontSize: 20 }} />,
+    icon: <PhoneOutlinedIcon sx={{ fontSize: { xs: 18, md: 20 } }} />,
     value: contact.phone,
     href: `tel:${contact.phone.replace(/\s/g, "")}`,
   },
   {
     id: "email",
     label: "E-mail",
-    icon: <EmailOutlinedIcon sx={{ fontSize: 20 }} />,
+    icon: <EmailOutlinedIcon sx={{ fontSize: { xs: 18, md: 20 } }} />,
     value: contact.email,
     href: `mailto:${contact.email}`,
   },
   {
     id: "address",
     label: "Adres",
-    icon: <LocationOnOutlinedIcon sx={{ fontSize: 20 }} />,
+    icon: <LocationOnOutlinedIcon sx={{ fontSize: { xs: 18, md: 20 } }} />,
     value: contact.address,
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       contact.address,
@@ -48,43 +59,43 @@ const contactItems = [
   {
     id: "hours",
     label: "Godziny",
-    icon: <AccessTimeOutlinedIcon sx={{ fontSize: 20 }} />,
+    icon: <AccessTimeOutlinedIcon sx={{ fontSize: { xs: 18, md: 20 } }} />,
     value: "Poniedziałek - Piątek\n8:00 - 17:00",
   },
 ];
 
-const sharedButtonSx = {
-  minHeight: { xs: 44, md: 52 },
+const socialLinks = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    icon: <InstagramIcon sx={{ fontSize: socialIconSize }} />,
+    href: contact.social.instagram,
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    icon: <FacebookRoundedIcon sx={{ fontSize: socialIconSize }} />,
+    href: contact.social.facebook,
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    icon: <YouTubeIcon sx={{ fontSize: socialIconSize }} />,
+    href: contact.social.youtube,
+  },
+];
+
+const sharedButtonLayoutSx = {
+  minHeight: { xs: 58, md: 52 },
   px: { xs: 1.4, sm: 3 },
-  width: { xs: "calc(50% - 6px)", sm: 210 },
-  borderRadius: 999,
+  width: { xs: "100%", md: 210 },
   fontSize: { xs: 13.5, md: 15.5 },
-  fontWeight: 800,
-  lineHeight: 1,
-  textTransform: "none",
-  boxShadow: "none",
   whiteSpace: "nowrap",
 };
 
-const primaryButtonSx = {
-  ...sharedButtonSx,
-  backgroundColor: colors.accent,
-  "&:hover": {
-    backgroundColor: colors.accent,
-    boxShadow: "none",
-  },
-};
+const primaryButtonSx = getActionButtonSx("primary", sharedButtonLayoutSx);
 
-const secondaryButtonSx = {
-  ...sharedButtonSx,
-  color: colors.accent,
-  backgroundColor: "rgba(14,165,164,0.12)",
-  border: "1px solid rgba(14,165,164,0.2)",
-  "&:hover": {
-    backgroundColor: "rgba(14,165,164,0.16)",
-    boxShadow: "none",
-  },
-};
+const secondaryButtonSx = getActionButtonSx("secondary", sharedButtonLayoutSx);
 
 function ContactInfoItem({ item }) {
   const content = (
@@ -128,14 +139,14 @@ function ContactInfoItem({ item }) {
       sx={{
         display: "grid",
         gridTemplateColumns: "auto 1fr",
-        gap: 1.5,
+        gap: { xs: 1.25, md: 1.5 },
         alignItems: "start",
-        p: 2,
-        borderRadius: 3,
+        p: { xs: 1.65, sm: 1.8, md: 2 },
+        borderRadius: { xs: 2.5, md: 3 },
         backgroundColor: item.featured
-          ? "rgba(14,165,164,0.06)"
+          ? "rgba(38,176,173,0.06)"
           : colors.surface,
-        border: `1px solid ${item.featured ? "rgba(14,165,164,0.24)" : colors.border}`,
+        border: `1px solid ${item.featured ? "rgba(38,176,173,0.22)" : colors.border}`,
         textDecoration: "none",
         color: "inherit",
         cursor: item.href ? "pointer" : "default",
@@ -145,7 +156,7 @@ function ContactInfoItem({ item }) {
         "&:hover": item.href
           ? {
               backgroundColor: item.featured
-                ? "rgba(14,165,164,0.1)"
+                ? "rgba(38,176,173,0.1)"
                 : colors.surfaceAlt,
               borderColor: colors.accent,
               boxShadow: colors.shadowSm,
@@ -166,14 +177,14 @@ function ContactInfoItem({ item }) {
     >
       <Box
         sx={{
-          width: 42,
-          height: 42,
+          width: { xs: 38, md: 42 },
+          height: { xs: 38, md: 42 },
           display: "grid",
           placeItems: "center",
           borderRadius: "50%",
           color: colors.accent,
           backgroundColor: item.featured
-            ? "rgba(14,165,164,0.14)"
+            ? "rgba(38,176,173,0.13)"
             : colors.accentSoft,
           flex: "0 0 auto",
         }}
@@ -182,6 +193,71 @@ function ContactInfoItem({ item }) {
       </Box>
 
       {content}
+    </Box>
+  );
+}
+
+function SocialFollowCard() {
+  return (
+    <Box
+      sx={{
+        mt: 1,
+      }}
+    >
+      <Typography
+        sx={{
+          fontSize: 13,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: colors.textMute,
+          fontWeight: 700,
+        }}
+      >
+        Obserwuj nas
+      </Typography>
+
+      <Box
+        sx={{
+          mt: 1,
+          display: "flex",
+          gap: 1.5,
+          alignItems: "center",
+        }}
+      >
+        {socialLinks.map((link) => (
+          <IconButton
+            key={link.id}
+            component="a"
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Otwórz ${link.label}`}
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              color: colors.accent,
+              backgroundColor: colors.softGlassBg,
+              border: `1px solid ${colors.accentGlassBorder}`,
+              boxShadow: colors.softGlassShadow,
+              backdropFilter: colors.softGlassBlur,
+              transition:
+                "background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease",
+              "&:hover": {
+                color: "#228F8C",
+                backgroundColor: colors.softGlassBgHover,
+                borderColor: colors.accentGlassBorderHover,
+                boxShadow: colors.softGlassShadowHover,
+              },
+              "&:active": {
+                backgroundColor: "rgba(38,176,173,0.18)",
+              },
+            }}
+          >
+            {link.icon}
+          </IconButton>
+        ))}
+      </Box>
     </Box>
   );
 }
@@ -254,10 +330,17 @@ export default function ContactClient() {
             Dane kontaktowe
           </Typography>
 
-          <Box sx={{ mt: 2.5, display: "grid", gap: 1.2 }}>
+          <Box
+            sx={{
+              mt: { xs: 2, md: 2.5 },
+              display: "grid",
+              gap: { xs: 1, md: 1.2 },
+            }}
+          >
             {contactItems.map((item) => (
               <ContactInfoItem key={item.id} item={item} />
             ))}
+            <SocialFollowCard />
           </Box>
         </Box>
 
@@ -267,7 +350,7 @@ export default function ContactClient() {
             pb: { xs: 2, md: 1 },
             gridColumn: { xs: "1", md: "2" },
             gridRow: { xs: "2", md: "2" },
-            display: "flex",
+            display: { xs: "none", md: "flex" },
             flexDirection: "column",
             justifyContent: "flex-start",
             backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
@@ -320,38 +403,61 @@ export default function ContactClient() {
 
         <Box
           sx={{
-            p: { xs: 2.5, md: 4 },
-            pt: { xs: 2.25, md: 0 },
+            p: { xs: 2, md: 4 },
+            pt: { xs: 1.75, md: 0 },
             gridColumn: { xs: "1", md: "2" },
             gridRow: { xs: "2", md: "3" },
             display: "flex",
-            flexDirection: "row",
-            flexWrap: { xs: "nowrap", sm: "wrap" },
-            gap: { xs: 1, sm: 1.5 },
-            alignItems: { xs: "center", md: "flex-start" },
-            justifyContent: { xs: "stretch", sm: "flex-start" },
+            flexDirection: "column",
+            gap: { xs: 1.5, md: 1.5 },
+            alignItems: { xs: "stretch", md: "flex-start" },
             backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
           }}
         >
-          <Button
-            component="a"
-            href={`tel:${contact.phone.replace(/\s/g, "")}`}
-            variant="contained"
-            disableElevation
-            sx={primaryButtonSx}
+          <Typography
+            sx={{
+              display: { xs: "block", md: "none" },
+              color: colors.text,
+              fontSize: 14,
+              fontWeight: 800,
+              lineHeight: 1.35,
+            }}
           >
-            Zadzwoń
-          </Button>
+            Umów darmową prezentację
+          </Typography>
 
-          <Button
-            component="a"
-            href={`mailto:${contact.email}`}
-            variant="contained"
-            disableElevation
-            sx={secondaryButtonSx}
+          <Box
+            className="contact-actions"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(2, 210px)",
+              },
+              gap: { xs: 1.5, md: 1.5 },
+              width: "100%",
+            }}
           >
-            Napisz e-mail
-          </Button>
+            <Button
+              component="a"
+              href={`tel:${contact.phone.replace(/\s/g, "")}`}
+              variant="contained"
+              disableElevation
+              sx={primaryButtonSx}
+            >
+              Zadzwoń
+            </Button>
+
+            <Button
+              component="a"
+              href={`mailto:${contact.email}`}
+              variant="contained"
+              disableElevation
+              sx={secondaryButtonSx}
+            >
+              Napisz e-mail
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

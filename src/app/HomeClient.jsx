@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import NextLink from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import NorthEastRoundedIcon from "@mui/icons-material/NorthEastRounded";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
@@ -19,6 +20,7 @@ import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import colors from "@/data/colors";
 import content from "@/data/content";
 import { formatDisplayText } from "@/lib/text";
+import { getActionButtonSx } from "@/components/ui/buttonStyles";
 import NavbarPill from "@/components/NavbarPill";
 import Footer from "@/components/Footer";
 
@@ -106,34 +108,43 @@ const interactiveCardHoverSx = {
 
 const mobileRevealBreakpoint = "(max-width: 899.95px)";
 const mobileProcessRevealThreshold = 10;
+const heroSwipeHintShowDelayMs = 800;
+const heroSwipeHintAutoDismissAfterAdvances = 2;
+const heroInitialAutoplayDelayMs = 3300;
+const heroAutoplayDelayMs = 7000;
+const heroAutoplayPauseAfterInteractionMs = 8000;
+const heroAutoTransition = {
+  fadeOutMs: 500,
+  switchPauseMs: 80,
+  fadeInMs: 900,
+};
+const heroManualTransition = {
+  fadeOutMs: 300,
+  switchPauseMs: 50,
+  fadeInMs: 550,
+};
+
+const getHeroTransitionTimings = (profile) =>
+  profile === "manual" ? heroManualTransition : heroAutoTransition;
 
 export default function HomeClient() {
   const { home } = content;
   const heroSlides = home.hero.slides;
-  const compactDesktopArrowInset = 18;
-  const compactDesktopArrowSize = 36;
   const compactDesktopTextInset = 52;
   const heroDesktopMaxWidth = 1320;
-  const wideDesktopArrowOffset = -30;
   const wideDesktopMinWidth = 1536;
   const compactMobileHeroQuery =
     "@media (max-width:599.95px) and (max-height:760px)";
   const [heroIndex, setHeroIndex] = useState(0);
-  const [heroDirection, setHeroDirection] = useState("next");
-  const [heroInteracted, setHeroInteracted] = useState(false);
+  const [heroContentVisible, setHeroContentVisible] = useState(true);
+  const [heroTransitionProfile, setHeroTransitionProfile] = useState("auto");
+  const [heroAutoplayHasAdvanced, setHeroAutoplayHasAdvanced] =
+    useState(false);
+  const [heroAutoplayPausedUntil, setHeroAutoplayPausedUntil] = useState(0);
+  const [showHeroSwipeHint, setShowHeroSwipeHint] = useState(false);
   const [showMobileProcessSection, setShowMobileProcessSection] =
     useState(false);
 
-  const heroTextAnimationName =
-    heroDirection === "prev" ? "heroTextInPrev" : "heroTextInNext";
-  const heroTextAnimationMobileName =
-    heroDirection === "prev" ? "heroTextInPrevMobile" : "heroTextInNextMobile";
-  const heroImageAnimationName =
-    heroDirection === "prev" ? "heroImageInPrev" : "heroImageInNext";
-  const heroImageAnimationMobileName =
-    heroDirection === "prev"
-      ? "heroImageInPrevMobile"
-      : "heroImageInNextMobile";
   const activeHero = heroSlides[heroIndex];
   const activeHeroImageLayout = activeHero.imageLayout ?? {};
   const activeHeroMobileObjectPosition =
@@ -142,6 +153,102 @@ export default function HomeClient() {
     "center center";
   const touchStartXRef = useRef(null);
   const touchDeltaXRef = useRef(0);
+  const heroFadeTimerRef = useRef(null);
+  const heroRevealTimerRef = useRef(null);
+  const heroSwipeHintShowTimerRef = useRef(null);
+  const heroSwipeHintDismissedRef = useRef(false);
+  const heroSwipeHintVisibleRef = useRef(false);
+  const heroSwipeHintAutoAdvanceCountRef = useRef(0);
+
+  const heroTransitionTimings =
+    getHeroTransitionTimings(heroTransitionProfile);
+  const heroContentTransition = `opacity ${
+    heroContentVisible
+      ? heroTransitionTimings.fadeInMs
+      : heroTransitionTimings.fadeOutMs
+  }ms cubic-bezier(0.33, 1, 0.68, 1)`;
+
+  const pauseHeroAutoplay = () => {
+    setHeroAutoplayPausedUntil(
+      Date.now() + heroAutoplayPauseAfterInteractionMs,
+    );
+  };
+
+  const dismissHeroSwipeHint = useCallback(() => {
+    heroSwipeHintDismissedRef.current = true;
+    window.clearTimeout(heroSwipeHintShowTimerRef.current);
+    heroSwipeHintVisibleRef.current = false;
+    setShowHeroSwipeHint(false);
+  }, []);
+
+  const transitionToHero = (nextIndex, transitionProfile = "auto") => {
+    const transitionTimings = getHeroTransitionTimings(transitionProfile);
+
+    window.clearTimeout(heroFadeTimerRef.current);
+    window.clearTimeout(heroRevealTimerRef.current);
+
+    setHeroTransitionProfile(transitionProfile);
+    setHeroContentVisible(false);
+
+    heroFadeTimerRef.current = window.setTimeout(() => {
+      setHeroIndex(nextIndex);
+
+      heroRevealTimerRef.current = window.setTimeout(() => {
+        setHeroContentVisible(true);
+      }, transitionTimings.switchPauseMs);
+    }, transitionTimings.fadeOutMs);
+  };
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(mobileRevealBreakpoint);
+
+    const clearHeroSwipeHintTimers = () => {
+      window.clearTimeout(heroSwipeHintShowTimerRef.current);
+    };
+
+    const scheduleHeroSwipeHint = () => {
+      clearHeroSwipeHintTimers();
+
+      if (!mediaQuery.matches || heroSwipeHintDismissedRef.current) {
+        heroSwipeHintVisibleRef.current = false;
+        setShowHeroSwipeHint(false);
+        return;
+      }
+
+      heroSwipeHintShowTimerRef.current = window.setTimeout(() => {
+        if (!mediaQuery.matches || heroSwipeHintDismissedRef.current) return;
+
+        heroSwipeHintVisibleRef.current = true;
+        heroSwipeHintAutoAdvanceCountRef.current = 0;
+        setShowHeroSwipeHint(true);
+      }, heroSwipeHintShowDelayMs);
+    };
+
+    const handleHeroSwipeHintMediaChange = () => {
+      scheduleHeroSwipeHint();
+    };
+
+    scheduleHeroSwipeHint();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleHeroSwipeHintMediaChange);
+    } else {
+      mediaQuery.addListener(handleHeroSwipeHintMediaChange);
+    }
+
+    return () => {
+      clearHeroSwipeHintTimers();
+
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener(
+          "change",
+          handleHeroSwipeHintMediaChange,
+        );
+      } else {
+        mediaQuery.removeListener(handleHeroSwipeHintMediaChange);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (showMobileProcessSection) return;
@@ -163,16 +270,70 @@ export default function HomeClient() {
     };
   }, [showMobileProcessSection]);
 
-  const goToHero = (nextIndex, direction = "next", interacted = true) => {
-    setHeroDirection(direction);
-    if (interacted) setHeroInteracted(true);
-    setHeroIndex(nextIndex);
+  useEffect(() => {
+    if (heroSlides.length < 2) return;
+
+    const pauseRemainingMs = Math.max(
+      0,
+      heroAutoplayPausedUntil - Date.now(),
+    );
+    const slideDelayMs = heroAutoplayHasAdvanced
+      ? heroAutoplayDelayMs
+      : heroInitialAutoplayDelayMs;
+    const timeoutDelayMs = Math.max(pauseRemainingMs, slideDelayMs);
+
+    const timer = window.setTimeout(() => {
+      setHeroAutoplayHasAdvanced(true);
+      transitionToHero(
+        heroIndex === heroSlides.length - 1 ? 0 : heroIndex + 1,
+        "auto",
+      );
+
+      if (
+        heroSwipeHintVisibleRef.current &&
+        !heroSwipeHintDismissedRef.current
+      ) {
+        heroSwipeHintAutoAdvanceCountRef.current += 1;
+
+        if (
+          heroSwipeHintAutoAdvanceCountRef.current >=
+          heroSwipeHintAutoDismissAfterAdvances
+        ) {
+          dismissHeroSwipeHint();
+        }
+      }
+    }, timeoutDelayMs);
+
+    return () => window.clearTimeout(timer);
+  }, [
+    heroAutoplayHasAdvanced,
+    heroAutoplayPausedUntil,
+    heroIndex,
+    heroSlides.length,
+    dismissHeroSwipeHint,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(heroFadeTimerRef.current);
+      window.clearTimeout(heroRevealTimerRef.current);
+    };
+  }, []);
+
+  const goToHero = (nextIndex, interacted = true) => {
+    if (nextIndex === heroIndex) return;
+
+    if (interacted) {
+      dismissHeroSwipeHint();
+      pauseHeroAutoplay();
+    }
+
+    transitionToHero(nextIndex, interacted ? "manual" : "auto");
   };
 
   const prevHero = (interacted = true) => {
     goToHero(
       heroIndex === 0 ? heroSlides.length - 1 : heroIndex - 1,
-      "prev",
       interacted,
     );
   };
@@ -180,12 +341,12 @@ export default function HomeClient() {
   const nextHero = (interacted = true) => {
     goToHero(
       heroIndex === heroSlides.length - 1 ? 0 : heroIndex + 1,
-      "next",
       interacted,
     );
   };
 
   const handleHeroTouchStart = (event) => {
+    pauseHeroAutoplay();
     touchStartXRef.current = event.touches[0]?.clientX ?? null;
     touchDeltaXRef.current = 0;
   };
@@ -212,22 +373,55 @@ export default function HomeClient() {
   };
 
   const heroArrowSx = {
-    minWidth: 44,
-    width: 44,
-    height: 44,
+    display: { xs: "none", md: "inline-flex" },
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: 40,
+    width: 40,
+    height: 40,
+    flex: "0 0 40px",
+    p: 0,
     borderRadius: "50%",
-    color: "rgba(15,23,42,0.72)",
-    backgroundColor: "rgba(15,23,42,0.03)",
-    border: "1px solid rgba(15,23,42,0.05)",
+    opacity: 0.32,
+    color: "rgba(15,23,42,0.46)",
+    background: "transparent",
+    border: "1px solid transparent",
     boxShadow: "none",
     backdropFilter: "none",
+    WebkitBackdropFilter: "none",
     transition:
-      "transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease",
+      "opacity 180ms ease, transform 180ms ease, background 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease",
+    ".hero-carousel-region:hover &": {
+      opacity: 0.76,
+      color: "rgba(15,23,42,0.58)",
+      background:
+        "linear-gradient(135deg, rgba(255,255,255,0.78), rgba(247,251,250,0.64))",
+      borderColor: "rgba(15,23,42,0.075)",
+      boxShadow:
+        "0 5px 14px rgba(15,23,42,0.035), inset 0 1px 0 rgba(255,255,255,0.74)",
+      backdropFilter: "blur(10px) saturate(112%)",
+      WebkitBackdropFilter: "blur(10px) saturate(112%)",
+    },
     "&:hover": {
-      color: "rgba(15,23,42,0.86)",
-      backgroundColor: "rgba(255,255,255,0.62)",
-      borderColor: "rgba(15,23,42,0.09)",
-      boxShadow: "0 12px 30px rgba(15,23,42,0.07)",
+      opacity: 1,
+      color: "rgba(20,145,143,0.9)",
+      background:
+        "linear-gradient(135deg, rgba(250,254,253,0.98), rgba(224,246,241,0.94))",
+      borderColor: "rgba(38,176,173,0.22)",
+      boxShadow:
+        "0 9px 22px rgba(15,23,42,0.06), 0 3px 10px rgba(38,176,173,0.05)",
+      transform: "translateY(-1px)",
+    },
+    "&:active": {
+      color: "rgba(20,145,143,0.9)",
+      background:
+        "linear-gradient(135deg, rgba(250,254,253,0.98), rgba(224,246,241,0.94))",
+      borderColor: "rgba(38,176,173,0.22)",
+      transform: "translateY(0)",
+    },
+    "&:focus-visible": {
+      outline: `2px solid ${colors.accent}`,
+      outlineOffset: 4,
     },
   };
 
@@ -254,59 +448,34 @@ export default function HomeClient() {
           <Box
             sx={{
               minHeight: {
-                xs: "calc(100svh - 92px)",
+                xs: "clamp(620px, calc(100svh - 168px), 720px)",
+                sm: "clamp(640px, calc(100svh - 148px), 760px)",
                 md: "calc(100svh - 118px)",
               },
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "39% 61%" },
               alignItems: { xs: "start", md: "center" },
-              gap: { xs: 0.5, sm: 3.5, md: 1.2, lg: 1.5 },
+              gap: { xs: "clamp(12px, 3.5vw, 20px)", sm: 3, md: 1.2, lg: 1.5 },
               position: "relative",
               width: "100%",
               maxWidth: { xs: "100%", md: heroDesktopMaxWidth, xl: 1360 },
               mx: "auto",
               px: { xs: 0.5, md: 2.5, lg: 3.5 },
-              pt: { xs: 1.2, md: 2, lg: 3 },
-              pb: { xs: 0.1, md: 2 },
+              pt: {
+                xs: "calc(env(safe-area-inset-top) + 22px)",
+                md: 2,
+                lg: 3,
+              },
+              pb: { xs: "clamp(26px, 7vw, 46px)", sm: 4.5, md: 4.5, lg: 5 },
               [compactMobileHeroQuery]: {
-                minHeight: "calc(100svh - 92px)",
-              gap: 1.25,
-              pt: "calc(env(safe-area-inset-top) + 12px)",
-              pb: 1.5,
-            },
+                minHeight: "auto",
+                gap: "10px",
+                pt: "calc(env(safe-area-inset-top) + 34px)",
+                pb: "20px",
+              },
           }}
         >
-          <Button
-            onClick={prevHero}
-            aria-label="Poprzedni slajd"
-            sx={{
-              position: "absolute",
-              left: { md: compactDesktopArrowInset },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 3,
-              ...heroArrowSx,
-              minWidth: { md: compactDesktopArrowSize },
-              width: { md: compactDesktopArrowSize },
-              height: { md: compactDesktopArrowSize },
-              display: { xs: "none", md: "inline-flex" },
-              [`@media (min-width:${wideDesktopMinWidth}px)`]: {
-                left: wideDesktopArrowOffset,
-                minWidth: 44,
-                width: 44,
-                height: 44,
-              },
-              "&:hover": {
-                ...heroArrowSx["&:hover"],
-                transform: "translateY(-50%) scale(1.02)",
-              },
-            }}
-          >
-            <ChevronLeftRoundedIcon sx={{ fontSize: 21 }} />
-          </Button>
-
           <Box
-            key={`hero-text-${heroIndex}`}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -317,84 +486,19 @@ export default function HomeClient() {
               maxWidth: { xs: "100%", md: "100%" },
               minWidth: 0,
               minHeight: { md: 0, lg: 460 },
-              mt: { xs: -10, md: 0 },
+              mt: { xs: 0, md: 0 },
               mx: { xs: "auto", md: 0 },
               pl: { xs: 0, md: `${compactDesktopTextInset}px` },
               pt: { md: 2.5, lg: 0 },
               order: { xs: 2, md: 1 },
-              transformOrigin: { xs: "center top", md: "left center" },
-              ...(heroInteracted
-                ? {
-                    animationName: {
-                      xs: heroTextAnimationMobileName,
-                      md: heroTextAnimationName,
-                    },
-                    animationDuration: {
-                      xs: "440ms",
-                      md: "700ms",
-                    },
-                    animationTimingFunction: {
-                      xs: "ease-out",
-                      md: "cubic-bezier(0.16, 1, 0.3, 1)",
-                    },
-                    animationDelay: {
-                      xs: "0ms",
-                      md: "120ms",
-                    },
-                    animationFillMode: "both",
-                  }
-                : {
-                    animation: "none",
-                  }),
+              opacity: heroContentVisible ? 1 : 0,
+              pointerEvents: heroContentVisible ? "auto" : "none",
+              transition: heroContentTransition,
               [`@media (min-width:${wideDesktopMinWidth}px)`]: {
                 pl: 0,
               },
               [compactMobileHeroQuery]: {
                 mt: 0,
-              },
-              "@keyframes heroTextIn": {
-                "0%": { opacity: 0, transform: "translateY(10px)" },
-                "100%": { opacity: 1, transform: "translateY(0)" },
-              },
-              "@keyframes heroTextInNext": {
-                "0%": {
-                  opacity: 0,
-                  transform: "translate3d(12px, 8px, 0)",
-                },
-                "100%": {
-                  opacity: 1,
-                  transform: "translate3d(0, 0, 0)",
-                },
-              },
-              "@keyframes heroTextInPrev": {
-                "0%": {
-                  opacity: 0,
-                  transform: "translate3d(-12px, 8px, 0)",
-                },
-                "100%": {
-                  opacity: 1,
-                  transform: "translate3d(0, 0, 0)",
-                },
-              },
-              "@keyframes heroTextInNextMobile": {
-                "0%": {
-                  opacity: 0,
-                  transform: "translate3d(0, 2px, 0)",
-                },
-                "100%": {
-                  opacity: 1,
-                  transform: "translate3d(0, 0, 0)",
-                },
-              },
-              "@keyframes heroTextInPrevMobile": {
-                "0%": {
-                  opacity: 0,
-                  transform: "translate3d(0, 2px, 0)",
-                },
-                "100%": {
-                  opacity: 1,
-                  transform: "translate3d(0, 0, 0)",
-                },
               },
             }}
           >
@@ -432,20 +536,20 @@ export default function HomeClient() {
 
             <Typography
               sx={{
-                mt: { xs: -8.2, md: 1.4 },
+                mt: { xs: 0, md: 1.4 },
                 fontSize: { xs: 15, sm: 16, md: 18 },
                 fontWeight: 400,
                 lineHeight: 1.6,
                 color: colors.textSoft,
                 maxWidth: { xs: "36ch", md: "34ch" },
-                minHeight: { md: 84 },
+                minHeight: { xs: "clamp(58px, 17vw, 72px)", sm: 52, md: 84 },
                 display: "block",
                 position: "relative",
                 zIndex: 1,
                 textAlign: { xs: "center", md: "left" },
                 marginInline: { xs: "auto", md: 0 },
                 [compactMobileHeroQuery]: {
-                  mt: 0.8,
+                  mt: 0,
                 },
               }}
             >
@@ -454,106 +558,102 @@ export default function HomeClient() {
 
             <Box
               sx={{
-                mt: { xs: 1.9, md: 2.4 },
+                mt: { xs: "clamp(10px, 3.2vw, 18px)", sm: 1.15, md: 2.4 },
                 width: { xs: "100%", sm: "auto" },
                 maxWidth: { xs: "36ch", md: "none" },
                 display: "flex",
                 justifyContent: { xs: "center", md: "flex-start" },
                 marginInline: { xs: "auto", md: 0 },
                 [compactMobileHeroQuery]: {
-                  mt: 1.4,
+                  mt: "8px",
                 },
               }}
             >
               <Button
                 component={NextLink}
                 href={activeHero.href}
-                variant="contained"
-                disableElevation
+                variant="text"
+                disableRipple
                 sx={{
-                  borderRadius: 2.6,
-                  backgroundColor: colors.accent,
-                  color: colors.white,
-                  fontSize: { xs: 14, md: 16 },
-                  fontWeight: 800,
-                  lineHeight: 1,
-                  minHeight: { xs: 46, md: 56 },
-                  px: { xs: 2.05, md: 3.75 },
-                  py: 0,
+                  display: { xs: "inline-flex", md: "none" },
+                  alignItems: "center",
+                  gap: { xs: 1, sm: 1.15 },
+                  minWidth: "unset",
+                  minHeight: 44,
+                  px: 1,
+                  py: 1.5,
+                  borderRadius: colors.buttonRadius,
+                  backgroundColor: "transparent",
+                  backgroundImage: "none",
+                  border: 0,
+                  boxShadow: "none",
+                  color: colors.accentStrong,
+                  fontSize: { xs: 14.5, sm: 15 },
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  letterSpacing: 0,
                   textTransform: "none",
-                  width: { xs: "auto", sm: "auto" },
-                  minWidth: { xs: "unset", sm: 250 },
-                  maxWidth: { xs: 360, sm: "none" },
-                  mx: { xs: "auto", md: 0 },
                   justifyContent: "center",
                   textAlign: "center",
                   whiteSpace: "nowrap",
-                  boxShadow: {
-                    xs: "0 6px 12px rgba(15,23,42,0.08)",
-                    md: "none",
+                  transition: "color 180ms ease, transform 180ms ease",
+                  "& .hero-mobile-cta-arrow": {
+                    fontSize: 18,
+                    transition: "transform 180ms ease, color 180ms ease",
                   },
-                  "&:hover": { backgroundColor: colors.accent },
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                    color: colors.accent,
+                    transform: "none",
+                    "& .hero-mobile-cta-arrow": {
+                      transform: "translateX(3px)",
+                    },
+                  },
+                  "&:active": {
+                    backgroundColor: "transparent",
+                    color: colors.accent,
+                    transform: "translateY(1px)",
+                    "& .hero-mobile-cta-arrow": {
+                      transform: "translateX(4px)",
+                    },
+                  },
+                  "&:focus-visible": {
+                    outline: `2px solid ${colors.accent}`,
+                    outlineOffset: 4,
+                  },
                 }}
+              >
+                {activeHero.buttonLabel}
+                <ArrowForwardRoundedIcon className="hero-mobile-cta-arrow" />
+              </Button>
+
+              <Button
+                component={NextLink}
+                href={activeHero.href}
+                variant="contained"
+                disableElevation
+                sx={getActionButtonSx("primary", {
+                  display: { xs: "none", md: "inline-flex" },
+                  fontSize: 16,
+                  minHeight: 56,
+                  px: 3.75,
+                  py: 0,
+                  width: "auto",
+                  minWidth: 250,
+                  maxWidth: "none",
+                  mx: 0,
+                  justifyContent: "center",
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                })}
               >
                 {activeHero.buttonLabel}
               </Button>
             </Box>
-
-            <Box
-              sx={{
-                mt: 1.2,
-                display: "flex",
-                alignSelf: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 0.8,
-                px: 0.55,
-                py: 0.42,
-                borderRadius: 999,
-                backgroundColor: "rgba(255,255,255,0.34)",
-                border: "1px solid rgba(15,23,42,0.05)",
-                boxShadow: "0 4px 14px rgba(15,23,42,0.03)",
-                backdropFilter: "blur(8px)",
-                display: { xs: "flex", md: "none" },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.7,
-                  justifyContent: "center",
-                  px: 0.28,
-                  width: "100%",
-                }}
-              >
-                {heroSlides.map((slide, index) => (
-                  <Box
-                    key={`${slide.title}-${index}`}
-                    onClick={() =>
-                      goToHero(index, index < heroIndex ? "prev" : "next")
-                    }
-                    sx={{
-                      cursor: "pointer",
-                      width: index === heroIndex ? 24 : 9,
-                      height: 9,
-                      borderRadius: 999,
-                      backgroundColor:
-                        index === heroIndex
-                          ? "rgba(14,165,164,0.84)"
-                          : "rgba(15,23,42,0.15)",
-                      transition:
-                        "width 220ms ease, background-color 220ms ease, transform 220ms ease",
-                      transform:
-                        index === heroIndex ? "scale(1)" : "scale(0.96)",
-                    }}
-                  />
-                ))}
-              </Box>
-            </Box>
           </Box>
 
           <Box
+            className="hero-carousel-region"
             sx={{
               width: "100%",
               display: "flex",
@@ -597,8 +697,8 @@ export default function HomeClient() {
             <Typography
               sx={{
                 display: { xs: "block", md: "none" },
-                mt: 1.95,
-                mb: -0.7,
+                mt: { xs: "clamp(12px, 4vw, 18px)" },
+                mb: 0,
                 fontWeight: 800,
                 letterSpacing: "-0.04em",
                 lineHeight: 0.96,
@@ -610,8 +710,10 @@ export default function HomeClient() {
                 whiteSpace: "nowrap",
                 position: "relative",
                 zIndex: 1,
+                opacity: heroContentVisible ? 1 : 0,
+                transition: heroContentTransition,
                 [compactMobileHeroQuery]: {
-                  mt: 1.1,
+                  mt: "10px",
                   mb: 0.3,
                   whiteSpace: "normal",
                 },
@@ -621,93 +723,23 @@ export default function HomeClient() {
             </Typography>
 
             <Box
-              key={`hero-image-frame-${heroIndex}`}
               sx={{
-                mt: { xs: -0.35, md: 0 },
+                mt: { xs: "clamp(8px, 2.5vw, 14px)", md: 0 },
                 width: "100%",
-                maxWidth: { xs: 570, sm: 620, md: 1180, lg: 1240 },
+                maxWidth: { xs: 640, sm: 700, md: 1180, lg: 1240 },
                 aspectRatio: { xs: "4 / 3", sm: "16 / 10" },
                 height: { md: 550, lg: 580 },
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 px: { xs: 0, sm: 2, md: 0.5 },
-                py: { xs: "-0.2rem 0", sm: 1.5, md: 2 },
+                py: { xs: 0, sm: 1.5, md: 2 },
                 position: "relative",
-                ...(heroInteracted
-                  ? {
-                      animationName: {
-                        xs: heroImageAnimationMobileName,
-                        md: heroImageAnimationName,
-                      },
-                      animationDuration: {
-                        xs: "400ms",
-                        md: "560ms",
-                      },
-                      animationTimingFunction: {
-                        xs: "ease-out",
-                        md: "cubic-bezier(0.16, 1, 0.3, 1)",
-                      },
-                      animationDelay: "0ms",
-                      animationFillMode: "both",
-                    }
-                  : {
-                      animation: "none",
-                    }),
+                overflow: "hidden",
                 [compactMobileHeroQuery]: {
-                  mt: 0.35,
+                  mt: "8px",
                   aspectRatio: "16 / 11",
-                  maxWidth: 420,
-                },
-                "@keyframes heroImageIn": {
-                  "0%": {
-                    opacity: 0,
-                    transform: "translateY(8px) scale(0.992)",
-                  },
-                  "100%": {
-                    opacity: 1,
-                    transform: "translateY(0) scale(1)",
-                  },
-                },
-                "@keyframes heroImageInNext": {
-                  "0%": {
-                    opacity: 0,
-                    transform: "translate3d(8px, 4px, 0) scale(0.996)",
-                  },
-                  "100%": {
-                    opacity: 1,
-                    transform: "translate3d(0, 0, 0) scale(1)",
-                  },
-                },
-                "@keyframes heroImageInPrev": {
-                  "0%": {
-                    opacity: 0,
-                    transform: "translate3d(-8px, 4px, 0) scale(0.996)",
-                  },
-                  "100%": {
-                    opacity: 1,
-                    transform: "translate3d(0, 0, 0) scale(1)",
-                  },
-                },
-                "@keyframes heroImageInNextMobile": {
-                  "0%": {
-                    opacity: 0,
-                    transform: "translate3d(0, 2px, 0)",
-                  },
-                  "100%": {
-                    opacity: 1,
-                    transform: "translate3d(0, 0, 0)",
-                  },
-                },
-                "@keyframes heroImageInPrevMobile": {
-                  "0%": {
-                    opacity: 0,
-                    transform: "translate3d(0, 2px, 0)",
-                  },
-                  "100%": {
-                    opacity: 1,
-                    transform: "translate3d(0, 0, 0)",
-                  },
+                  maxWidth: 500,
                 },
               }}
             >
@@ -719,69 +751,180 @@ export default function HomeClient() {
                 decoding="async"
                 fetchPriority="high"
                 sx={{
-                  width: { xs: "120%", md: "auto" },
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: { xs: "132%", sm: "126%", md: "auto" },
                   height: {
-                    xs: "100%",
+                    xs: "106%",
+                    sm: "104%",
                     md: activeHeroImageLayout.desktopHeight ?? "88%",
                   },
                   maxWidth: {
-                    xs: "100%",
+                    xs: "none",
                     md: activeHeroImageLayout.desktopMaxWidth ?? "96%",
                   },
-                  maxHeight: "100%",
+                  maxHeight: { xs: "none", md: "100%" },
                   display: "block",
                   objectFit: "contain",
                   objectPosition: {
                     xs: activeHeroMobileObjectPosition,
                     md: activeHeroImageLayout.objectPosition ?? "center center",
                   },
-                  transform: { xs: "scale(1.12)", md: "none" },
+                  opacity: heroContentVisible ? 1 : 0,
+                  transform: {
+                    xs: "translate(-50%, -50%) scale(1.32)",
+                    sm: "translate(-50%, -50%) scale(1.28)",
+                    md: "translate(-50%, -50%) scale(1)",
+                  },
                   transformOrigin: "center center",
+                  transition: heroContentTransition,
+                  willChange: "opacity",
+                  pointerEvents: "none",
                   [compactMobileHeroQuery]: {
-                    transform: "scale(1.02)",
+                    height: "104%",
+                    transform: "translate(-50%, -50%) scale(1.25)",
                   },
                 }}
               />
             </Box>
-          </Box>
 
-          <Button
-            onClick={nextHero}
-            aria-label="Następny slajd"
-            sx={{
-              position: "absolute",
-              right: { md: compactDesktopArrowInset },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 3,
-              ...heroArrowSx,
-              minWidth: { md: compactDesktopArrowSize },
-              width: { md: compactDesktopArrowSize },
-              height: { md: compactDesktopArrowSize },
-              display: { xs: "none", md: "inline-flex" },
-              [`@media (min-width:${wideDesktopMinWidth}px)`]: {
-                right: wideDesktopArrowOffset,
-                minWidth: 44,
-                width: 44,
-                height: 44,
-              },
-              "&:hover": {
-                ...heroArrowSx["&:hover"],
-                transform: "translateY(-50%) scale(1.02)",
-              },
-            }}
-          >
-            <ChevronRightRoundedIcon sx={{ fontSize: 21 }} />
-          </Button>
+            <Box
+              sx={{
+                mt: { xs: "clamp(6px, 2vw, 12px)", sm: 1, md: -2.65, lg: -2.95 },
+                mb: { xs: "clamp(6px, 2.5vw, 14px)", sm: 1.2, md: 2.2 },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: { xs: 1, md: 1.1 },
+                position: "relative",
+                transform: {
+                  xs: "none",
+                  sm: "none",
+                  md: "translateY(-28px)",
+                },
+                zIndex: 2,
+              }}
+            >
+              <Box
+                aria-hidden="true"
+                sx={{
+                  display: { xs: "inline-flex", md: "none" },
+                  alignItems: "center",
+                  gap: 0.45,
+                  position: "absolute",
+                  left: "50%",
+                  bottom: "calc(100% + 8px)",
+                  zIndex: 3,
+                  color: "rgba(45,99,101,0.72)",
+                  fontSize: { xs: 12, sm: 12.4 },
+                  fontWeight: 600,
+                  lineHeight: 1,
+                  whiteSpace: "nowrap",
+                  opacity: showHeroSwipeHint ? 0.52 : 0,
+                  pointerEvents: "none",
+                  filter: showHeroSwipeHint ? "blur(0)" : "blur(2px)",
+                  transform: showHeroSwipeHint
+                    ? "translate(-50%, 0) scale(1)"
+                    : "translate(-50%, 6px) scale(0.98)",
+                  transition:
+                    "opacity 620ms cubic-bezier(0.22, 1, 0.36, 1), transform 620ms cubic-bezier(0.22, 1, 0.36, 1), filter 620ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  willChange: "opacity, transform, filter",
+                }}
+              >
+                <Box component="span">Przesuń aby poznać produkty</Box>
+              </Box>
+
+              <Button
+                onClick={() => prevHero()}
+                aria-label="Poprzedni slajd"
+                sx={{
+                  ...heroArrowSx,
+                  "&:hover": {
+                    ...heroArrowSx["&:hover"],
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                <ChevronLeftRoundedIcon
+                  sx={{ fontSize: 20, color: "inherit" }}
+                />
+              </Button>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: { xs: 0.9, md: 1 },
+                  minWidth: { xs: 62, md: 68 },
+                }}
+              >
+                {heroSlides.map((slide, index) => (
+                  <Box
+                    key={`${slide.title}-${index}`}
+                    component="button"
+                    type="button"
+                    aria-label={`Pokaż slajd ${index + 1}`}
+                    aria-current={index === heroIndex ? "true" : undefined}
+                    onClick={() => goToHero(index)}
+                    sx={{
+                      cursor: "pointer",
+                      display: "block",
+                      width: index === heroIndex ? 22 : 7,
+                      height: 7,
+                      p: 0,
+                      border: 0,
+                      borderRadius: 999,
+                      backgroundColor:
+                        index === heroIndex
+                          ? "rgba(38,176,173,0.78)"
+                          : "rgba(15,23,42,0.16)",
+                      transition:
+                        "width 260ms ease, background-color 220ms ease, transform 220ms ease",
+                      transform:
+                        index === heroIndex ? "scale(1)" : "scale(0.98)",
+                      "&:hover": {
+                        backgroundColor:
+                          index === heroIndex
+                            ? "rgba(38,176,173,0.92)"
+                            : "rgba(15,23,42,0.24)",
+                      },
+                      "&:focus-visible": {
+                        outline: `2px solid ${colors.accent}`,
+                        outlineOffset: 4,
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <Button
+                onClick={() => nextHero()}
+                aria-label="Następny slajd"
+                sx={{
+                  ...heroArrowSx,
+                  "&:hover": {
+                    ...heroArrowSx["&:hover"],
+                    transform: "translateY(-1px)",
+                  },
+                }}
+              >
+                <ChevronRightRoundedIcon
+                  sx={{ fontSize: 20, color: "inherit" }}
+                />
+              </Button>
+            </Box>
+          </Box>
         </Box>
 
         <Box
           sx={{
             maxWidth: 1260,
             mx: "auto",
-            mt: { xs: -18, sm: 3.2, md: 0 },
+            mt: { xs: 0, sm: 1, md: 0 },
             [compactMobileHeroQuery]: {
-              mt: 2.25,
+              mt: 0,
             },
           }}
         >
@@ -790,7 +933,7 @@ export default function HomeClient() {
               display: { xs: showMobileProcessSection ? "block" : "none", md: "block" },
             }}
           >
-            <Box sx={{ mt: 7 }}>
+            <Box sx={{ mt: { xs: "clamp(30px, 8vw, 52px)", sm: 6, md: 7 } }}>
               <SectionEyebrow>Proces doboru</SectionEyebrow>
 
               <Typography
@@ -1340,7 +1483,7 @@ function WinnerPill({ label }) {
     <Box
       component={href ? NextLink : "div"}
       href={href ?? undefined}
-      sx={{
+      sx={getActionButtonSx("secondary", {
         display: "inline-flex",
         alignItems: "center",
         gap: 0.6,
@@ -1348,25 +1491,16 @@ function WinnerPill({ label }) {
         py: 0.6,
         fontWeight: 800,
         fontSize: 13,
-        color: colors.accent,
-        backgroundColor: colors.accentSoft,
-        borderRadius: 999,
-        border: "1px solid rgba(14,165,164,0.18)",
         lineHeight: 1,
         whiteSpace: "nowrap",
         textDecoration: "none",
-        transition:
-          "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease",
         cursor: href ? "pointer" : "default",
         "&:hover": href
           ? {
               transform: "translateY(-1px)",
-              boxShadow: "0 10px 24px rgba(15,23,42,0.08)",
-              borderColor: "rgba(14,165,164,0.28)",
-              backgroundColor: "rgba(20,184,166,0.16)",
             }
           : undefined,
-      }}
+      })}
     >
       {label}
       <TrendingUpRoundedIcon sx={{ fontSize: 18, opacity: 0.75 }} />
@@ -1440,7 +1574,7 @@ function BenefitCard({ icon: Icon, title, desc }) {
           color: colors.accent,
           display: "grid",
           placeItems: "center",
-          boxShadow: "inset 0 0 0 1px rgba(14,165,164,0.08)",
+          boxShadow: "inset 0 0 0 1px rgba(38,176,173,0.08)",
         }}
       >
         <Icon sx={{ fontSize: 25 }} />
