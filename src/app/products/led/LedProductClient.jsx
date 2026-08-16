@@ -21,15 +21,19 @@ import {
 } from "@/components/products/productPageStyles";
 
 const images = {
+  hero: "/images/led-product/led-free-2.webp",
+  ergo: "/images/led-product/ergo-led.webp",
   free: "/images/led-product/led-free.webp",
-  ergo: "/images/led-product/led-free-2.webp",
 };
 
 const ergoImageCenter = "53.7% 48.4%";
 const freeImageCenter = "49.5% 49.7%";
+const ledProductCardSx = {
+  aspectRatio: { xs: "1 / 1", sm: "7 / 5" },
+};
 const ledProductImageSx = {
   objectFit: "contain",
-  transform: { xs: "scale(1.06)", sm: "scale(1.1)", md: "scale(1.14)" },
+  transform: { xs: "scale(1)", sm: "scale(1.1)", md: "scale(1.14)" },
   transformOrigin: "center",
 };
 
@@ -48,11 +52,12 @@ export default function LedProductClient() {
         }}
       >
         <ProductImageCard
-          src={images.free}
+          src={images.hero}
           alt="Oswietlenie LED do lup"
           loading="eager"
           fetchPriority="high"
           objectPosition={freeImageCenter}
+          sx={ledProductCardSx}
           imageSx={ledProductImageSx}
         />
 
@@ -110,7 +115,7 @@ export default function LedProductClient() {
           alignItems: "center",
         }}
       >
-        <Box sx={{ px: { md: 1 } }}>
+        <Box sx={{ order: { xs: 2, md: 1 }, px: { md: 1 } }}>
           <ProductSectionEyebrow>{ledPage.benefits.eyebrow}</ProductSectionEyebrow>
 
           <Typography
@@ -147,6 +152,7 @@ export default function LedProductClient() {
           src={images.ergo}
           alt="Nowoczesne oswietlenie Ergo Eye Optic"
           objectPosition={ergoImageCenter}
+          sx={{ ...ledProductCardSx, order: { xs: 1, md: 2 } }}
           imageSx={ledProductImageSx}
         />
       </Box>
@@ -171,6 +177,7 @@ export default function LedProductClient() {
             src={images.free}
             alt="Korzysci oswietlenia LED do lup"
             objectPosition={freeImageCenter}
+            sx={ledProductCardSx}
             imageSx={ledProductImageSx}
           />
         </Box>
@@ -178,7 +185,6 @@ export default function LedProductClient() {
         <Box
           sx={{
             order: { xs: 2, md: 1 },
-            mt: { xs: 3.2, md: 0 },
             maxWidth: { xs: "100%", md: "42ch" },
           }}
         >
