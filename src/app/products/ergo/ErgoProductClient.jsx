@@ -16,8 +16,6 @@ import {
   bodyTextSx,
   heroCardSx,
   heroAccentSx,
-  interactiveCardHoverSx,
-  panelCardSx,
   sectionHeadingSx,
 } from "@/components/products/productPageStyles";
 
@@ -25,6 +23,54 @@ const images = [
   "/images/ergo-product/ergo-flip-up.webp",
   "/images/ergo-product/ergo-flip-up-2.webp",
 ];
+
+const ergoDetailsEditorialWrapSx = {
+  px: { xs: 0, md: 1 },
+  py: { xs: 0.4, md: 1.2 },
+};
+
+const ergoDetailsColumnsSx = {
+  display: "grid",
+  gap: { xs: 2.7, md: 0 },
+  gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+};
+
+const ergoDetailsColumnSx = {
+  position: "relative",
+  minWidth: 0,
+  "&:not(:first-of-type)": {
+    pt: { xs: 2.7, md: 0 },
+    pl: { xs: 0, md: 5.2 },
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: { xs: 0, md: "10px" },
+      right: { xs: 0, md: "auto" },
+      bottom: { xs: "auto", md: "10px" },
+      left: 0,
+      width: { xs: "100%", md: "1px" },
+      height: { xs: "1px", md: "auto" },
+      backgroundColor: "rgba(15,23,42,0.045)",
+    },
+  },
+  "&:first-of-type": {
+    pr: { md: 5.2 },
+  },
+};
+
+const ergoDetailsHeadingSx = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1.15,
+};
+
+const ergoDetailsAccentSx = {
+  width: 7,
+  height: 7,
+  borderRadius: 999,
+  backgroundColor: colors.accent,
+  flex: "0 0 auto",
+};
 
 const ergoPage = content.products.ergo.page;
 
@@ -56,7 +102,6 @@ export default function ErgoProductClient() {
         <Box
           sx={{
             ...heroCardSx,
-            width: "100%",
             minWidth: 0,
           }}
         >
@@ -182,27 +227,27 @@ function ErgoWhySection() {
     <Box sx={{ mt: { xs: 7, md: 9 } }}>
       <ProductSectionEyebrow>{ergoPage.why.eyebrow}</ProductSectionEyebrow>
 
-      <Box
+      <Typography
         sx={{
-          borderRadius: 4,
-          p: { xs: 2.2, md: 2.8 },
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.84) 100%)",
-          border: `1px solid ${colors.border}`,
-          boxShadow: colors.shadowSm,
+          ...sectionHeadingSx,
+          mt: 0.7,
+          maxWidth: { xs: "100%", md: "18ch" },
         }}
       >
-        <Box
-          sx={{
-            display: "grid",
-            gap: { xs: 1.15, md: 1.3 },
-            maxWidth: { xs: "100%", md: "54ch" },
-          }}
-        >
-          {ergoPage.why.items.map((item) => (
-            <ProductBulletItem key={item}>{item}</ProductBulletItem>
-          ))}
-        </Box>
+        {ergoPage.why.title}
+      </Typography>
+
+      <Box
+        sx={{
+          mt: { xs: 2.3, md: 2.8 },
+          display: "grid",
+          gap: { xs: 1.15, md: 1.3 },
+          maxWidth: { xs: "100%", md: "54ch" },
+        }}
+      >
+        {ergoPage.why.items.map((item) => (
+          <ProductBulletItem key={item}>{item}</ProductBulletItem>
+        ))}
       </Box>
     </Box>
   );
@@ -234,44 +279,42 @@ function ErgoDetailsSection() {
 
       <Box
         sx={{
-          mt: 3.2,
-          display: "grid",
-          gap: { xs: 1.6, md: 2 },
-          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          mt: { xs: 3.4, md: 3.8 },
+          ...ergoDetailsEditorialWrapSx,
         }}
       >
-        {ergoPage.details.items.map((item) => (
-          <Box
-            key={item.title}
-            sx={{
-              ...panelCardSx,
-              ...interactiveCardHoverSx,
-            }}
-          >
-            <Typography
-              sx={{
-                color: colors.text,
-                fontSize: { xs: 22, md: 26 },
-                fontWeight: 800,
-                lineHeight: 1.08,
-                letterSpacing: "-0.03em",
-                maxWidth: "20ch",
-              }}
-            >
-              {item.title}
-            </Typography>
+        <Box sx={ergoDetailsColumnsSx}>
+          {ergoPage.details.items.map((item) => (
+            <Box key={item.title} sx={ergoDetailsColumnSx}>
+              <Box sx={ergoDetailsHeadingSx}>
+                <Box aria-hidden="true" sx={ergoDetailsAccentSx} />
 
-            <Typography
-              sx={{
-                mt: 1.15,
-                ...bodyTextSx,
-                maxWidth: "38ch",
-              }}
-            >
-              {formatDisplayText(item.desc)}
-            </Typography>
-          </Box>
-        ))}
+                <Typography
+                  sx={{
+                    color: colors.text,
+                    fontSize: { xs: 22, md: 26 },
+                    fontWeight: 800,
+                    lineHeight: 1.08,
+                    letterSpacing: "-0.03em",
+                    maxWidth: "20ch",
+                  }}
+                >
+                  {item.title}
+                </Typography>
+              </Box>
+
+              <Typography
+                sx={{
+                  mt: 1.15,
+                  ...bodyTextSx,
+                  maxWidth: "38ch",
+                }}
+              >
+                {formatDisplayText(item.desc)}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
   );

@@ -141,12 +141,19 @@ function ContactInfoItem({ item }) {
         gridTemplateColumns: "auto 1fr",
         gap: { xs: 1.25, md: 1.5 },
         alignItems: "start",
-        p: { xs: 1.65, sm: 1.8, md: 2 },
-        borderRadius: { xs: 2.5, md: 3 },
+        p: { xs: 1.55, sm: 1.7, md: 2 },
+        borderRadius: { xs: 2, md: 3 },
         backgroundColor: item.featured
-          ? "rgba(38,176,173,0.06)"
-          : colors.surface,
-        border: `1px solid ${item.featured ? "rgba(38,176,173,0.22)" : colors.border}`,
+          ? { xs: "rgba(38,176,173,0.065)", md: "rgba(38,176,173,0.06)" }
+          : { xs: "rgba(255,255,255,0.72)", md: colors.surface },
+        border: {
+          xs: `1px solid ${
+            item.featured ? "rgba(38,176,173,0.2)" : "rgba(15,23,42,0.06)"
+          }`,
+          md: `1px solid ${
+            item.featured ? "rgba(38,176,173,0.22)" : colors.border
+          }`,
+        },
         textDecoration: "none",
         color: "inherit",
         cursor: item.href ? "pointer" : "default",
@@ -156,10 +163,10 @@ function ContactInfoItem({ item }) {
         "&:hover": item.href
           ? {
               backgroundColor: item.featured
-                ? "rgba(38,176,173,0.1)"
-                : colors.surfaceAlt,
-              borderColor: colors.accent,
-              boxShadow: colors.shadowSm,
+                ? "rgba(38,176,173,0.095)"
+                : "rgba(248,252,252,0.86)",
+              borderColor: { xs: "rgba(15,23,42,0.09)", md: colors.accent },
+              boxShadow: { xs: "none", md: colors.shadowSm },
             }
           : undefined,
         "&:active": item.href
@@ -197,11 +204,12 @@ function ContactInfoItem({ item }) {
   );
 }
 
-function SocialFollowCard() {
+function SocialFollowCard({ sx = {} } = {}) {
   return (
     <Box
       sx={{
         mt: 1,
+        ...sx,
       }}
     >
       <Typography
@@ -237,17 +245,29 @@ function SocialFollowCard() {
               height: 36,
               borderRadius: "50%",
               color: colors.accent,
-              backgroundColor: colors.softGlassBg,
-              border: `1px solid ${colors.accentGlassBorder}`,
-              boxShadow: colors.softGlassShadow,
-              backdropFilter: colors.softGlassBlur,
+              backgroundColor: {
+                xs: "rgba(255,255,255,0.72)",
+                md: colors.softGlassBg,
+              },
+              border: {
+                xs: "1px solid rgba(15,23,42,0.06)",
+                md: `1px solid ${colors.accentGlassBorder}`,
+              },
+              boxShadow: { xs: "none", md: colors.softGlassShadow },
+              backdropFilter: { xs: "none", md: colors.softGlassBlur },
               transition:
                 "background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease",
               "&:hover": {
                 color: "#228F8C",
-                backgroundColor: colors.softGlassBgHover,
-                borderColor: colors.accentGlassBorderHover,
-                boxShadow: colors.softGlassShadowHover,
+                backgroundColor: {
+                  xs: "rgba(38,176,173,0.08)",
+                  md: colors.softGlassBgHover,
+                },
+                borderColor: {
+                  xs: "rgba(38,176,173,0.22)",
+                  md: colors.accentGlassBorderHover,
+                },
+                boxShadow: { xs: "none", md: colors.softGlassShadowHover },
               },
               "&:active": {
                 backgroundColor: "rgba(38,176,173,0.18)",
@@ -279,43 +299,34 @@ export default function ContactClient() {
         Skontaktuj się z nami
       </Typography>
 
-      <Typography
-        sx={{
-          display: { xs: "block", md: "none" },
-          mb: { xs: 2.5, md: 0 },
-          maxWidth: 680,
-          ...supportingTextSx,
-          fontSize: { xs: 16, md: 17 },
-        }}
-      >
-        Chętnie pomożemy dobrać odpowiednie lupy, konfigurację{" "}
-        <Box component="span" sx={{ display: { xs: "inline", md: "block" } }}>
-          i akcesoria do Twoich potrzeb.
-        </Box>
-      </Typography>
-
       <Box
         sx={{
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "0.92fr 1.08fr" },
           gridTemplateRows: { xs: "auto auto", md: "1fr auto auto 1fr" },
-          overflow: "hidden",
-          borderRadius: 5,
-          border: `1px solid ${colors.border}`,
-          boxShadow: colors.shadowSm,
-          background:
-            "linear-gradient(135deg, rgba(247,250,252,0.96) 0%, rgba(255,255,255,1) 52%, rgba(236,253,245,0.72) 100%)",
+          gap: { xs: 3.2, sm: 3.6, md: 0 },
+          alignItems: { xs: "start", md: "stretch" },
+          overflow: { xs: "visible", md: "hidden" },
+          borderRadius: { xs: 0, md: 5 },
+          border: { xs: "none", md: `1px solid ${colors.border}` },
+          boxShadow: { xs: "none", md: colors.shadowSm },
+          background: {
+            xs: "transparent",
+            md: "linear-gradient(135deg, rgba(247,250,252,0.96) 0%, rgba(255,255,255,1) 52%, rgba(236,253,245,0.72) 100%)",
+          },
         }}
       >
         <Box
           sx={{
-            p: { xs: 2.5, md: 3.5 },
+            minWidth: 0,
+            p: { xs: 0, md: 3.5 },
             gridColumn: { xs: "1", md: "1" },
-            gridRow: { xs: "1", md: "1 / span 4" },
-            borderTop: "none",
-            borderBottom: "none",
+            gridRow: { xs: "auto", md: "1 / span 4" },
             borderRight: { xs: "none", md: `1px solid ${colors.border}` },
-            backgroundColor: "rgba(255,255,255,0.78)",
+            backgroundColor: {
+              xs: "transparent",
+              md: "rgba(255,255,255,0.78)",
+            },
           }}
         >
           <Typography
@@ -340,25 +351,24 @@ export default function ContactClient() {
             {contactItems.map((item) => (
               <ContactInfoItem key={item.id} item={item} />
             ))}
-            <SocialFollowCard />
+            <SocialFollowCard sx={{ display: { xs: "none", md: "block" } }} />
           </Box>
         </Box>
 
         <Box
           sx={{
-            p: { xs: 2.5, md: 4 },
-            pb: { xs: 2, md: 1 },
+            p: { xs: 0, md: 4 },
+            pb: { xs: 0, md: 1 },
             gridColumn: { xs: "1", md: "2" },
-            gridRow: { xs: "2", md: "2" },
+            gridRow: { xs: "auto", md: "2" },
             display: { xs: "none", md: "flex" },
             flexDirection: "column",
             justifyContent: "flex-start",
-            backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
+            backgroundColor: "transparent",
           }}
         >
           <Typography
             sx={{
-              display: { xs: "none", md: "block" },
               fontSize: 13,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
@@ -371,7 +381,6 @@ export default function ContactClient() {
 
           <Typography
             sx={{
-              display: { xs: "none", md: "block" },
               mt: 1.5,
               maxWidth: "none",
               fontSize: { md: fontSizes.subtitle.md },
@@ -387,7 +396,6 @@ export default function ContactClient() {
 
           <Typography
             sx={{
-              display: { xs: "none", md: "block" },
               mt: 2,
               maxWidth: 560,
               ...supportingTextSx,
@@ -403,32 +411,60 @@ export default function ContactClient() {
 
         <Box
           sx={{
-            p: { xs: 2, md: 4 },
-            pt: { xs: 1.75, md: 0 },
+            p: { xs: 0, md: 4 },
+            pt: { xs: 0, md: 0 },
             gridColumn: { xs: "1", md: "2" },
-            gridRow: { xs: "2", md: "3" },
+            gridRow: { xs: "auto", md: "3" },
             display: "flex",
             flexDirection: "column",
             gap: { xs: 1.5, md: 1.5 },
             alignItems: { xs: "stretch", md: "flex-start" },
-            backgroundColor: { xs: "rgba(255,255,255,0.78)", md: "transparent" },
+            backgroundColor: "transparent",
           }}
         >
-          <Typography
-            sx={{
-              display: { xs: "block", md: "none" },
-              color: colors.text,
-              fontSize: 14,
-              fontWeight: 800,
-              lineHeight: 1.35,
-            }}
-          >
-            Umów darmową prezentację
-          </Typography>
+          <Box sx={{ display: { xs: "block", md: "none" } }}>
+            <Typography
+              sx={{
+                fontSize: 13,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: colors.accent,
+                fontWeight: 800,
+              }}
+            >
+              Indywidualny dobór
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 1.35,
+                fontSize: fontSizes.subtitle.xs,
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.08,
+                color: colors.text,
+              }}
+            >
+              Umów indywidualny dobór
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 1.8,
+                maxWidth: 560,
+                ...supportingTextSx,
+                fontSize: 16,
+              }}
+            >
+              Chętnie pomożemy dobrać odpowiednie lupy, konfigurację i
+              akcesoria do Twoich potrzeb.
+            </Typography>
+          </Box>
 
           <Box
             className="contact-actions"
             sx={{
+              mt: { xs: 0.7, md: 0 },
               display: "grid",
               gridTemplateColumns: {
                 xs: "repeat(2, minmax(0, 1fr))",
@@ -458,6 +494,13 @@ export default function ContactClient() {
               Napisz e-mail
             </Button>
           </Box>
+
+          <SocialFollowCard
+            sx={{
+              display: { xs: "block", md: "none" },
+              mt: { xs: 1.6, sm: 1.9 },
+            }}
+          />
         </Box>
       </Box>
     </Box>

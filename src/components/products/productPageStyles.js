@@ -37,16 +37,6 @@ export const cardTitleSx = {
   lineHeight: 1.35,
 };
 
-export const interactiveCardHoverSx = {
-  transition:
-    "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
-  "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: "0 16px 38px rgba(15,23,42,0.07)",
-    borderColor: "rgba(15,23,42,0.09)",
-  },
-};
-
 export const ctaButtonSx = getActionButtonSx("primary", {
   fontSize: { xs: 14.5, md: 15.5 },
   minHeight: { xs: 42, md: 46 },
@@ -54,25 +44,16 @@ export const ctaButtonSx = getActionButtonSx("primary", {
 });
 
 export const heroCardSx = {
-  borderRadius: 5,
-  p: { xs: 2.5, md: 3.5 },
+  p: { xs: 0, md: 1 },
+  boxSizing: "border-box",
   width: "100%",
   maxWidth: { xs: "100%", md: 540 },
-  mx: "auto",
+  mx: 0,
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  background:
-    "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%)",
-  border: `1px solid ${colors.border}`,
-  boxShadow: colors.shadowSm,
 };
 
 export const panelCardSx = {
-  borderRadius: 4,
   p: { xs: 2, md: 2.4 },
-  background:
-    "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.84) 100%)",
-  border: `1px solid ${colors.border}`,
-  boxShadow: colors.shadowSm,
 };

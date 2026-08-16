@@ -9,7 +9,6 @@ import {
   bodyTextSx,
   cardTitleSx,
   ctaButtonSx,
-  interactiveCardHoverSx,
 } from "./productPageStyles";
 
 export function ProductImageCard({
@@ -24,14 +23,8 @@ export function ProductImageCard({
   return (
     <Box
       sx={{
-        borderRadius: 5,
-        overflow: "hidden",
-        border: `1px solid ${colors.border}`,
-        backgroundColor: colors.surfaceAlt,
-        boxShadow: colors.shadowSm,
         position: "relative",
         aspectRatio: "7/5",
-        ...interactiveCardHoverSx,
         ...sx,
       }}
     >

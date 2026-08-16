@@ -17,18 +17,21 @@ import {
   ctaButtonSx,
   heroCardSx,
   heroAccentSx,
-  interactiveCardHoverSx,
   sectionHeadingSx,
 } from "@/components/products/productPageStyles";
 
-const images = [
-  "/images/led-product/led-free-2.webp",
-  "/images/led-product/led-free.webp",
-  "/images/led-product/led-ergo.webp",
-];
+const images = {
+  free: "/images/led-product/led-free.webp",
+  ergo: "/images/led-product/led-free-2.webp",
+};
 
 const ergoImageCenter = "53.7% 48.4%";
 const freeImageCenter = "49.5% 49.7%";
+const ledProductImageSx = {
+  objectFit: "contain",
+  transform: { xs: "scale(1.06)", sm: "scale(1.1)", md: "scale(1.14)" },
+  transformOrigin: "center",
+};
 
 const ledPage = content.products.led.page;
 
@@ -45,11 +48,12 @@ export default function LedProductClient() {
         }}
       >
         <ProductImageCard
-          src={images[0]}
+          src={images.free}
           alt="Oswietlenie LED do lup"
           loading="eager"
           fetchPriority="high"
-          objectPosition={{ xs: "55% 40%", sm: "55% 40%", md: "center 50%" }}
+          objectPosition={freeImageCenter}
+          imageSx={ledProductImageSx}
         />
 
         <Box sx={heroCardSx}>
@@ -139,58 +143,12 @@ export default function LedProductClient() {
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            width: "100%",
-            mx: { xs: "auto", md: 0 },
-          }}
-        >
-          <Box
-            sx={{
-              borderRadius: 5,
-              overflow: "hidden",
-              border: `1px solid ${colors.border}`,
-              backgroundColor: colors.surfaceAlt,
-              boxShadow: colors.shadowSm,
-              position: "relative",
-              aspectRatio: "1 / 1",
-              display: "grid",
-              placeItems: "center",
-              ...interactiveCardHoverSx,
-            }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "inherit",
-                overflow: "hidden",
-                backgroundColor: colors.white,
-                display: "grid",
-                placeItems: "center",
-              }}
-            >
-              <Box
-                component="img"
-                src={images[2]}
-                alt="Nowoczesne oswietlenie Ergo Eye Optic"
-                loading="lazy"
-                decoding="async"
-                fetchPriority="auto"
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  display: "block",
-                  objectFit: "cover",
-                  objectPosition: ergoImageCenter,
-                  transform: "scale(1.02)",
-                  transformOrigin: "center",
-                  backgroundColor: colors.white,
-                }}
-              />
-            </Box>
-          </Box>
-        </Box>
+        <ProductImageCard
+          src={images.ergo}
+          alt="Nowoczesne oswietlenie Ergo Eye Optic"
+          objectPosition={ergoImageCenter}
+          imageSx={ledProductImageSx}
+        />
       </Box>
 
       <Box
@@ -210,16 +168,17 @@ export default function LedProductClient() {
           }}
         >
           <ProductImageCard
-            src={images[1]}
+            src={images.free}
             alt="Korzysci oswietlenia LED do lup"
             objectPosition={freeImageCenter}
+            imageSx={ledProductImageSx}
           />
         </Box>
 
         <Box
           sx={{
             order: { xs: 2, md: 1 },
-            mt: 3.2,
+            mt: { xs: 3.2, md: 0 },
             maxWidth: { xs: "100%", md: "42ch" },
           }}
         >

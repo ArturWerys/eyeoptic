@@ -20,6 +20,11 @@ const content = {
           imageLayout: {
             desktopHeight: "92%",
             desktopMaxWidth: "96%",
+            mobileHeight: "112%",
+            tabletHeight: "110%",
+            mobileScale: 1.26,
+            tabletScale: 1.28,
+            mobileCompactScale: 1.34,
             objectPosition: "center 54%",
           },
         },
@@ -33,6 +38,11 @@ const content = {
           imageLayout: {
             desktopHeight: "92%",
             desktopMaxWidth: "96%",
+            mobileHeight: "112%",
+            tabletHeight: "110%",
+            mobileScale: 1.24,
+            tabletScale: 1.26,
+            mobileCompactScale: 1.33,
             objectPosition: "center 54%",
           },
         },
@@ -46,6 +56,11 @@ const content = {
           imageLayout: {
             desktopHeight: "90%",
             desktopMaxWidth: "94%",
+            mobileHeight: "112%",
+            tabletHeight: "110%",
+            mobileScale: 1.22,
+            tabletScale: 1.24,
+            mobileCompactScale: 1.31,
             objectPosition: "center 55%",
           },
         },
@@ -59,6 +74,11 @@ const content = {
           imageLayout: {
             desktopHeight: "88%",
             desktopMaxWidth: "92%",
+            mobileHeight: "112%",
+            tabletHeight: "110%",
+            mobileScale: 1,
+            tabletScale: 1.02,
+            mobileCompactScale: 1.11,
             objectPosition: "center 53%",
           },
         },
@@ -72,6 +92,11 @@ const content = {
           imageLayout: {
             desktopHeight: "89%",
             desktopMaxWidth: "93%",
+            mobileHeight: "112%",
+            tabletHeight: "110%",
+            mobileScale: 0.9,
+            tabletScale: 0.92,
+            mobileCompactScale: 1,
             objectPosition: "center 55%",
             mobileObjectPosition: "56% 58%",
           },
@@ -131,7 +156,7 @@ const content = {
     },
 
     compare: {
-      heading: "TTL czy Flip-Up - co sprawdzi się lepiej?",
+      heading: "TTL czy Flip-Up, co sprawdzi się lepiej?",
       rows: [
         {
           left: "Maksymalna stabilność i stała geometria obrazu",
@@ -386,6 +411,7 @@ const content = {
         },
         why: {
           eyebrow: "Dlaczego Eye Optic Ergo?",
+          title: "Komfort i precyzja, które pracują razem",
           items: [
             "poprawa ergonomii pracy i redukcja napięcia mięśniowego",
             "wyraźny, stabilny obraz o wysokiej rozdzielczości",
