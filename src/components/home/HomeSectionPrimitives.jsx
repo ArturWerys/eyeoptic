@@ -30,26 +30,11 @@ export function SectionEyebrow({ children }) {
   );
 }
 
-export function RevealSection({
-  children,
-  delay = 0,
-  instantOnMobile = false,
-  mobileDelay = 220,
-}) {
+export function RevealSection({ children, delay = 0, mobileOnly = false }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 899.95px)").matches;
-
-    if (instantOnMobile && isMobile) {
-      const timer = setTimeout(() => {
-        setVisible(true);
-      }, mobileDelay);
-
-      return () => clearTimeout(timer);
-    }
-
     const el = ref.current;
     if (!el) return;
 
@@ -69,14 +54,16 @@ export function RevealSection({
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [instantOnMobile, mobileDelay]);
+  }, []);
 
   return (
     <Box
       ref={ref}
       sx={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(28px)",
+        opacity: mobileOnly ? { xs: visible ? 1 : 0, md: 1 } : visible ? 1 : 0,
+        transform: mobileOnly
+          ? { xs: visible ? "translateY(0)" : "translateY(28px)", md: "none" }
+          : visible ? "translateY(0)" : "translateY(28px)",
         transition:
           "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1)",
         transitionDelay: `${delay}ms`,
@@ -249,58 +236,6 @@ export function AboutStat({ value, title, desc }) {
           ...bodyTextSx,
           fontSize: 14,
           lineHeight: 1.7,
-        }}
-      >
-        {formatDisplayText(desc)}
-      </Typography>
-    </Box>
-  );
-}
-
-export function BenefitCard({ icon: Icon, title, desc }) {
-  return (
-    <Box
-      sx={{
-        borderRadius: 4,
-        p: { xs: 2.4, md: 3 },
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.82) 100%)",
-        border: `1px solid ${colors.border}`,
-        boxShadow: colors.shadowSm,
-        minHeight: { md: 196 },
-        ...interactiveCardHoverSx,
-      }}
-    >
-      <Box
-        sx={{
-          width: 52,
-          height: 52,
-          borderRadius: 2.75,
-          backgroundColor: colors.accentSoft,
-          color: colors.accent,
-          display: "grid",
-          placeItems: "center",
-          boxShadow: "inset 0 0 0 1px rgba(38,176,173,0.08)",
-        }}
-      >
-        <Icon sx={{ fontSize: 25 }} />
-      </Box>
-
-      <Typography
-        sx={{
-          mt: 2.2,
-          ...cardTitleSx,
-          letterSpacing: "0.01em",
-          maxWidth: { xs: "100%", md: "24ch" },
-        }}
-      >
-        {formatDisplayText(title)}
-      </Typography>
-      <Typography
-        sx={{
-          mt: 1,
-          ...bodyTextSx,
-          maxWidth: { xs: "100%", md: "42ch" },
         }}
       >
         {formatDisplayText(desc)}

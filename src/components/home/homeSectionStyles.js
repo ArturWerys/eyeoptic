@@ -1,5 +1,9 @@
 import colors from "@/data/colors";
 
+export const sectionSpacingSx = {
+  mt: { xs: "clamp(32px, calc(12.5vw - 8px), 48px)", md: 7 },
+};
+
 export const sectionHeadingSx = {
   fontSize: { xs: 40, md: 44 },
   fontWeight: 800,

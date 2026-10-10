@@ -1,5 +1,5 @@
 import colors from "@/data/colors";
-import { getActionButtonSx } from "@/components/ui/buttonStyles";
+import { getActionButtonSx } from "@/data/buttonStyles";
 
 export const sectionHeadingSx = {
   fontSize: { xs: 34, sm: 40, md: 44 },
@@ -52,8 +52,4 @@ export const heroCardSx = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-};
-
-export const panelCardSx = {
-  p: { xs: 2, md: 2.4 },
 };

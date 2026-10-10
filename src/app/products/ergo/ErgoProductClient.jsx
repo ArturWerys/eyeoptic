@@ -7,6 +7,7 @@ import content from "@/data/content";
 import { formatDisplayText } from "@/lib/text";
 import {
   ProductBenefitLine,
+  ProductHeroText,
   ProductBulletItem,
   ProductConsultationSection,
   ProductImageCard,
@@ -14,15 +15,13 @@ import {
 } from "@/components/products/ProductPageShared";
 import {
   bodyTextSx,
-  heroCardSx,
-  heroAccentSx,
   sectionHeadingSx,
 } from "@/components/products/productPageStyles";
 
-const images = [
-  "/images/ergo-product/ergo-flip-up.webp",
-  "/images/ergo-product/ergo-flip-up-2.webp",
-];
+const images = {
+  front: "/images/ergo-product/ergo-flip-up-blue-front.webp",
+  side: "/images/ergo-product/ergo-flip-up-blue-side.webp",
+};
 
 const ergoDetailsEditorialWrapSx = {
   px: { xs: 0, md: 1 },
@@ -88,8 +87,8 @@ export default function ErgoProductClient() {
         }}
       >
         <ProductImageCard
-          src={images[0]}
-          alt="Lupy Eye Optic Ergo"
+          src={images.front}
+          alt="Niebieskie lupy Eye Optic Ergo — widok z przodu"
           loading="eager"
           fetchPriority="high"
           sx={{
@@ -99,55 +98,11 @@ export default function ErgoProductClient() {
           }}
         />
 
-        <Box
-          sx={{
-            ...heroCardSx,
-            minWidth: 0,
-          }}
-        >
-          <Typography
-            sx={{
-              fontWeight: 800,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.98,
-              fontSize: { xs: 36, sm: 42, md: 52 },
-              color: colors.text,
-            }}
-          >
-            {ergoPage.hero.title}
-          </Typography>
-
-          <Typography
-            sx={{
-              ...heroAccentSx,
-              ml: { xs: -0.5, md: 0 },
-            }}
-          >
-            {ergoPage.hero.accent}
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 2.6,
-              ...bodyTextSx,
-              maxWidth: { xs: "100%", md: "34ch" },
-            }}
-          >
-            {formatDisplayText(ergoPage.hero.description)}
-          </Typography>
-
-          <Box
-            sx={{
-              mt: 3.2,
-              display: "grid",
-              gap: 1.2,
-            }}
-          >
-            {ergoPage.hero.uses.map((item) => (
-              <ProductBulletItem key={item}>{item}</ProductBulletItem>
-            ))}
-          </Box>
-        </Box>
+        <ProductHeroText
+          hero={ergoPage.hero}
+          sx={{ minWidth: 0 }}
+          accentSx={{ ml: { xs: -0.5, md: 0 } }}
+        />
       </Box>
 
       <ErgoBenefitsSection />
@@ -161,7 +116,11 @@ export default function ErgoProductClient() {
           mt: { xs: 7, md: 9 },
         }}
       >
-        <SharedConsultationSection />
+        <ProductConsultationSection
+          title={ergoPage.consultation.title}
+          description={ergoPage.consultation.description}
+          buttonLabel={ergoPage.consultation.buttonLabel}
+        />
       </Box>
     </>
   );
@@ -214,8 +173,8 @@ function ErgoBenefitsSection() {
 
       <Box sx={{ order: { xs: 1, md: 2 } }}>
         <ProductImageCard
-          src={images[1]}
-          alt="Korzyści pracy w lupach Ergo"
+          src={images.side}
+          alt="Niebieskie lupy Eye Optic Ergo — widok z boku"
         />
       </Box>
     </Box>
@@ -317,15 +276,5 @@ function ErgoDetailsSection() {
         </Box>
       </Box>
     </Box>
-  );
-}
-
-function SharedConsultationSection() {
-  return (
-    <ProductConsultationSection
-      title={ergoPage.consultation.title}
-      description={ergoPage.consultation.description}
-      buttonLabel={ergoPage.consultation.buttonLabel}
-    />
   );
 }

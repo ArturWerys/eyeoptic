@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
 
 import colors from "@/data/colors";
@@ -9,36 +8,9 @@ import NavbarPill from "@/components/NavbarPill";
 import Footer from "@/components/Footer";
 import HomeHeroCarousel from "@/components/home/HomeHeroCarousel";
 import HomePageSections from "@/components/home/HomePageSections";
-import {
-  compactMobileHeroQuery,
-  mobileProcessRevealThreshold,
-  mobileRevealBreakpoint,
-} from "@/components/home/homeResponsive";
 
 export default function HomeClient() {
   const { home } = content;
-  const [showMobileProcessSection, setShowMobileProcessSection] =
-    useState(false);
-
-  useEffect(() => {
-    if (showMobileProcessSection) return;
-
-    const mediaQuery = window.matchMedia(mobileRevealBreakpoint);
-    if (!mediaQuery.matches) return;
-
-    const revealProcessSection = () => {
-      if (window.scrollY > mobileProcessRevealThreshold) {
-        setShowMobileProcessSection(true);
-        window.removeEventListener("scroll", revealProcessSection);
-      }
-    };
-
-    window.addEventListener("scroll", revealProcessSection, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", revealProcessSection);
-    };
-  }, [showMobileProcessSection]);
 
   return (
     <Box
@@ -61,11 +33,7 @@ export default function HomeClient() {
 
         <HomeHeroCarousel home={home} />
 
-        <HomePageSections
-          home={home}
-          compactMobileHeroQuery={compactMobileHeroQuery}
-          showMobileProcessSection={showMobileProcessSection}
-        />
+        <HomePageSections home={home} />
 
         <Footer />
       </Container>

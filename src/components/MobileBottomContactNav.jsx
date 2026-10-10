@@ -7,15 +7,11 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
-import {
-  getActionButtonSx,
-  getActionIconButtonSx,
-} from "@/components/ui/buttonStyles";
+import { getActionButtonSx, getActionIconButtonSx } from "@/data/buttonStyles";
 
 const mobileContactIconButtonSx = getActionIconButtonSx("neutral", {
   width: "100%",
   minHeight: 42,
-  borderRadius: colors.buttonRadius,
   backgroundColor: "transparent",
   backgroundImage: "none",
   border: 0,
@@ -40,7 +36,6 @@ const mobilePresentationButtonSx = getActionButtonSx("primary", {
   minWidth: 0,
   width: "100%",
   minHeight: 42,
-  borderRadius: colors.buttonRadius,
   fontSize: 12.35,
   lineHeight: 1.05,
   px: 0.8,
@@ -54,7 +49,6 @@ const desktopContactSegmentSx = getActionButtonSx("neutral", {
   fontSize: 14,
   gap: 1,
   px: 2.2,
-  borderRadius: colors.buttonRadius,
   backgroundColor: "transparent",
   backgroundImage: "none",
   border: 0,
@@ -81,7 +75,6 @@ const desktopContactSegmentSx = getActionButtonSx("neutral", {
 const desktopPresentationButtonSx = getActionButtonSx("primary", {
   minWidth: 0,
   minHeight: 52,
-  borderRadius: colors.buttonRadius,
   fontSize: 14.5,
   fontWeight: 900,
   px: 3.1,
@@ -155,8 +148,7 @@ export default function MobileBottomContactNav() {
             zIndex: 1,
             display: "grid",
 
-            gridTemplateColumns:
-              "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr)",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr)",
 
             gap: 0.55,
 
@@ -204,9 +196,7 @@ export default function MobileBottomContactNav() {
             aria-label="Umów prezentację"
             sx={mobilePresentationButtonSx}
           >
-            <Box component="span">
-              Umów prezentację
-            </Box>
+            <Box component="span">Umów prezentację</Box>
           </Button>
         </Box>
       </Box>

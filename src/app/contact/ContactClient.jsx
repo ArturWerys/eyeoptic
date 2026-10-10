@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -15,7 +10,7 @@ import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
-import { getActionButtonSx } from "@/components/ui/buttonStyles";
+import { getActionButtonSx } from "@/data/buttonStyles";
 import { formatDisplayText } from "@/lib/text";
 
 const fontSizes = {
@@ -456,13 +451,12 @@ export default function ContactClient() {
                 fontSize: 16,
               }}
             >
-              Chętnie pomożemy dobrać odpowiednie lupy, konfigurację i
-              akcesoria do Twoich potrzeb.
+              Chętnie pomożemy dobrać odpowiednie lupy, konfigurację i akcesoria
+              do Twoich potrzeb.
             </Typography>
           </Box>
 
           <Box
-            className="contact-actions"
             sx={{
               mt: { xs: 0.7, md: 0 },
               display: "grid",

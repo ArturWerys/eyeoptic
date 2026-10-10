@@ -1,5 +1,7 @@
+import HomeClient from "@/app/HomeClient";
+
 export const metadata = {
-  title: "Eye Optic | Lupy stomatologiczne TTL i Flip-Up ",
+  title: "Eye Optic | Lupy stomatologiczne TTL i Flip-Up",
   description:
     "Profesjonalne lupy stomatologiczne TTL i Flip-Up z oświetleniem LED. Idealna ergonomia i precyzja pracy.",
   keywords: [
@@ -15,8 +17,6 @@ export const metadata = {
     type: "website",
   },
 };
-
-import HomeClient from "@/app/HomeClient";
 
 export default function Page() {
   return <HomeClient />;

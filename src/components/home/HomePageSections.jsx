@@ -1,6 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
+import { useEffect, useState } from "react";
 import { Box, Divider, Link, Typography } from "@mui/material";
 import NorthEastRoundedIcon from "@mui/icons-material/NorthEastRounded";
 import CenterFocusStrongRoundedIcon from "@mui/icons-material/CenterFocusStrongRounded";
@@ -9,10 +10,10 @@ import AccessibilityNewRoundedIcon from "@mui/icons-material/AccessibilityNewRou
 import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
 
 import colors from "@/data/colors";
+import { compactMobileHeroQuery, mobileRevealBreakpoint } from "@/components/home/homeResponsive";
 import { formatDisplayText } from "@/lib/text";
 import {
   AboutStat,
-  BenefitCard,
   RevealSection,
   SectionEyebrow,
   StepCard,
@@ -22,30 +23,30 @@ import {
   accentNoteSx,
   bodyTextSx,
   cardTitleSx,
-  interactiveCardHoverSx,
   sectionHeadingSx,
+  sectionSpacingSx,
 } from "@/components/home/homeSectionStyles";
 
-const benefitCards = [
+const benefits = [
   {
     icon: CenterFocusStrongRoundedIcon,
-    title: "Maksymalna kontrola pola zabiegowego",
-    desc: "Lepsza widoczność obszaru pracy i większa pewność podczas precyzyjnych procedur.",
+    title: "Pełna kontrola pola zabiegowego",
+    desc: "Lepsza widoczność i większa pewność podczas precyzyjnych procedur.",
   },
   {
     icon: ZoomInRoundedIcon,
-    title: "Lepsza ocena detali",
-    desc: "Łatwiejsze dostrzeganie szczegółów, struktur i granic podczas codziennej pracy.",
+    title: "Wyraźniejsze detale",
+    desc: "Łatwiejsze dostrzeganie szczegółów i struktur.",
   },
   {
     icon: AccessibilityNewRoundedIcon,
-    title: "Mniejsze obciążenie odcinka szyjnego i lędźwiowego",
-    desc: "Bardziej ergonomiczna pozycja pracy, która pomaga ograniczyć napięcie i zmęczenie.",
+    title: "Większy komfort pracy",
+    desc: "Ergonomia wspierająca prawidłową postawę.",
   },
   {
     icon: TrackChangesRoundedIcon,
-    title: "Stabilna praca w powiększeniu",
-    desc: "Większa precyzja ruchu i komfort działania nawet podczas dłuższych zabiegów.",
+    title: "Precyzja każdego ruchu",
+    desc: "Stabilna praca w powiększeniu nawet podczas dłuższych zabiegów.",
   },
 ];
 
@@ -54,28 +55,160 @@ const compareProductHrefByLabel = {
   "Flip-Up": "/products/flipUp",
 };
 
-export default function HomePageSections({
-  home,
-  compactMobileHeroQuery,
-  showMobileProcessSection,
-}) {
+export default function HomePageSections({ home }) {
+  const [showMobileSections, setShowMobileSections] = useState(false);
+
+  useEffect(() => {
+    if (showMobileSections) return;
+
+    const mediaQuery = window.matchMedia(mobileRevealBreakpoint);
+    const revealSections = () => {
+      if (mediaQuery.matches && window.scrollY > 10) {
+        setShowMobileSections(true);
+      }
+    };
+
+    window.addEventListener("scroll", revealSections, { passive: true });
+    const frame = window.requestAnimationFrame(revealSections);
+
+    return () => {
+      window.removeEventListener("scroll", revealSections);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [showMobileSections]);
+
   return (
     <Box
       sx={{
         maxWidth: 1260,
         mx: "auto",
         mt: { xs: 0, sm: 1, md: 0 },
+        visibility: { xs: showMobileSections ? "visible" : "hidden", md: "visible" },
         [compactMobileHeroQuery]: {
           mt: 0,
         },
       }}
     >
-      <Box
-        sx={{
-          display: { xs: showMobileProcessSection ? "block" : "none", md: "block" },
-        }}
-      >
-        <Box sx={{ mt: { xs: "clamp(30px, 8vw, 52px)", sm: 6, md: 7 } }}>
+      <RevealSection delay={80}>
+        <Box
+          sx={{
+            mt: { xs: 0, sm: 0.5, md: 1 },
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1.15fr 0.85fr" },
+            gridTemplateAreas: {
+              xs: '"heading" "photo" "benefits"',
+              md: '"heading photo" "benefits photo"',
+            },
+            columnGap: { md: 4, lg: 6 },
+            rowGap: { xs: "clamp(16px, 5vw, 24px)", md: 3 },
+            alignItems: "start",
+          }}
+        >
+          <Box sx={{ gridArea: "heading" }}>
+            <SectionEyebrow>Korzyści</SectionEyebrow>
+
+            <Typography
+              sx={{
+                ...sectionHeadingSx,
+                maxWidth: { xs: "100%", md: "14ch" },
+              }}
+            >
+              Co zyskujesz dzięki dobrze dobranym lupom?
+            </Typography>
+          </Box>
+
+          <Box
+            component="figure"
+            sx={{
+              gridArea: "photo",
+              m: 0,
+              minWidth: 0,
+              position: "relative",
+              alignSelf: { xs: "center", md: "end" },
+              width: "100%",
+              maxWidth: { xs: 360, sm: 420, md: "100%" },
+              mx: "auto",
+            }}
+          >
+            <Box
+              component="img"
+              src="/images/home-page/ergo-prescription-glasses-profile.png"
+              alt="Lupy Eye Optic ERGO noszone razem z okularami korekcyjnymi"
+              loading="lazy"
+              decoding="async"
+              width={1254}
+              height={1254}
+              sx={{
+                display: "block",
+                width: { xs: "100%", md: "112%" },
+                ml: { xs: 0, md: "-12%" },
+                transform: { xs: "translateX(-8%)", md: "none" },
+                maxWidth: "none",
+                height: "auto",
+                objectFit: "contain",
+              }}
+            />
+            <Typography
+              component="figcaption"
+              sx={{
+                position: { xs: "static", md: "absolute" },
+                top: { md: "100%" },
+                left: { md: "15%" },
+                width: { xs: "100%", md: "80%" },
+                ml: 0,
+                mt: 1.5,
+                color: "rgba(45,99,101,0.72)",
+                opacity: 0.7,
+                fontSize: { xs: 11, md: 11.5 },
+                fontWeight: 600,
+                lineHeight: 1.6,
+                textAlign: "center",
+              }}
+            >
+              Wizerunek modela wygenerowano przy użyciu AI.
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              gridArea: "benefits",
+              minWidth: 0,
+              display: "grid",
+              gridTemplateColumns: "1fr",
+            }}
+          >
+            {benefits.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <Box
+                  key={item.title}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "28px minmax(0, 1fr)",
+                    columnGap: { xs: 1.75, md: 2.25 },
+                    pt: index === 0 ? 0 : { xs: 2.5, md: 3 },
+                    pb: index === benefits.length - 1 ? 0 : { xs: 2.5, md: 3 },
+                    borderBottom: index === benefits.length - 1 ? "none" : "1px solid rgba(15,23,42,0.065)",
+                  }}
+                >
+                  <Icon aria-hidden="true" sx={{ mt: 0.25, fontSize: 26, color: colors.accent }} />
+                  <Box>
+                    <Typography sx={{ ...cardTitleSx, fontSize: { xs: 18, md: 20 }, lineHeight: 1.35 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography sx={{ ...bodyTextSx, mt: 0.75, maxWidth: "46ch" }}>
+                      {item.desc}
+                    </Typography>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+      </RevealSection>
+
+      <Box sx={sectionSpacingSx}>
+        <RevealSection delay={100} mobileOnly>
           <SectionEyebrow>Proces doboru</SectionEyebrow>
 
           <Typography
@@ -97,24 +230,24 @@ export default function HomePageSections({
             {formatDisplayText(home.process.text)}
           </Typography>
 
-          <Box
-            sx={{
-              mt: 3,
-              display: "grid",
-              gap: 1.5,
-              gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
-            }}
-          >
-            {home.process.steps.map((step) => (
-              <StepCard
-                key={step.n}
-                n={step.n}
-                title={step.title}
-                desc={step.desc}
-              />
-            ))}
-          </Box>
+        </RevealSection>
 
+        <Box
+          sx={{
+            mt: 3,
+            display: "grid",
+            gap: 1.5,
+            gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+          }}
+        >
+          {home.process.steps.map((step) => (
+            <RevealSection key={step.n} delay={100} mobileOnly>
+              <StepCard n={step.n} title={step.title} desc={step.desc} />
+            </RevealSection>
+          ))}
+        </Box>
+
+        <RevealSection delay={100} mobileOnly>
           <Link
             component={NextLink}
             href="/contact"
@@ -134,48 +267,14 @@ export default function HomePageSections({
               },
             }}
           >
-            Widzisz, jakie to proste? Skontaktuj się z&nbsp;nami i&nbsp;zamów swoje
-            lupy.
+            Widzisz, jakie to proste? Skontaktuj się z&nbsp;nami i&nbsp;zamów
+            swoje lupy.
             <NorthEastRoundedIcon sx={{ fontSize: 18 }} />
           </Link>
-        </Box>
+        </RevealSection>
       </Box>
-
-      <RevealSection delay={80}>
-        <Box sx={{ mt: 7 }}>
-          <SectionEyebrow>Korzyści</SectionEyebrow>
-
-          <Typography
-            sx={{
-              ...sectionHeadingSx,
-              maxWidth: { xs: "100%", md: "14ch" },
-            }}
-          >
-            Co zyskujesz dzięki dobrze dobranym lupom?
-          </Typography>
-
-          <Box
-            sx={{
-              mt: 3,
-              display: "grid",
-              gap: 1.5,
-              gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-            }}
-          >
-            {benefitCards.map((item) => (
-              <BenefitCard
-                key={item.title}
-                icon={item.icon}
-                title={item.title}
-                desc={item.desc}
-              />
-            ))}
-          </Box>
-        </Box>
-      </RevealSection>
-
       <RevealSection delay={110}>
-        <Box sx={{ mt: 8 }}>
+        <Box sx={{ ...sectionSpacingSx, mt: { ...sectionSpacingSx.mt, md: 8 } }}>
           <SectionEyebrow>O nas</SectionEyebrow>
           <Typography
             sx={{
@@ -191,7 +290,7 @@ export default function HomePageSections({
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-              gap: { xs: 3.4, md: 6 },
+              gap: { xs: "clamp(20px, 6vw, 32px)", md: 6 },
               alignItems: "start",
             }}
           >
@@ -206,8 +305,8 @@ export default function HomePageSections({
                   maxWidth: { xs: "100%", md: "46ch" },
                 }}
               >
-                Eye Optic to marka stworzona przez specjalistów, którzy od
-                ponad dwudziestu lat dostarczają nowoczesne technologie dla
+                Eye Optic to marka stworzona przez specjalistów, którzy od ponad
+                dwudziestu lat dostarczają nowoczesne technologie dla
                 stomatologii.
               </Typography>
 
@@ -273,7 +372,7 @@ export default function HomePageSections({
       </RevealSection>
 
       <RevealSection delay={140}>
-        <Box sx={{ mt: 7 }}>
+        <Box sx={sectionSpacingSx}>
           <SectionEyebrow>Porównanie systemów</SectionEyebrow>
           <Typography
             sx={{
@@ -356,7 +455,7 @@ export default function HomePageSections({
       </RevealSection>
 
       <RevealSection delay={180}>
-        <Box sx={{ mt: 7 }}>
+        <Box sx={sectionSpacingSx}>
           <SectionEyebrow>Najczęstsze pytania</SectionEyebrow>
 
           <Typography

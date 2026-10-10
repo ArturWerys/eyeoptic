@@ -8,7 +8,6 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import YouTubeIcon from "@mui/icons-material/YouTube";
@@ -187,22 +186,19 @@ export default function Footer() {
   );
 }
 
-function FooterLink({ href, children, external = false, featured = false }) {
+function FooterLink({ href, children }) {
   return (
     <Link
-      component={external ? "a" : NextLink}
+      component={NextLink}
       href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
       underline="none"
       sx={{
         justifySelf: "start",
         display: "inline-flex",
         alignItems: "center",
-        gap: featured ? 0.35 : 0,
         color: colors.textSoft,
         fontSize: 13,
-        fontWeight: featured ? 600 : 400,
+        fontWeight: 400,
         transition: "color 180ms ease",
         "&:hover": {
           color: colors.accent,
@@ -213,7 +209,6 @@ function FooterLink({ href, children, external = false, featured = false }) {
       }}
     >
       {formatDisplayText(children)}
-      {featured && <ArrowOutwardRoundedIcon sx={{ fontSize: 14 }} />}
     </Link>
   );
 }

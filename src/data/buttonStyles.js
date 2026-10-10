@@ -4,28 +4,6 @@ const buttonTransition =
   "transform 180ms ease, background-position 260ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease";
 
 /* -------------------------------------------------------
-   BACKGROUNDS
-------------------------------------------------------- */
-
-// Najważniejsze CTA „Umów prezentację”
-// Delikatnie mocniejsze niż primary, ale nadal glass.
-const ctaButtonBg =
-  "linear-gradient(135deg, rgba(242,252,250,0.99) 0%, rgba(211,242,237,0.97) 100%)";
-
-const ctaButtonBgHover =
-  "linear-gradient(135deg, rgba(238,251,249,1) 0%, rgba(199,238,232,0.99) 100%)";
-
-/* -------------------------------------------------------
-   SHADOWS
-------------------------------------------------------- */
-
-const ctaButtonShadow =
-  "0 9px 24px rgba(15,23,42,0.058), 0 3px 10px rgba(38,176,173,0.04), inset 0 1px 0 rgba(255,255,255,0.94)";
-
-const ctaButtonShadowHover =
-  "0 13px 30px rgba(15,23,42,0.07), 0 4px 12px rgba(38,176,173,0.055), inset 0 1px 0 rgba(255,255,255,0.98)";
-
-/* -------------------------------------------------------
    BASE
 ------------------------------------------------------- */
 
@@ -65,7 +43,6 @@ const actionButtonBaseSx = {
 ------------------------------------------------------- */
 
 const actionButtonVariants = {
-  // „Poznaj lupy TTL”
   primary: {
     backgroundColor: "rgba(38,176,173,0.1)",
     backgroundImage: "none",
@@ -92,27 +69,6 @@ const actionButtonVariants = {
       boxShadow: "none",
       backdropFilter: "none",
       WebkitBackdropFilter: "none",
-    },
-  },
-
-  // „Umów prezentację”
-  cta: {
-    backgroundColor: "rgba(224,247,242,0.82)",
-    backgroundImage: ctaButtonBg,
-
-    border: "1px solid rgba(38,176,173,0.24)",
-
-    color: colors.accentStrong,
-    boxShadow: ctaButtonShadow,
-
-    "&:hover": {
-      backgroundColor: "rgba(214,243,238,0.92)",
-      backgroundImage: ctaButtonBgHover,
-
-      borderColor: "rgba(38,176,173,0.34)",
-
-      color: colors.accentStrong,
-      boxShadow: ctaButtonShadowHover,
     },
   },
 

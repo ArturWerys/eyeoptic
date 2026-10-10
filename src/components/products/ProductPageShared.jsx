@@ -9,7 +9,40 @@ import {
   bodyTextSx,
   cardTitleSx,
   ctaButtonSx,
+  heroCardSx,
+  heroAccentSx,
 } from "./productPageStyles";
+
+export function ProductHeroText({ hero, sx, accentSx }) {
+  return (
+    <Box sx={{ ...heroCardSx, ...sx }}>
+      <Typography
+        sx={{
+          fontWeight: 800,
+          letterSpacing: "-0.04em",
+          lineHeight: 0.98,
+          fontSize: { xs: 36, sm: 42, md: 52 },
+          color: colors.text,
+        }}
+      >
+        {hero.title}
+      </Typography>
+      <Typography sx={{ ...heroAccentSx, ...accentSx }}>
+        {hero.accent}
+      </Typography>
+      <Typography
+        sx={{ mt: 2.6, ...bodyTextSx, maxWidth: { xs: "100%", md: "34ch" } }}
+      >
+        {formatDisplayText(hero.description)}
+      </Typography>
+      <Box sx={{ mt: 3.2, display: "grid", gap: 1.2 }}>
+        {hero.uses.map((item) => (
+          <ProductBulletItem key={item}>{item}</ProductBulletItem>
+        ))}
+      </Box>
+    </Box>
+  );
+}
 
 export function ProductImageCard({
   src,

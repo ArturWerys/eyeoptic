@@ -12,7 +12,7 @@ import colors from "@/data/colors";
 import contact from "@/data/contact_info.json";
 import content from "@/data/content";
 import MobileBottomContactNav from "@/components/MobileBottomContactNav";
-import { getActionButtonSx } from "@/components/ui/buttonStyles";
+import { getActionButtonSx } from "@/data/buttonStyles";
 
 export default function NavbarPill() {
   const pathname = usePathname();
@@ -29,10 +29,9 @@ function NavbarPillContent({ pathname }) {
   const desktopNavMinWidth = 1160;
   const wideDesktopNavMinWidth = 1380;
   const desktopNavItems = content.nav;
-  const mobileNavItems =
-    isHomePage
-      ? content.nav
-      : [{ href: "/", label: "Strona główna" }, ...content.nav];
+  const mobileNavItems = isHomePage
+    ? content.nav
+    : [{ href: "/", label: "Strona główna" }, ...content.nav];
   const blurMobileMenuButton = () => {
     window.requestAnimationFrame(() => {
       mobileMenuButtonRef.current?.blur();
@@ -144,14 +143,16 @@ function NavbarPillContent({ pathname }) {
             <IconButton
               component={NextLink}
               href="/"
-              aria-label="Strona glowna"
+              aria-label="Strona główna"
               sx={{
                 alignSelf: "center",
                 borderRadius: colors.buttonRadius,
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: isHomePage ? colors.surfaceAlt : colors.pillBg,
+                backgroundColor: isHomePage
+                  ? colors.surfaceAlt
+                  : colors.surface,
                 color: isHomePage ? colors.text : colors.textSoft,
                 px: { xs: 1.05, md: 1.45 },
                 py: { xs: 0.85, md: 1.25 },
@@ -175,7 +176,7 @@ function NavbarPillContent({ pathname }) {
                     width: 7,
                     height: 7,
                     borderRadius: 999,
-                    backgroundColor: colors.dot,
+                    backgroundColor: colors.accent,
                     flex: "0 0 auto",
                     opacity: isHomePage ? 1 : 0,
                     [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
@@ -194,10 +195,8 @@ function NavbarPillContent({ pathname }) {
               return (
                 <Link
                   key={item.href}
-                  component={item.external ? "a" : NextLink}
+                  component={NextLink}
                   href={item.href}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noopener noreferrer" : undefined}
                   underline="none"
                   sx={{
                     display: "inline-flex",
@@ -231,7 +230,7 @@ function NavbarPillContent({ pathname }) {
                         width: 7,
                         height: 7,
                         borderRadius: 999,
-                        backgroundColor: colors.dot,
+                        backgroundColor: colors.accent,
                         flex: "0 0 auto",
                         [`@media (min-width:${wideDesktopNavMinWidth}px)`]: {
                           width: 8,
@@ -256,7 +255,7 @@ function NavbarPillContent({ pathname }) {
           <Button
             ref={mobileMenuButtonRef}
             onClick={handleMobileMenuToggle}
-            aria-label="Otworz menu produktow"
+            aria-label={open ? "Zamknij menu produktów" : "Otwórz menu produktów"}
             aria-expanded={open}
             sx={getActionButtonSx("neutral", {
               display: "inline-flex",
@@ -317,7 +316,6 @@ function NavbarPillContent({ pathname }) {
               }}
             />
           </Button>
-
         </Box>
 
         <Collapse in={open} timeout="auto" unmountOnExit>
@@ -344,10 +342,8 @@ function NavbarPillContent({ pathname }) {
               return (
                 <Link
                   key={item.href}
-                  component={item.external ? "a" : NextLink}
+                  component={NextLink}
                   href={item.href}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noopener noreferrer" : undefined}
                   underline="none"
                   onClick={handleMobileMenuLinkClick}
                   sx={{
@@ -372,7 +368,7 @@ function NavbarPillContent({ pathname }) {
                         width: 8,
                         height: 8,
                         borderRadius: 999,
-                        backgroundColor: colors.dot,
+                        backgroundColor: colors.accent,
                         transform: "translateY(-50%)",
                       }}
                     />

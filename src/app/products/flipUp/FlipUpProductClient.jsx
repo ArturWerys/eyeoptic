@@ -1,13 +1,13 @@
 "use client";
 
-import NextLink from "next/link";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import colors from "@/data/colors";
 import content from "@/data/content";
 import { formatDisplayText } from "@/lib/text";
 import {
   ProductBenefitLine,
+  ProductHeroText,
   ProductBulletItem,
   ProductConsultationSection,
   ProductImageCard,
@@ -16,17 +16,15 @@ import {
 import ProductSpecsTable from "@/components/products/ProductSpecsTable";
 import {
   bodyTextSx,
-  ctaButtonSx,
-  heroCardSx,
-  heroAccentSx,
-  panelCardSx,
   sectionHeadingSx,
 } from "@/components/products/productPageStyles";
 
-const images = [
-  "/images/flip-up-product/flip-up.webp",
-  "/images/flip-up-product/flip-up-mini.webp",
-];
+const images = {
+  hero: "/images/flip-up-product/flip-up.webp",
+  aluFront: "/images/flip-up-product/flip-up-alu-front.webp",
+  mini: "/images/flip-up-product/flip-up-mini.webp",
+  alu: "/images/flip-up-product/flip-up-alu.webp",
+};
 
 const {
   magnifications: miniFlipUpMagnifications,
@@ -61,55 +59,13 @@ export default function FlipUpProductClient() {
         }}
       >
         <ProductImageCard
-          src={images[0]}
+          src={images.hero}
           alt="Lupy Flip-Up"
           loading="eager"
           fetchPriority="high"
         />
 
-        <Box sx={heroCardSx}>
-          <Typography
-            sx={{
-              fontWeight: 800,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.98,
-              fontSize: { xs: 36, sm: 42, md: 52 },
-              color: colors.text,
-            }}
-          >
-            {flipUpPage.hero.title}
-          </Typography>
-
-          <Typography
-            sx={{
-              ...heroAccentSx,
-            }}
-          >
-            {flipUpPage.hero.accent}
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 2.6,
-              ...bodyTextSx,
-              maxWidth: { xs: "100%", md: "34ch" },
-            }}
-          >
-            {formatDisplayText(flipUpPage.hero.description)}
-          </Typography>
-
-          <Box
-            sx={{
-              mt: 3.2,
-              display: "grid",
-              gap: 1.2,
-            }}
-          >
-            {flipUpPage.hero.uses.map((item) => (
-              <ProductBulletItem key={item}>{item}</ProductBulletItem>
-            ))}
-          </Box>
-        </Box>
+        <ProductHeroText hero={flipUpPage.hero} />
       </Box>
 
       <Box
@@ -157,8 +113,8 @@ export default function FlipUpProductClient() {
         </Box>
 
         <ProductImageCard
-          src={images[1]}
-          alt="Korzyści pracy w lupach Flip-Up"
+          src={images.aluFront}
+          alt="Lupy Eye Optic ALU Flip-Up — widok z przodu"
         />
       </Box>
 
@@ -166,12 +122,12 @@ export default function FlipUpProductClient() {
 
       <FlipUpTablesSection configurations={flipUpConfigurations} />
 
-      <Box
-        sx={{
-          mt: { xs: 7, md: 9 },
-        }}
-      >
-        <SharedConsultationSection />
+      <Box sx={{ mt: { xs: 7, md: 9 } }}>
+        <ProductConsultationSection
+          title={flipUpPage.consultation.title}
+          description={flipUpPage.consultation.description}
+          buttonLabel={flipUpPage.consultation.buttonLabel}
+        />
       </Box>
     </>
   );
@@ -180,71 +136,119 @@ export default function FlipUpProductClient() {
 function FlipUpVariantsSection({ configurations }) {
   return (
     <Box sx={{ mt: { xs: 7, md: 9 } }}>
-      <ProductSectionEyebrow>
-        {flipUpPage.variants.eyebrow}
-      </ProductSectionEyebrow>
+      <Box>
+        <ProductSectionEyebrow>
+          {flipUpPage.variants.eyebrow}
+        </ProductSectionEyebrow>
 
-      <Typography
-        sx={{
-          ...sectionHeadingSx,
-          maxWidth: { xs: "100%", md: "17ch" },
-        }}
-      >
-        {flipUpPage.variants.title}
-      </Typography>
+        <Typography
+          sx={{
+            ...sectionHeadingSx,
+            maxWidth: { xs: "100%", md: "17ch" },
+          }}
+        >
+          {flipUpPage.variants.title}
+        </Typography>
 
-      <Typography
-        sx={{
-          mt: 1.8,
-          ...bodyTextSx,
-          maxWidth: { xs: "100%", md: "48ch" },
-        }}
-      >
-        {formatDisplayText(flipUpPage.variants.description)}
-      </Typography>
+        <Typography
+          sx={{
+            mt: 1.8,
+            ...bodyTextSx,
+            maxWidth: { xs: "100%", md: "48ch" },
+          }}
+        >
+          {formatDisplayText(flipUpPage.variants.description)}
+        </Typography>
+      </Box>
 
       <Box
         sx={{
-          mt: 3.2,
+          mt: { xs: 3.5, md: 4.5 },
           display: "grid",
-          gap: { xs: 1.6, md: 2 },
+          gap: { xs: 5, md: 4 },
           gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
         }}
       >
         {configurations.map((item) => (
-          <Box key={item.name} sx={panelCardSx}>
-            <Typography
-              sx={{
-                color: colors.text,
-                fontSize: { xs: 24, md: 28 },
-                fontWeight: 800,
-                lineHeight: 1.02,
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {item.name}
-            </Typography>
-
-            <Typography
-              sx={{
-                mt: 1.15,
-                ...bodyTextSx,
-                maxWidth: "34ch",
-              }}
-            >
-              {formatDisplayText(item.shortDescription)}
-            </Typography>
-
+          <Box
+            key={item.name}
+            sx={{
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              overflow: "hidden",
+            }}
+          >
+            {images[item.key] && (
+              <Box
+                sx={{
+                  mb: { xs: 2, md: 2.5 },
+                  width: "100%",
+                  position: "relative",
+                  aspectRatio: "4 / 3",
+                  overflow: "hidden",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={images[item.key]}
+                  alt={`Lupy ${item.name} — widok produktu`}
+                  loading="lazy"
+                  decoding="async"
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    transform: item.key === "alu" ? "scale(1.12)" : "none",
+                  }}
+                />
+              </Box>
+            )}
             <Box
               sx={{
-                mt: 2.2,
-                display: "grid",
-                gap: 0.95,
+                width: "100%",
+                maxWidth: 360,
+                px: { xs: 1, md: 0 },
+                boxSizing: "border-box",
               }}
             >
-              {item.bullets.map((bullet) => (
-                <ProductBulletItem key={bullet}>{bullet}</ProductBulletItem>
-              ))}
+              <Typography
+                sx={{
+                  color: colors.text,
+                  fontSize: { xs: 24, md: 28 },
+                  fontWeight: 800,
+                  lineHeight: 1.02,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                {item.name}
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: 1.15,
+                  ...bodyTextSx,
+                  minHeight: { md: "3.5em" },
+                }}
+              >
+                {formatDisplayText(item.shortDescription)}
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: 2.2,
+                  display: "grid",
+                  gap: 0.95,
+                }}
+              >
+                {item.bullets.map((bullet) => (
+                  <ProductBulletItem key={bullet}>{bullet}</ProductBulletItem>
+                ))}
+              </Box>
             </Box>
           </Box>
         ))}
@@ -346,15 +350,5 @@ function FlipUpTablesSection({ configurations }) {
         ))}
       </Box>
     </Box>
-  );
-}
-
-function SharedConsultationSection() {
-  return (
-    <ProductConsultationSection
-      title={flipUpPage.consultation.title}
-      description={flipUpPage.consultation.description}
-      buttonLabel={flipUpPage.consultation.buttonLabel}
-    />
   );
 }

@@ -16,7 +16,7 @@ const content = {
             "Precyzyjne rozwiązanie dopasowane do specjalizacji, stylu pracy i odległości roboczej.",
           href: "/products/ttl",
           buttonLabel: "Poznaj lupy TTL",
-          img: "/images/home-page/ttl.webp",
+          img: "/images/ttl-product/ttl.webp",
           imageLayout: {
             desktopHeight: "92%",
             desktopMaxWidth: "96%",
@@ -34,7 +34,7 @@ const content = {
             "Lżejsza konstrukcja dla większego komfortu i swobody pracy.",
           href: "/products/ttl",
           buttonLabel: "Poznaj lupy TTL Sport",
-          img: "/images/home-page/ttl-sport.webp",
+          img: "/images/ttl-product/ttl-sport.webp",
           imageLayout: {
             desktopHeight: "92%",
             desktopMaxWidth: "96%",
@@ -52,7 +52,7 @@ const content = {
             "Regulowane ustawienie i szybkie dopasowanie do własnych preferencji pracy.",
           href: "/products/flipUp",
           buttonLabel: "Poznaj lupy Flip-Up",
-          img: "/images/home-page/flip-up.webp",
+          img: "/images/flip-up-product/flip-up.webp",
           imageLayout: {
             desktopHeight: "90%",
             desktopMaxWidth: "94%",
@@ -68,9 +68,9 @@ const content = {
           title: "Lupy Ergo",
           subtitle:
             "Większy komfort pracy, ergonomia i swoboda ustawienia dopasowana do użytkownika.",
-          href: "/products/flipUp",
+          href: "/products/ergo",
           buttonLabel: "Poznaj lupy Ergo",
-          img: "/images/home-page/ergo-flip-up.webp",
+          img: "/images/ergo-product/ergo-flip-up-gold-front.webp",
           imageLayout: {
             desktopHeight: "88%",
             desktopMaxWidth: "92%",
@@ -88,7 +88,7 @@ const content = {
             "Lepsza widoczność pola zabiegowego i większy komfort codziennej pracy.",
           href: "/products/led",
           buttonLabel: "Poznaj oświetlenie LED",
-          img: "/images/home-page/led-free-2.webp",
+          img: "/images/led-product/led-free-5.webp",
           imageLayout: {
             desktopHeight: "89%",
             desktopMaxWidth: "93%",
@@ -102,36 +102,6 @@ const content = {
           },
         },
       ],
-      points: [
-        { title: "Ergonomia", desc: "Naturalna pozycja głowy i pleców" },
-        { title: "Precyzja", desc: "Więcej detalu, pewniejszy ruch" },
-        { title: "Dopasowanie", desc: "Dobór pod specjalizację i styl pracy" },
-      ],
-      ctaPrimary: { label: "Umów dobór lup", href: "/contact" },
-      ctaSecondary: { label: "Zobacz modele", href: "/products" },
-    },
-
-    why: {
-      heading: "Co zyskujesz dzięki dobrze dobranym lupom?",
-      tiles: [
-        "Maksymalna kontrola pola zabiegowego",
-        "Lepsza ocena detali",
-        "Mniejsze obciążenie odcinka szyjnego i lędźwiowego",
-        "Stabilna praca w powiększeniu",
-      ],
-    },
-
-    about: {
-      heading: "O nas",
-      title:
-        "Eye Optic to marka stworzona przez specjalistow z ponad dwudziestoletnim doswiadczeniem w technologiach dla stomatologii.",
-      text: "Bogate doswiadczenie w dziedzinie optyki zabiegowej pozwolilo nam stworzyc linie produktow laczacych wysoka jakosc z atrakcyjna cena. Lupy stomatologiczne oraz systemy oswietlenia Eye Optic spelniaja rygorystyczne normy dla wyrobow medycznych. Kazdy produkt przed dostarczeniem do klienta przechodzi indywidualna kontrole jakosci, aby zapewnic maksymalny komfort pracy oraz bezpieczenstwo podczas zabiegow.",
-      points: [
-        "Rozwiazania Eye Optic sa kompatybilne z produktami innych producentow dostepnych na rynku.",
-        "Nasze systemy charakteryzuja sie latwa konfiguracja, intuicyjna obsluga oraz trwaloscia w codziennym uzytkowaniu.",
-        "Naszym celem jest, aby kazdy zabieg z wykorzystaniem lup i oswietlenia Eye Optic wyroznial sie komfortem, ergonomia i najwyzsza efektywnoscia.",
-      ],
-      note: "Nasza misja jest przyczyniac sie do sukcesow klinicznych naszych klientow. Poczuj roznice z Eye Optic.",
     },
     process: {
       heading: "Dobór w 3 krokach",
@@ -190,20 +160,6 @@ const content = {
 
       moreHref: "/contact",
       moreLabel: "Masz inne pytanie? Skontaktuj się z nami",
-    },
-
-    contact: {
-      heading: "Umów dobór lup Eye Optic",
-      fields: {
-        interests: ["TTL", "Flip-Up", "LED", "Inne"],
-        specializations: [
-          "Stomatologia ogólna",
-          "Endodoncja",
-          "Protetyka / estetyka",
-          "Chirurgia / perio",
-          "Inne",
-        ],
-      },
     },
   },
 
@@ -378,10 +334,6 @@ const content = {
             "Lupy stomatologiczne Eye Optic Ergo to odpowiedź na rosnące wymagania nowoczesnej stomatologii, gdzie liczy się nie tylko precyzja widzenia, ale także komfort pracy przez wiele godzin. Dzięki zaawansowanej konstrukcji ergonomicznej umożliwiają pracę w naturalnej, wyprostowanej pozycji, znacząco odciążając kręgosłup szyjny i plecy.",
         },
         benefits: {
-          eyebrow: "Korzyści",
-          title: "Ergonomia i jakość obrazu w codziennej pracy",
-          description:
-            "Eye Optic Ergo wspierają prawidłową postawę i zapewniają wysoką jakość widzenia tam, gdzie liczy się precyzja, komfort i powtarzalność każdego ruchu.",
           items: [
             {
               title: "Ergonomia, która zmienia codzienną pracę",
@@ -442,7 +394,7 @@ const content = {
         },
         {
           label: "Pole widzenia (mm)",
-          values: ["115 - 180", "70 - 165", "65 - 1755"],
+          values: ["115 - 180", "70 - 165", "65 - 175"],
         },
         {
           label: "Waga (g)",

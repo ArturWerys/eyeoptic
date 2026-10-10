@@ -8,7 +8,7 @@ import content from "@/data/content";
 import { formatDisplayText } from "@/lib/text";
 import {
   ProductBenefitLine,
-  ProductBulletItem,
+  ProductHeroText,
   ProductImageCard,
   ProductSectionEyebrow,
 } from "@/components/products/ProductPageShared";
@@ -16,8 +16,6 @@ import ProductSpecsTable from "@/components/products/ProductSpecsTable";
 import {
   bodyTextSx,
   ctaButtonSx,
-  heroCardSx,
-  heroAccentSx,
   sectionHeadingSx,
 } from "@/components/products/productPageStyles";
 
@@ -49,49 +47,7 @@ export default function TtlProductClient() {
           fetchPriority="high"
         />
 
-        <Box sx={heroCardSx}>
-          <Typography
-            sx={{
-              fontWeight: 800,
-              letterSpacing: "-0.04em",
-              lineHeight: 0.98,
-              fontSize: { xs: 36, sm: 42, md: 52 },
-              color: colors.text,
-            }}
-          >
-            {ttlPage.hero.title}
-          </Typography>
-
-          <Typography
-            sx={{
-              ...heroAccentSx,
-            }}
-          >
-            {ttlPage.hero.accent}
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 2.6,
-              ...bodyTextSx,
-              maxWidth: { xs: "100%", md: "34ch" },
-            }}
-          >
-            {formatDisplayText(ttlPage.hero.description)}
-          </Typography>
-
-          <Box
-            sx={{
-              mt: 3.2,
-              display: "grid",
-              gap: 1.2,
-            }}
-          >
-            {ttlPage.hero.uses.map((item) => (
-              <ProductBulletItem key={item}>{item}</ProductBulletItem>
-            ))}
-          </Box>
-        </Box>
+        <ProductHeroText hero={ttlPage.hero} />
       </Box>
 
       <Box
